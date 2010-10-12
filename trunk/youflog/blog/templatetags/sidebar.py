@@ -1,5 +1,5 @@
 from django.template import Library
-
+import hashlib,urllib
 from blog.models import Entry,Comment,Category,Link,Archive
 from settings import DATABASE_ENGINE
 register = Library()
@@ -42,3 +42,24 @@ def get_archives(context):
     archives=Archive.objects.all()[:12]
     return {'archives':archives}
 
+import logging
+@register.inclusion_tag('readwall.html', takes_context = True)
+def get_reader_wall(context):
+    sql="select count(email) as count,author,email,weburl  from comments_comment group by author order by count desc limit 12"
+    from django.db import connection
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    rows=cursor.fetchall()
+    comments=[]
+    
+    for row in rows:
+        imgurl = "http://www.gravatar.com/avatar/"
+        imgurl +=hashlib.md5(row[2].lower()).hexdigest()+"?"+ urllib.urlencode({
+                'd':'identicon', 's':str(50),'r':'G'})
+        count=row[0]
+        author=row[1]
+        weburl=row[3]
+        comment={'author':author,'gravatar_url':imgurl,'weburl':weburl,'count':str(count)}
+        comments.append(comment)
+    
+    return {'comments':comments}

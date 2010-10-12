@@ -36,7 +36,7 @@ class Comment(models.Model):
     objects = CommentManager()
 
     class Meta:
-        ordering = ('-date',)
+        #ordering = ('date',)
         permissions = [("can_moderate", "Can moderate comments")]
         
     def get_content_object_url(self):
