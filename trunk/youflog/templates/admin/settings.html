@@ -1,0 +1,88 @@
+{%extends "admin/base.html"%}
+{%block content%}
+<div class="wrap">
+	<h2>常规选项</h2>
+	{%if messages%}
+	<div align="center" style="background-color: rgb(255, 251, 204);">
+		<p>
+		{% for message in messages %}
+		<strong>{{ message }}</strong> 
+		</p>
+		{%endfor%}
+	</div>
+	{%endif%}
+	<form id="settings" action="/admin/settings/save" method="post">
+		<table class="form-table">
+			<tbody>
+				<tr valign="top">
+					<th scope="row">
+						<label for="blogname">博客标题</label>
+					</th>
+					<td><input type="text" class="regular-text" value="{{blog.title}}" id="blogname" name="blogname"></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="subtitle">博客子标题</label>
+					</th>
+					<td><input type="text" class="regular-text" value="{{blog.subtitle}}" id="subtitle" name="subtitle"></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="blognotice">网站公告</label>
+					</th>
+					<td><textarea id="blognotice" name="blognotice">{{blog.blognotice}}</textarea></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="sitekeywords">站点关键字</label>
+					</th>
+					<td><input type="text" class="regular-text" value="{{blog.sitekeywords}}" id="sitekeywords" name="sitekeywords">
+					<p class="setting-description">站点关键字对应head中的meta keywords</p>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="sitedesc">站点描述</label>
+					</th>
+					<td><input type="text" class="regular-text" value="{{blog.sitedescription}}" id="sitedesc" name="sitedesc">
+					<p class="setting-description">用简洁的文字描述该博客,对应head中的meta description</p>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="domain">域名</label>
+					</th>
+					<td><input type="text" class="regular-text" value="{{site.domain}}" id="domain" name="domain"></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="theme">主题</label>
+					</th>
+					<td>
+					<select  id="theme" name="theme" style="width: 60%">
+                    {%for theme in themes%}
+                    <option value="{{theme}}" {%ifequal blog.theme_name theme%}selected='selected'{%endifequal%}>{{theme}}</option>
+                    {%endfor%}
+					</select>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="posts_per_page">每页文章数</label>
+					</th>
+					<td><input type="text" class="regular-text" value="{{blog.posts_per_page}}" id="posts_per_page" name="posts_per_page"></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="comments_per_page">每页评论数</label>
+					</th>
+					<td><input type="text" class="regular-text" value="{{blog.comments_per_page}}" id="comments_per_page" name="comments_per_page"></td>
+				</tr>
+			</tbody>
+		</table>
+		<p class="submit">
+			<input type="submit" value="保存更改" class="button-primary" name="Submit">
+		</p>
+	</form>
+</div>
+{%endblock%}

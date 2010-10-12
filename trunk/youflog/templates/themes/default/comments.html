@@ -1,0 +1,59 @@
+{% load comment %}
+{% get_comment_form for object as commentform %}
+<script type="text/javascript" src="/static/themes/{{ blog.theme_name }}/js/comments.js"></script>
+<script type="text/javascript" src="/static/js/comment-reply.js"></script>
+
+
+{% get_threaded_comment_list for object %}
+ 
+	{% if entry.allow_comment %}
+	<div id="respond">
+	<form id="commentform" action="/postcomment" method="post" onsubmit="return post()">
+		<div class="body">
+			<div class="header">
+				<h3 class="title">
+					来了,就把评论留下
+				</h3>
+				<a style="display: none;" href="#respond" id="cancel-comment-reply-link" rel="nofollow">Cancel reply</a>
+				<div class="fixed"></div>
+			</div>
+			
+			<div class="text">
+				<textarea name="content" id=comment class="textarea" cols="64" rows="8" tabindex="4"></textarea>
+			</div>
+			<div class="info">
+
+				<div class="part">
+					<div id="author_info">
+						<div><label for="author" class="small">Name* </label></div>
+						<div><input type="text" class="textfield" name="author" id="author" value="" tabindex="1" /></div>
+						<div><label for="email" class="small">E-Mail* (不公布)</label></div>
+						<div><input type="text" class="textfield" name="email" id="email" value="" tabindex="2" /></div>
+						<div><label for="url" class="small">Website</label></div>
+						<div><input type="text" class="textfield" name="url" id="url" value="" tabindex="3" /></div>
+					</div>
+				</div>
+
+				{{ commentform.content_type }}
+			    {{ commentform.object_pk }}
+			    {{ commentform.parent_id }}
+				<div class="part">
+					<input name="submit" type="submit" id="submit" class="button" tabindex="6" value="Submit"/>
+				</div>
+
+				<div class="feed">
+					<input type="checkbox" name="mail_notify" style="width: auto;margin-left:10px;" checked="checked"/>
+                    <label for="reply_notify_mail">有回复时邮件通知我</label>
+				</div>
+			</div>
+
+			<div class="fixed"></div>
+		</div>
+		
+	</form>
+	</div>
+	{%else%}
+	<div class="block">
+		为啥要把评论关掉呢？
+	</div>
+	{% endif %}

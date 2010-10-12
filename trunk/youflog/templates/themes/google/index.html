@@ -1,0 +1,49 @@
+{% extends "themes/google/base.html" %}
+{% block content %}
+<div id="content" class="narrowcolumn">
+	{% if entries.object_list %}
+		{% for entry in entries.object_list %}
+			<div class="post" id="post-{{entry.id}}">
+				<h2><a href="{{entry.link|escape}}" rel="bookmark" title="Permanent Link to {{entry.title}}">{{entry.title}}</a></h2>
+				<br/>
+				<div class="entry">
+					{{entry.content|safe}}
+				</div>
+
+				<p class="postmetadata">
+				<small>{{entry.date|date:"Y/m/d H:i"}}&nbsp|&nbsp
+				{%if entry.cates%}
+				Posted in: {%for c in entry.cates%}
+				<a href="/category/{{c.slug}}">{{c.name}}</a>&nbsp;
+				{%endfor%}
+				{%endif%}
+				Tags: {%for tag in entry.tagstr%}
+					<a href="/tag/{{tag|urlencode}}">{{tag}}</a>&nbsp;
+					{% endfor %} | <a href="/{{entry.link|escape}}#comments">
+					Comment:{{entry.comments.count}}</a>
+					</small></p>
+			</div>
+		{% endfor %}
+
+		<div class="navigation">
+			{% if entries.has_previous %}
+			<div class="alignleft">
+			<a href="?page={{ entries.previous_page_number }}">&laquo; Older Entries</a>
+			</div>
+			{%endif%}
+			{% if entries.has_next %}
+			<div class="alignright">
+				<a href="?page={{ entries.next_page_number }}">&laquo; Newer Entries</a>
+			</div>
+			{%endif%}
+		</div>
+
+	{% else %}
+
+		<h2 class="center">Not Found</h2>
+		<p class="center">Sorry, but you are looking for something that isn't here.</p>
+	{% endif %}
+	</div>
+
+{% include "themes/google/sidebar.html" %}
+{% endblock %}

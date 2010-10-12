@@ -1,0 +1,25 @@
+{% extends "themes/google/base.html" %}
+{% block title %} {{entry.title|escape}} - {{blog.title|escape}} {% endblock %}
+{% block content %}
+	<div id="content" class="narrowcolumn">
+
+		{%if entry%}
+		<div class="post" id="post-{{entry.id}}">
+		<h2>{{entry.title}}</h2>
+			<div class="entry">
+				{{entry.content|safe}}
+				
+				<p class="postmetadata">
+				<small>{{entry.date|date:"Y/m/d H:i"}}&nbsp|&nbsp
+				<a href="/{{entry.link|escape}}#comments">
+				Comment:{{entry.commentcount}}
+				</a>
+				</small>
+				</p>
+			</div>
+		</div>
+		{%endif%}
+		
+	</div>
+{% include "themes/google/sidebar.html" %}
+{% endblock %}

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+<meta name="Robots" content="all"/> 
+<style type="text/css">
+.waptitle{ border:#E9EEF1 1px solid; background:#F6F9E7;}
+#wapbody{ max-width:380px; margin:1px auto; font-size:14px;}
+.waplist{ line-height:18px;}
+a{ color:#3366CC;text-decoration: none}
+a:hover{ color:#8E1D22;}
+.pagenav{font-size:12px;}
+</style>
+<title>文章分类 -- {{ blog.title}}</title> 
+</head> 
+<body id="wapbody">
+<div class="waptitle">Category for {{category.name}}</div>
+<div class="waplist">
+	{% for entry in entrys.object_list %}
+	<a href="/wap/single/{{entry.id}}">{{ entry.title}}</a>
+	<br />
+	{% endfor %}
+</div>
+<div class="pagenav">
+	{% if entrys.has_previous %}
+        <a href="?page={{ entrys.previous_page_number }}">上一页</a>
+    {% endif %}
+     {% if entrys.has_next %}
+        <a href="?page={{ entrys.next_page_number }}">下一页</a>
+    {% endif %}
+</div>
+Back to <a href="/wap">{{ blog.title}}</a>
+</body>
+</html>

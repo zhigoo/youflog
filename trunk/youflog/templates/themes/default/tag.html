@@ -1,0 +1,59 @@
+{% extends "themes/default/base.html" %}
+
+{% block title %} {{tag|escape}} - {{blog.title|escape}} {% endblock %}
+
+{% block content %}
+
+	<div class="post">
+		<h3 class="title">Archives</h3>
+		<div class="content">
+			<ul id="archive">
+				{% if entries.object_list %}
+					{% for entry in entries.object_list %}
+						<li class="archive-post">
+							<h3><a href="/{{ entry.link|escape }}" rel="bookmark">{{entry.title|escape}}</a></h3>
+							<div class="excerpt">
+								
+							</div>
+							<div class="small">
+								<a href="/{{entry.link|escape}}#comments">{{entry.commentcount}} 条评论</a>
+							</div>
+							
+							<div class="small">Tags:
+								{%for tag in entry.tagstr%}
+									<a href="/tag/{{tag|urlencode}}">{{tag}}</a>&nbsp;
+								{%endfor%}
+							</div>
+						</li>
+					{% endfor %}
+
+				{%else%}
+					<li class="archive-post">
+						<div class="small">
+							Sorry, no posts matched your criteria.
+						</div>
+					</li>
+
+				{%endif%}
+			</ul>
+		</div>
+
+		<div class="meta">
+			
+			<div class="info">
+				Posts Tagged '{{tag}}'
+			</div>
+			<div class="fixed"></div>
+		</div>
+	</div>
+
+	{%if entries.has_next%}
+	<div id="pagenavi" class="block">
+		<div class="content g">
+			{% if entries.has_previous %}<span class="newer"><a href="?page={{entries.previous_page_number}}" >&laquo; Prev</a></span>{% endif %}
+			{% if entries.has_next %}<span class="older"><a href="?page={{entries.next_page_number}}" >Next &raquo;</a></span>{% endif %}
+			<div class="fixed"></div>
+		</div>
+	</div>
+	{%endif%}
+{% endblock %}

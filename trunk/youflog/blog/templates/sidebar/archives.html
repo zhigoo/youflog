@@ -1,0 +1,7 @@
+{%if archives%}
+<ul>
+	{%for arch in archives%}
+	<li><a href="#" title="">{{arch.date|date:"Y-m"}}</a></li>
+	{%endfor%}
+</ul>
+{%endif%}

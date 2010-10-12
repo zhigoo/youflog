@@ -1,0 +1,112 @@
+{% load menu %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://gmpg.org/xfn/11">
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<title>{% block title %} {{ blog.title|escape}}{% endblock %}</title>
+	
+	<meta name="description" content="{{blog.sitedescription}}" />
+	<meta name="Keywords" content="{{blog.sitekeywords}}" />
+	
+	<meta name="robots" content="all" />
+	<link rel="alternate" type="application/atom+xml" title="{{ blog.title }}" href="/feed" />
+	<link rel="icon" type="image/ico" href="/favicon.ico" />
+	
+	<!-- style START -->
+	<link rel="stylesheet" href="/static/themes/{{ blog.theme_name }}/style.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="/static/themes/{{ blog.theme_name }}/chinese.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="/static/themes/{{ blog.theme_name }}/recentcomments.css" type="text/css" media="screen" />
+	<!--[if IE]>
+		<link rel="stylesheet" href="/static/themes/{{ blog.theme_name }}/ie.css" type="text/css" media="screen" />
+	<![endif]-->
+	<!-- style END -->
+		<link href="/static/prettify.css" type="text/css" rel="stylesheet" />
+		<script type="text/javascript" src="/static/js/prettify.js"></script>
+	<!-- script START -->
+	<!--
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js "></script>
+	-->
+	<script type="text/javascript" src="/static/js/jquery-1.2.6.js"></script>
+	<script type="text/javascript" src="/static/themes/{{ blog.theme_name }}/js/base.js"></script>
+	<script type="text/javascript" src="/static/themes/{{ blog.theme_name }}/js/menu.js"></script>
+	<!-- script END -->
+	{% block head_block %}{% endblock %}
+
+</head>
+
+<body onload="prettyPrint()">
+
+<!-- container START -->
+<div id="container">
+
+	<!-- header START -->
+	<div id="header">
+		<div class="content">
+			<div id="title">
+				<h1><a href="{{ blog.baseurl }}" title="{{ blog.title}}">{{ blog.title}}</a></h1>
+				<div id="tagline">{{ blog.subtitle|escape}}</div>
+			</div>
+			<div id="ads" style="float:right;">
+			</div>
+			<div class="fixed"></div>
+		</div>
+		<div class="meta">
+			<ul id="menubar">
+				<li class="home {%if ishome%}current_page_item{%else%}page_item{%endif%}">
+					<a href="/" title="Home">Home</a>
+				</li>
+				{% get_menus %}
+			</ul>
+			<div id="subscribe" class="feed">
+				<a rel="external nofollow" title="Subscribe to this blog..." class="feedlink" href="/feed">
+					<abbr title="Really Simple Syndication">RSS</abbr> feed
+				</a>
+				<ul style="visibility: hidden; display: block; left: 1039px; top: 115px;">
+				<li><a href="/feed" title="Subscribe with Posts" rel="external nofollow">订阅文章</a></li>
+				<li><a href="/feed/comments" title="Subscribe with Comments" rel="external nofollow">订阅评论</a></li>
+				</ul>
+			</div>
+			<span id="copyright">
+				© 2010-2011 dengmin's blog
+			</span>
+			<div class="fixed"></div>
+			
+		</div>
+	</div>
+	<!-- header END -->
+
+	<!-- content START -->
+	<div id="content">
+
+		<!-- main START -->
+		<div id="main">
+		{% block content %}{% endblock %}
+		</div>
+		<!-- main END -->
+
+		<!-- sidebar START -->
+		{% include "themes/default/sidebar.html" %}
+		<!-- sidebar END -->
+		<div class="fixed"></div>
+	</div>
+	<!-- content END -->
+
+	<!-- footer START -->
+	<div id="footer">
+		<div class="content">
+			<span id="about">
+			Powered by <a href="http://www.iyouf.info">dengmin</a>|
+			Theme by <a href="http://www.neoease.com/">NeoEase</a>|
+			<a href="/sitemap.xml">Sitemap</a>|
+			<a href="/wap">WAP</a>
+			</span>
+			<a id="gotop" href="#" onclick="MGJS.goTop();return false;">Top</a>
+			<div class="fixed"></div>
+		</div>
+	</div>
+	<!-- footer END -->
+
+</div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+{% load sidebar %}
+<!-- sidebar START -->
+<div id="sidebar">
+	<!-- sidebar left -->
+	<div id="sidebar_left">
+		 
+		<!-- search box -->
+		<div class="widget s">
+				<form action="http://www.google.com/search" method="get">
+					<div id="searchbox">
+						<input class="textfield" type="text" name="q" size="24" />
+						<input name="as_sitesearch" value="{{blog.domain}}" type="hidden">
+						<input type="hidden" name="ie" value="UTF-8" />
+						<input class="button" type="submit" value="Search" />
+						<div class="tip">Search this blog</div>
+						<div class="fixed"></div>
+					</div>
+				</form>
+		</div>
+		
+		<!-- recent posts -->
+		<div class="widget widget_pages">
+			<h3>最新文章</h3>
+			{% get_recent_posts %}
+		</div>
+		
+		<div class="widget">
+			<h3 class="widget-title">热门文章</h3>
+			{% get_hot_posts %}
+		</div>
+		
+		<div class="widget">
+			<h3 class="widget-title">随机文章</h3>
+			{% get_random_posts %}
+		</div>
+		
+		<!-- recent comments -->
+			<div class="widget widget_recentcomments">
+				<h3>最新评论</h3>
+				<ul id="recent_comments">
+				{%get_recent_comment%}
+				   <div id="recentcomment_nav"></div>
+				</ul>
+			</div>
+
+	
+	
+	<!-- tag cloud -->
+		<div class="widget widget_tag_cloud">
+			<h3>标签云</h3>
+			<div>
+				{% if tags %}
+					{% for t in tags %}
+					<a title="{{ t.count }} pages" href="/tag/{{t.name|urlencode}}" style='font-size:{{ t.tagcount|add:11 }}px;'>{{t.name}}</a>
+					{%endfor%}
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="widget">
+			<h3>文章分类</h3>
+			{% get_categories %}
+		</div>
+		<div class="widget">
+			<h3>文章归档</h3>
+			{%get_archives%}
+		</div>
+		
+		<div class="widget widget_links">
+			<h3>友情链接</h3>
+			{%get_links%}
+		</div>
+	</div>
+	
+</div>
+<!-- sidebar END -->
