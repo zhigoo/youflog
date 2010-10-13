@@ -60,6 +60,7 @@ def admin_posts(request):
         entrys = all_publish
     publish_count = all_publish.count()
     all_count=all.count()
+    
     return render_response(request,"admin/posts.html",{'entrys':entrys,\
                                                        'publish_count':publish_count,
                                                        'all_count':all_count,'page':page})
@@ -101,7 +102,7 @@ def submit_post(request):
         title = request.POST['title']
         content=request.POST.get('content','')
         excerpt = request.POST.get('excerpt','')
-        category_id = request.POST.get("category")
+        category_id = request.POST.get("category",1)
         tags = request.POST.get('tags','')
         slug=request.POST.get('slug','')
         allow_comment = request.POST.get('allow_comment',False)

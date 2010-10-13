@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.views.decorators.http import require_POST
-from blog.models import Blog,Entry,Comment,Category
+from blog.models import Blog,Entry,Comment,Category,Archive
 from utils.utils import paginator,urldecode,sendmail,render
 from django.utils import simplejson
 from django.contrib.sites.models import Site
@@ -90,7 +90,7 @@ def postComment(request):
         
         comment.parent_id=parentid
         comment.save()
-        entry.updateCommentCount(1)
+        
         logging.info(comment.parent)
         #email notify
         '''if comment.parent and parentid != '0':
@@ -130,18 +130,22 @@ def tag(request,tag):
     else:
         return HttpResponseRedirect('404.html')
     
-def category(request,slug):
+def category(request,name):
     try:
-        if slug:
-            cat = Category.objects.get(slug=slug)
+        if name:
+            cat = Category.objects.get(slug=name)
+            logging.info(cat)
             page=request.GET.get('page',1)
-            entry = Entry.objects.filter(categories__contains=cat.id)
-            entries = paginator(entry,g_blog.posts_per_page,page)
-            return render(request,'category.html',{'entries':entries,'category':cat})
+            entries=Entry.objects.get_posts().filter(category=cat)
+            return render(request,'category.html',{'entries':entries,'category':cat,'page':page})
     except:
-        pass
-        #return HttpResponseRedirect('404.html')
+        return HttpResponseRedirect('404.html')
 
+
+def archives(request,year,month):
+    page=request.GET.get('page',1)
+    entries=Entry.objects.get_post_by_date(year,month)
+    return render(request,'archives.html',{'entries':entries,'page':page,'year':year,'month':month})
 
 class CommentPostBadRequest(http.HttpResponseBadRequest):
    

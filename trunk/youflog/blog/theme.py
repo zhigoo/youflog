@@ -26,6 +26,6 @@ class ThemeIterator:
             self.cursor += 1
             p=os.path.join(self.theme_path,value)
             #判断是否是一个目录
-            if os.path.isdir(p):
+            if value!='.svn' and os.path.isdir(p):
                 self.list.append(value)
                 return value

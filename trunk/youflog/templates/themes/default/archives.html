@@ -1,11 +1,11 @@
 {% extends "themes/default/base.html" %}
 {%load pagination %}
-{% block title %} {{category.name|escape}} - {{blog.title|escape}} {% endblock %}
+{% block title %} archives for {{year}}-{{month}} - {{blog.title|escape}} {% endblock %}
 
 {% block content %}
 
 	<div class="post">
-		<h3 class="title">Category</h3>
+		<h3 class="title">Archives</h3>
 		<div class="content">
 			<ul id="archive">
 				{% if entries %}
@@ -44,7 +44,7 @@
 		<div class="meta">
 			
 			<div class="info">
-				Archive for the ‘{{category.name}}’ Category 
+				Archive for the ‘{{year}}-{{month}}’ 
 			</div>
 			<div class="fixed"></div>
 		</div>

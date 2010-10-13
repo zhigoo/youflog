@@ -1,16 +1,16 @@
 {% extends "themes/google/base.html" %}
 {%load pagination%}
-{% block title %} {{category.name}} - {{blog.title|escape}} {% endblock %}
+{% block title %} Archives for {{year}}-{{month}} - {{blog.title|escape}} {% endblock %}
 
 {% block content %}
 	<div id="content" class="narrowcolumn">
 
-		<h2 class="pagetitle">Archive for {{category.name}}</h2>
+		<h2 class="pagetitle">Archive for {{year}}-{{month}}</h2>
 		{% if entries %}
 		{%begin_pagination entries page%}
 		{% for entry in entries %}
 		<div class="post">
-				<h2 id="post-{{entry.id}}"><a href="{{entry.link}}" rel="bookmark" title="Permanent Link to {{entry.title}}">{{entry.title}}</a></h2>
+				<h2 id="post-{{entry.id}}"><a href="/{{entry.get_absolute_url}}" rel="bookmark" title="Permanent Link to {{entry.title}}">{{entry.title}}</a></h2>
 				<br/>
 				<div class="entry">
 					{{entry.content|safe}}

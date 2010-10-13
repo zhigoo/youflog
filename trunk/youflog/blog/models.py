@@ -19,7 +19,10 @@ class Archive(models.Model):
     
     def __unicode__(self):
         return self.monthyear
-
+    
+    def get_absolute_url(self):
+        return 'archives/%s/%s'%(self.year,self.month)
+    
 class Blog(models.Model):
     author = models.CharField('admin',default='admin',max_length=20)
     description = models.TextField();
@@ -85,7 +88,6 @@ class Entry(models.Model):
     #允许评论
     allow_comment = models.BooleanField()
     allow_pingback = models.BooleanField()
-    commentcount = models.IntegerField(default=0)
     menu_order=models.IntegerField(default=0)
     #文章置顶
     sticky=models.BooleanField(default=False)
@@ -124,14 +126,6 @@ class Entry(models.Model):
     def get_tags(self):
         return Tag.objects.get_for_object(self)
     
-    def cates(self):
-        categories=eval(self.categories)
-        cate=[]
-        for id in categories:
-            c = Category.objects.get(id=id)
-            cate.append(c)
-        return cate
-    
     def fullurl(self):
         '''返回文章的绝对路径'''
         url=Site.objects.get_current().domain+"/"+self.link
@@ -139,10 +133,6 @@ class Entry(models.Model):
     
     def updateReadtimes (self):
         self.readtimes += 1
-        super(Entry,self).save()
-    
-    def updateCommentCount (self,count):
-        self.commentcount += count
         super(Entry,self).save()
 
     def save(self,pub):
