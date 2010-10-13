@@ -43,7 +43,6 @@ def get_archives(context):
     archives=Archive.objects.all()[:12]
     return {'archives':archives}
 
-import logging
 @register.inclusion_tag('sidebar/tags.html', takes_context = True)
 def get_tag_cloud(context):
     tags=Tag.objects.all()

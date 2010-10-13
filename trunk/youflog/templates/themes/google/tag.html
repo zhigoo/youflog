@@ -19,7 +19,7 @@
 				<p class="postmetadata">
 				<small>
 				{{entry.date|date:"Y/m/d H:i"}}&nbsp;|&nbsp;
-				posted in:<a>{{entry.category.name}}</a>|&nbsp;&nbsp;
+				posted in:<a href="/category/{{entry.category.slug}}">{{entry.category.name}}</a>|&nbsp;&nbsp;
 				Tags: {% for tag in entry.get_tags %}
 						{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
 						{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 

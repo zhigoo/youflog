@@ -535,30 +535,35 @@ a.greedlink:hover {
 	color: #333;
 }
 
-.pagenavi{clear:both;margin:15px 0;}
+.pagenavi {
+	clear: both;
+	margin: 15px 0;
+}
+
 .pagenavi span.pages {
-background-color:#FFFFFF;
-border:1px solid #000000;
-color:#000000;
-margin:2px;
-padding:2px 4px;
+	background-color: #FFFFFF;
+	border: 1px solid #000000;
+	color: #000000;
+	margin: 2px;
+	padding: 2px 4px;
 }
 
 .pagenavi span.current {
-background-color:#FFFFFF;
-border:1px solid #000000;
-color:#000000;
-font-weight:bold;
-margin:2px;
-padding:2px 4px;
+	background-color: #FFFFFF;
+	border: 1px solid #000000;
+	color: #000000;
+	font-weight: bold;
+	margin: 2px;
+	padding: 2px 4px;
 }
-.pagenavi a, .pagenavi a:link, .pagenavi a:active {
-background-color:#FFFFFF;
-border:1px solid #225588;
-color:#225588;
-margin:2px;
-padding:2px 4px;
-text-decoration:none;
+
+.pagenavi a,.pagenavi a:link,.pagenavi a:active {
+	background-color: #FFFFFF;
+	border: 1px solid #225588;
+	color: #225588;
+	margin: 2px;
+	padding: 2px 4px;
+	text-decoration: none;
 }
 
 #pagenavi,#postnavi,#commentnavi {

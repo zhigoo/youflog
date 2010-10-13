@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.views.decorators.http import require_POST
-from blog.models import Blog,Entry,Comment,Category,Archive
+from blog.models import Blog,Entry,Comment,Category
 from utils.utils import paginator,urldecode,sendmail,render
 from django.utils import simplejson
 from django.contrib.sites.models import Site
@@ -34,7 +34,6 @@ def index(request):
 def singlePost(request,slug=None):
     if slug:
         slug=urldecode(slug)
-        logging.info(slug)
         entrys=Entry.objects.filter(slug=slug)
         entry=entrys[0]
     entry.updateReadtimes()
