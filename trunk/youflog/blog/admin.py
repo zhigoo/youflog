@@ -8,6 +8,8 @@ from django.contrib.auth import authenticate, login as auth_login ,logout as aut
 from datetime import datetime
 from theme import ThemeIterator
 from blog.forms import PostForm
+from settings import MEDIA_ROOT
+from os.path import isdir, exists, dirname
 import logging
 
 #login process
@@ -395,3 +397,23 @@ def save_setting(request):
         except:
             messages.add_message(request,messages.INFO,'setting save failure!')
         return HttpResponseRedirect('/admin/settings')
+    
+@login_required 
+def media(request):
+    return render_response(request,'admin/media.html',{})
+
+from os import makedirs
+@login_required
+def upload_media(request):
+    file_obj=request.FILES.get('file',None)
+    if file_obj:
+        filename=file_obj.name
+        savepath='%s/%s'%(MEDIA_ROOT,filename.decode('utf8'))
+        dir = dirname(savepath)
+        if not isdir(dir):
+            makedirs(dir)
+        f = open(savepath, 'wb+')
+        for chunk in file_obj.chunks():
+            f.write(chunk)
+        f.close()
+    return HttpResponseRedirect('/admin/media')

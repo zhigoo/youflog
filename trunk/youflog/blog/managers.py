@@ -7,7 +7,8 @@ from django.utils.encoding import force_unicode
 class EntryPublishManager(models.Manager):
     
     def get_posts(self):
-        return super(EntryPublishManager, self).get_query_set().filter(published=True,entrytype='post').order_by('-sticky')
+        return super(EntryPublishManager, self).get_query_set().filter(published=True,entrytype='post')\
+        .order_by('-sticky').order_by('-date')
     
     def get_pages(self):
         return  self.get_query_set().filter(published=True,entrytype='page').order_by('-menu_order')

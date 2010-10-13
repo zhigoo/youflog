@@ -1,7 +1,6 @@
 import datetime
 import hashlib,urllib
 from django.db import models
-from django.conf import settings
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
@@ -156,38 +155,15 @@ class Comment(models.Model):
         return self.get_content_object_url() + (anchor_pattern % self.__dict__)
 
 
-    def get_as_text(self):
-        
-        d = {
-            'user': self.user,
-            'date': self.date,
-            'comment': self.content
-        }
-        return _('Posted by %(user)s at %(date)s\n\n%(comment)s\n\n') % d
-
 class CommentMeta(models.Model):
     name=models.CharField(max_length=200)
     value=models.TextField()
     
-    @classmethod
-    def getValue(cls,name):
-        CommentMeta.objects.filter(name=name)
-    
-    @classmethod
-    def setValue(cls,name,value):
-        CommentMeta.objects.get_or_create(name)
-        pass
-
 def on_comment_was_posted(sender, comment, request, *args, **kwargs):
-
-    if hasattr(settings, 'AKISMET_API_KEY'):
-        ak = Akismet(
-            key = settings.AKISMET_API_KEY,
-            blog_url='http://%s/' % Site.objects.get(pk=settings.SITE_ID).domain
+    ak = Akismet(
+            key = 'cda0f27f8e2f',
+            blog_url=Site.objects.get_current().domain
         )
-    else:
-        return
-
     try:
         if ak.verify_key():
             data = {
@@ -195,13 +171,13 @@ def on_comment_was_posted(sender, comment, request, *args, **kwargs):
                 'user_agent': request.META.get('HTTP_USER_AGENT', ''),
                 'referrer': request.META.get('HTTP_REFERER', ''),
                 'comment_type': 'comment',
-                'comment_author': comment.user_name.encode('utf-8'),
+                'comment_author': comment.author.encode('utf-8'),
             }
-
             if ak.comment_check(comment.content.encode('utf-8'), data=data, build_data=True):
                 comment.is_public = False
                 comment.save()
     except AkismetError:
-        comment.save()
+        #comment.save()
+        pass
 
 comment_was_posted.connect(on_comment_was_posted)

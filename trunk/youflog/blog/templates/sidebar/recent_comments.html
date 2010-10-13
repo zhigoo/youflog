@@ -5,7 +5,7 @@
 	</div>
 	<div class="rc_info">
 		<span class="author_name">
-			<a href="{{comment.entry.fullurl|escape}}#comment-{{comment.id}}" title="发表于：{{comment.entry.title|escape}}">{{comment.author}}</a>
+			<a href="/{{comment.get_absolute_url}}" title="发表于：{{comment.entry.title|escape}}">{{comment.author}}</a>
 		</span>
 	</div>
 	<div class="rc_excerpt">

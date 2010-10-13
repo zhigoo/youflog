@@ -1,7 +1,6 @@
 from django.db import models
 from django import http
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse
 from django.template import Context
 from django.template.loader import get_template
@@ -18,7 +17,7 @@ from django.contrib.sites.models import Site
 from blog.forms import CommentForm
 from django.shortcuts import get_object_or_404
 from tagging.models import Tag, TaggedItem
-
+import blog.signals as signals
 import logging
 
 g_blog=Blog.get()
@@ -55,61 +54,6 @@ def singlePostByID (request,id=None):
     entry.updateReadtimes()
     return render(request,"single.html",{'entry':entry,'comment_meta':get_comment_cookie_meta(request)})
 
-def postComment(request):
-    ua = request.META.get('HTTP_USER_AGENT','unknown')
-    ip = request.META.get('REMOTE_ADDR','127.0.0.1')
-    if request.method == 'POST':
-        author = request.POST.get('author','unknown')
-        email=request.POST.get('email','minhao123@gmail.com')
-        weburl=request.POST.get('url','http://www.iyouf.info')
-        content=request.POST.get('comment','')
-        key=request.POST.get('key',0)
-        mail_notify=request.POST.get('reply_notify_mail',False)
-        parentid=request.POST.get('parentid',0)
-        ajax = request.POST.get('ajax',0)
-        if weburl and not weburl.startswith('http://'):
-            weburl='http://'+weburl
-        
-        content_type=request.POST.get('content_type','blog.entry')
-        object_id=request.POST.get('object_id',0)
-        
-        try:
-            model=models.get_model(*content_type.split(".", 1))
-            target = model._default_manager.get(pk=object_id)
-        except ObjectDoesNotExist:
-            pass
-        
-        entry = Entry.objects.get(id=key)
-        comment =Comment(entryid=key,
-                         content_type=ContentType.objects.get_for_model(target),
-                         object_id=target._get_pk_val(),
-                         author=author,email=email,
-                         weburl=weburl,content=content,
-                         ip=ip,useragent=ua,email_notify=mail_notify)
-        
-        comment.parent_id=parentid
-        comment.save()
-        
-        logging.info(comment.parent)
-        #email notify
-        '''if comment.parent and parentid != '0':
-            old_c=comment.parent
-            domain=Site.objects.get_current().domain
-            if old_c.email_notify:
-                sendmail({'old':old_c,"comment":comment,
-                          'entry':entry,'blog':g_blog,'domain':domain},
-                          'new Comment for ' +entry.title,old_c.email)
-        '''
-        
-    if ajax:
-        t = get_template('themes/default/comment.html')
-        html = t.render(Context({'comment': comment}))
-        json = simplejson.dumps((True,html))
-        return HttpResponse(json)
-    else:
-        respurl=entry.fullurl()+'#comment-'+str(comment.id)
-        return HttpResponseRedirect(respurl)
-
 def recentComments(request,page=1):
     page=request.GET.get('page',1)
     page = int(page)
@@ -133,7 +77,6 @@ def category(request,name):
     try:
         if name:
             cat = Category.objects.get(slug=name)
-            logging.info(cat)
             page=request.GET.get('page',1)
             entries=Entry.objects.get_posts().filter(category=cat)
             return render(request,'category.html',{'entries':entries,'category':cat,'page':page})
@@ -157,8 +100,6 @@ class CommentPostBadRequest(http.HttpResponseBadRequest):
 def post_comment(request, next = None):
     
     data = request.POST.copy()
-
-    # Look up the object we're trying to comment about
     ctype = data.get("content_type")
     object_pk = data.get("object_pk")
     if ctype is None or object_pk is None:
@@ -178,15 +119,12 @@ def post_comment(request, next = None):
             "No object matching content-type %r and object PK %r exists." % \
                 (escape(ctype), escape(object_pk)))
 
-    # Construct the comment form
     form = CommentForm(target, data=data)
-    # Check security information
     if form.security_errors():
         return CommentPostBadRequest(
             "The comment form failed security verification: %s" % \
                 escape(str(form.security_errors())))
 
-    # If there are errors
     if form.errors:
         message = None
         for field in ['author', 'email', 'content', 'url']:
@@ -202,6 +140,13 @@ def post_comment(request, next = None):
 
     comment.save()
     
+    #validate comment is or not akismet
+    signals.comment_was_posted.send(
+        sender  = comment.__class__,
+        comment = comment,
+        request = request
+    )
+    
     if comment.parent_id != '0':
         old_c=comment.parent
         entry=comment.object
@@ -210,7 +155,6 @@ def post_comment(request, next = None):
             sendmail({'old':old_c,"comment":comment,
                       'entry':entry,'blog':g_blog,'domain':domain},
                       'new Comment for ' +entry.title,old_c.email)
-    
 
     response = HttpResponseRedirect('%s#comment-%d' % (target.fullurl(), comment.id))
 

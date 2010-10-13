@@ -35,9 +35,11 @@
 			</div>
 			{% if entry.tags%}
 				<div class="tags">Tags: 
-					{%for tag in entry.tagstr%}
-						<a href="/tag/{{tag|urlencode}}">{{tag}}</a>&nbsp;
-					{%endfor%}
+					{% for tag in entry.get_tags %}
+						{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+						{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+						{% endif %}
+					{% endfor %}
 				</div>
 			{%endif%}
 			<div class="fixed"></div>
@@ -63,18 +65,6 @@
 		</div>
 	</div>
 
-	<!-- related-posts start -->
-	{% if relateposts %}
-	<div class="related-posts">
-		<h3 class="title">您还可以看看这些</h3>
-		<ul class="related_post">
-		{%for post in relateposts%}
-			<li><a href="/{{post.link|escape}}">{{post.title|escape}} </a> - {{post.date|date:"Y/m/d"}}</li>
-		{%endfor%}
-		</ul>
-	</div>
-	{% endif %}	
-	<!-- related-posts end -->
 
 {% else %}
 

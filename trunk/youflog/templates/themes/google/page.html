@@ -1,4 +1,5 @@
 {% extends "themes/google/base.html" %}
+{% load utils %}
 {% block title %} {{entry.title|escape}} - {{blog.title|escape}} {% endblock %}
 {% block content %}
 	<div id="content" class="narrowcolumn">
@@ -18,6 +19,8 @@
 				</p>
 			</div>
 		</div>
+		{% var object = entry %}
+		{% include "themes/google/comments.html" %}
 		{%endif%}
 		
 	</div>

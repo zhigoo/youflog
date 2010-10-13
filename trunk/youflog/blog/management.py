@@ -12,8 +12,8 @@ def init_data(**kwargs):
     default_cate.save()
     
     entry=Entry(title='Hello World!',content='Hello World, welcome to use youflog! thank you!',tags='youflog')
-    entry.excerpt='Hello World!'
     entry.allow_comment=True
+    entry.slug=''
     entry.category=default_cate
     entry.save(True)
 

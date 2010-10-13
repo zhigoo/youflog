@@ -42,6 +42,11 @@ urlpatterns = patterns('',
     #settings
     url(r'admin/settings$',admin.settings,name='settings'), #基本设置页面
     url(r'admin/settings/save',admin.save_setting,name='save settings'), #保持设置
+    
+    #media
+    url(r'^admin/media$',admin.media,name='show all media'),
+    url(r'^admin/upload_media$',admin.upload_media),
+    
     #sitemap
     url(r'^sitemap.xml$', cache_page(sitemap_views.sitemap, 60 * 60 * 6),{'sitemaps': sitemaps}),#sitemap
     #feed

@@ -99,7 +99,7 @@ class Entry(models.Model):
     
     postname=''
     class Meta:
-        ordering= ['-id','-date']
+        ordering= ['-id']
     
     def get_absolute_url(self):
         if self.link:
@@ -112,6 +112,20 @@ class Entry(models.Model):
     
     def __unicode__(self):
         return self.title
+    
+    @property
+    def excerpt_content(self):
+        return self.__get_excerpt_content('Read More...')
+    
+    def __get_excerpt_content(self,more='Read More...'):
+        if self.excerpt:
+            return self.excerpt+' <a href="/%s">%s</a>'%(self.link,more)
+        else:
+            spl=self.content.split('<!--more-->')
+            if len(spl) > 1:
+                return spl[0]+u' <a href="/%s">%s</a>'%(self.link,more)
+            else:
+                return spl[0]
     
     #next post
     def next(self):
