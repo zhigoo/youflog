@@ -12,14 +12,6 @@ sitemaps = {
 
 urlpatterns = patterns('',
     
-    url(r'^$', views.index, name='blog_index'), #首页
-    url(r'^tag/(?P<tag>[-\w]+)',views.tag,name='find post by tag'), #查找所有包含tag的文章
-    url(r'^category/(?P<slug>[-\w]+)$',views.category,name=''), #文章分类
-    url(r'^post/(?P<id>\d+).html$',views.singlePostByID,name="single post"), #文章的详细页面
-    url(r'(?P<slug>[-\w]+).html$',views.singlePost,name='blog_single_post'), #文章的详细页面
-    url(r'^page/(?P<slug>[-\w]+)',views.singlePage,name='show page detail'),
-    url(r'^postcomment$',views.post_comment,name="post_comment"), #发表评论
-    url(r'^recentComments',views.recentComments,name="recentComments"),  #通过ajax的方式获取最新的几条评论信息
     url(r'^admin/$',admin.index,name="admin_index"), # 后台管理页面
     #post
     url(r'^admin/entrys',admin.admin_posts,name="admin_entrys"), #获取所有的文章
@@ -63,6 +55,15 @@ urlpatterns = patterns('',
     url(r'^wap$',wap.index,name='wap index'), #wap的首页
     url(r'^wap/single/(?P<id>\d+)$',wap.single,name='single post for wap'),
     url(r'^wap/category/(?P<id>\d+)$',wap.category,name='category form wap'),
+    
+    url(r'^$', views.index, name='blog_index'), #首页
+    url(r'^tag/(?P<tag>[-\w]+)',views.tag,name='find post by tag'), #查找所有包含tag的文章
+    url(r'^category/(?P<slug>[-\w]+)$',views.category,name=''), #文章分类
+    url(r'^archive/(?P<id>\d+).html$',views.singlePostByID,name="single post"), #文章的详细页面
+    url(r'^(?P<slug>[-\w]+).html$',views.singlePost,name='blog_single_post'), #文章的详细页面
+    url(r'^page/(?P<slug>[-\w]+)',views.singlePage,name='show page detail'),
+    url(r'^postcomment$',views.post_comment,name="post_comment"), #发表评论
+    url(r'^recentComments',views.recentComments,name="recentComments"),  #通过ajax的方式获取最新的几条评论信息
     
     (r'^([-\w]+)/$', views.anypage),
     

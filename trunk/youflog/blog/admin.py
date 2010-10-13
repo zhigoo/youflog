@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login ,logout as auth_logout
 from datetime import datetime
 from theme import ThemeIterator
+from blog.forms import PostForm
 import logging
 
 #login process
@@ -50,15 +51,13 @@ def admin_posts(request):
         page = int(page)
     except:
         page =1
-    all = Entry.objects.all()
-    all_publish=Entry.publish.all()
+    all = Entry.objects.all().filter(entrytype='post')
+    all_publish=Entry.objects.get_posts()
     
     if post_status =='all':
         entrys = all
-        #entrys = paginator(entrys,10,page)
     else:
         entrys = all_publish
-        #entrys = paginator(all_publish,10,page)
     publish_count = all_publish.count()
     all_count=all.count()
     return render_response(request,"admin/posts.html",{'entrys':entrys,\
@@ -67,18 +66,18 @@ def admin_posts(request):
 
 @login_required
 def admin_addpost(request):
+    postform=PostForm()
     return render_response(request,"admin/post.html",{'cats':Category.objects.all(),\
-                                                      'action':'add','entrytype':'post'})
+                                                      'action':'add','entrytype':'post','postform':postform})
 
 @login_required
 def edit_post(request,id):
     entry = Entry.objects.get(id=id)
     entrytype=request.GET.get('entrytype','post')
     def mapcategoy(cat):
-        if not entry.categories:
-            entry.categories='[]'
+        
         return {"id":cat.id,"name":cat.name,"slug":cat.slug,\
-                "select":cat.id in eval(entry.categories)}
+                "select":cat.id ==entry.category.id}
     
     cats = Category.objects.all();
     return render_response(request,"admin/post.html",\
@@ -93,7 +92,8 @@ def post_delete(request):
             entry = Entry.objects.get(id=id)
             entry.delete()
     finally:
-        return HttpResponseRedirect('/admin/entrys'); 
+        return HttpResponseRedirect('/admin/entrys')
+    
 @login_required
 def submit_post(request):
     published=False
@@ -101,7 +101,7 @@ def submit_post(request):
         title = request.POST['title']
         content=request.POST.get('content','')
         excerpt = request.POST.get('excerpt','')
-        category = request.POST.getlist("category")
+        category_id = request.POST.get("category")
         tags = request.POST.get('tags','')
         slug=request.POST.get('slug','')
         allow_comment = request.POST.get('allow_comment',False)
@@ -121,7 +121,8 @@ def submit_post(request):
         else:
             published = request.POST.get('published')=='True'
         
-        categorys = [int(c) for c in category]
+        
+        category=Category.objects.get(id=int(category_id))
         
         ctx={'action':action}
         
@@ -131,29 +132,23 @@ def submit_post(request):
         
         if action== 'add':
             entry = Entry(title=title,content=content,excerpt=excerpt,\
-                          categories=categorys,slug=slug.replace(" ","-"))
-            entry.settags(tags)
+                          category=category,slug=slug.replace(" ","-"))
+            entry.tags=tags
             entry.allow_comment=allow_comment
+            entry.allow_pingback=allow_pingback
             entry.entrytype=posttype
             entry.sticky=sticky
             if posttype and posttype =='page':
                 menu_order=request.POST.get('order',0)
-                entry.menu_order=menu_order
+                if menu_order:
+                    entry.menu_order=menu_order 
             
             entry.date=datetime.now()
             entry.save(published)
             
-            for c in categorys:
-                try:
-                    cate=Category.objects.get(id=c)
-                    cate.count += 1
-                    cate.save()
-                except:
-                    pass
-            
             def mapcategoy(cat):
                 return  {"id":cat.id,"name":cat.name,\
-                         "slug":cat.slug,"select":cat.id in categorys}
+                         "slug":cat.slug,"select":cat.id == int(category_id)}
             
             ctx.update({'action':'edit','entry':entry,\
                         'entrytype':posttype,'cats':map(mapcategoy,Category.objects.all())})
@@ -162,21 +157,22 @@ def submit_post(request):
             postid = request.POST.get('postid','')
             if postid:
                 entry = Entry.objects.get(id=postid)
-                entry.settags(tags)
+                entry.tags=tags
                 entry.title=title
                 entry.content=content
                 entry.excerpt=excerpt
                 entry.slug=slug.replace(" ","-")
                 entry.entrytype=posttype
                 entry.sticky=sticky
+                entry.category=category
+                entry.allow_pingback=allow_pingback
                 if posttype and posttype =='page':
                     menu_order=request.POST.get('order',0)
                     entry.menu_order=menu_order
                 entry.allow_comment=allow_comment
-                entry.setCategory(categorys)
                 entry.save(published)
                 def mapcategoy(cat):
-                    return  {"id":cat.id,"name":cat.name,"slug":cat.slug,"select":cat.id in categorys}
+                    return  {"id":cat.id,"name":cat.name,"slug":cat.slug,"select":cat.id == entry.category.id}
     
                 ctx.update({'action':'edit','entry':entry,\
                     'entrytype':posttype,'cats':map(mapcategoy,Category.objects.all())})
@@ -194,29 +190,25 @@ def addPage(request):
 def pages(request):
     page=request.GET.get('page',1)
     post_status = request.GET.get('post_status')
-    try:
-        page = int(page)
-    except:
-        page =1
+    
     all=Entry.objects.all().filter(entrytype='page')
     all_entrys = Entry.objects.all().filter(published = True).filter(entrytype='page')
     
     if post_status =='all':
         entrys = all
-        entrys = paginator(entrys,10,page)
     else:
-        entrys = paginator(all_entrys,10,page)
+        entrys = all_entrys
     
     return render_response(request,"admin/pages.html",\
-                           {'entrys':entrys,'publish_count':all_entrys.count(),'all_count':all.count()})
+                           {'entrys':entrys,'publish_count':all_entrys.count(),'all_count':all.count(),
+                            'page':page})
 
 @login_required
 def comments(request):
     page=request.GET.get('page',1)
     page = int(page)
-    cmts = Comment.objects.all()
-    comments = paginator(cmts,10,page)
-    return render_response(request,'admin/comments.html',{'comments':comments})
+    comments = Comment.objects.all().order_by('-date')
+    return render_response(request,'admin/comments.html',{'comments':comments,'page':page})
 
 @login_required
 def comment_delete(request):
@@ -263,12 +255,9 @@ def deleteTag(request):
 @login_required
 def categories(request):
     page=request.GET.get('page',1)
-    try:
-        page = int(page)
-    except:
-        page = 1
-    categories = paginator(Category.objects.all(),10,page)
-    return render_response(request,'admin/categories.html',{'categories':categories})
+    
+    categories = Category.objects.all()
+    return render_response(request,'admin/categories.html',{'categories':categories,'page':page})
 
 @login_required
 def addCategory(request):
@@ -299,13 +288,14 @@ def addCategory(request):
         return HttpResponseRedirect('/admin/categories')
 @login_required
 def editCategory(request,id):
+    page=request.GET.get('page',1)
     try:
         id = int(id)
         cat=Category.objects.get(id=id)
     except:
         pass
-    categories = paginator(Category.objects.all(),10,1)
-    return render_response(request,'admin/category.html',{'cat':cat,'categories':categories})
+    categories = Category.objects.all()
+    return render_response(request,'admin/category.html',{'cat':cat,'categories':categories,'page':page})
 
 @login_required
 def deleteCategory(request):
@@ -321,12 +311,8 @@ def deleteCategory(request):
     
 def links(request):
     page = request.GET.get('page',1)
-    try:
-        page = int(page)
-    except:
-        page = 1
-    links = paginator(Link.objects.all(),10,page)
-    return render_response(request,'admin/links.html',{'links':links})
+    links = Link.objects.all()
+    return render_response(request,'admin/links.html',{'links':links,'page':page})
 
 @login_required
 def addLink(request):
@@ -362,13 +348,14 @@ def deleteLink(request):
 
 @login_required
 def editlink(request,id):
+    page = request.GET.get('page',1)
     try:
         id = int(id)
         link = Link.objects.get(id=id)
     except:
         pass
-    links = paginator(Link.objects.all(),10,1)
-    return render_response(request,'admin/link.html',{'link':link,'links':links})
+    links = Link.objects.all()
+    return render_response(request,'admin/link.html',{'link':link,'links':links,'page':page})
 
 @login_required
 def settings(request):

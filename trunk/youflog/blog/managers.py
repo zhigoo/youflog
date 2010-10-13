@@ -5,14 +5,12 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import force_unicode
 
 class EntryPublishManager(models.Manager):
-    def get_query_set(self):
-        return super(EntryPublishManager, self).get_query_set()\
-            .filter(published = True).filter(entrytype='post')
-            
+    
+    def get_posts(self):
+        return super(EntryPublishManager, self).get_query_set().filter(published=True,entrytype='post').order_by('-sticky')
+    
     def get_pages(self):
-        return  super(EntryPublishManager, self).get_query_set()\
-            .filter(published = True).filter(entrytype='page').order_by('-menu_order')
-
+        return  self.get_query_set().filter(published=True,entrytype='page').order_by('-menu_order')
 
 class CommentManager(models.Manager):
 

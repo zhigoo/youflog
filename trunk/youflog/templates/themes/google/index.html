@@ -1,8 +1,10 @@
 {% extends "themes/google/base.html" %}
+{% load pagination %}
 {% block content %}
 <div id="content" class="narrowcolumn">
-	{% if entries.object_list %}
-		{% for entry in entries.object_list %}
+	{% if entries %}
+	{% begin_pagination entries page %}
+		{% for entry in entries %}
 			<div class="post" id="post-{{entry.id}}">
 				<h2><a href="{{entry.link|escape}}" rel="bookmark" title="Permanent Link to {{entry.title}}">{{entry.title}}</a></h2>
 				<br/>
@@ -11,32 +13,20 @@
 				</div>
 
 				<p class="postmetadata">
-				<small>{{entry.date|date:"Y/m/d H:i"}}&nbsp|&nbsp
-				{%if entry.cates%}
-				Posted in: {%for c in entry.cates%}
-				<a href="/category/{{c.slug}}">{{c.name}}</a>&nbsp;
-				{%endfor%}
-				{%endif%}
-				Tags: {%for tag in entry.tagstr%}
-					<a href="/tag/{{tag|urlencode}}">{{tag}}</a>&nbsp;
-					{% endfor %} | <a href="/{{entry.link|escape}}#comments">
-					Comment:{{entry.comments.count}}</a>
+				<small>{{entry.date|date:"Y/m/d H:i"}}&nbsp;|&nbsp;
+				posted in:<a>{{entry.category.name}}</a>|&nbsp;&nbsp;
+				Tags: {% for tag in entry.get_tags %}
+						{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+						{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+						{% endif %}
+					{% endfor %} 
+					|&nbsp;&nbsp;Comments:
+					<a href="/{{entry.link|escape}}#comments">{{entry.comments.count}}</a>
 					</small></p>
 			</div>
 		{% endfor %}
 
-		<div class="navigation">
-			{% if entries.has_previous %}
-			<div class="alignleft">
-			<a href="?page={{ entries.previous_page_number }}">&laquo; Older Entries</a>
-			</div>
-			{%endif%}
-			{% if entries.has_next %}
-			<div class="alignright">
-				<a href="?page={{ entries.next_page_number }}">&laquo; Newer Entries</a>
-			</div>
-			{%endif%}
-		</div>
+		{% end_pagination %}
 
 	{% else %}
 

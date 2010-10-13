@@ -1,0 +1,7 @@
+<div>
+	{% if tags %}
+		{% for tag in tags %}
+		<a title="{{ tag.count }}" href="{{tag.get_absolute_url}}" style='font-size:12px;'>{{tag.name}}</a>
+		{%endfor%}
+	{% endif %}
+</div>

@@ -16,6 +16,8 @@ from utils.utils import paginator,urldecode,sendmail,render
 from django.utils import simplejson
 from django.contrib.sites.models import Site
 from blog.forms import CommentForm
+from django.shortcuts import get_object_or_404
+from tagging.models import Tag, TaggedItem
 
 import logging
 
@@ -26,12 +28,13 @@ def get_comment_cookie_meta(request):
 
 def index(request):
     page=request.GET.get('page',1)
-    entries = Entry.publish.all().order_by('-sticky')
+    entries = Entry.objects.get_posts()
     return render(request,'index.html',{'entries':entries,'ishome':True,'page':page})
 
 def singlePost(request,slug=None):
     if slug:
-        slug=urldecode(slug)    
+        slug=urldecode(slug)
+        logging.info(slug)
         entrys=Entry.objects.filter(slug=slug)
         entry=entrys[0]
     entry.updateReadtimes()
@@ -49,7 +52,7 @@ def singlePage(request,slug=None):
 
 
 def singlePostByID (request,id=None):
-    entry=Entry.publish.get(id=id)
+    entry=Entry.objects.get(id=id)
     entry.updateReadtimes()
     return render(request,"single.html",{'entry':entry,'comment_meta':get_comment_cookie_meta(request)})
 
@@ -77,7 +80,7 @@ def postComment(request):
         except ObjectDoesNotExist:
             pass
         
-        entry = Entry.publish.get(id=key)
+        entry = Entry.objects.get(id=key)
         comment =Comment(entryid=key,
                          content_type=ContentType.objects.get_for_model(target),
                          object_id=target._get_pk_val(),
@@ -121,9 +124,9 @@ def recentComments(request,page=1):
 def tag(request,tag):
     if tag:
         page=request.GET.get('page',1)
-        etnrys = Entry.publish.filter(tags__contains=tag)
-        entries = paginator(etnrys,g_blog.posts_per_page,page)
-        return render(request,'tag.html',{'entries':entries,'tag':tag})
+        tag = get_object_or_404(Tag, name =tag)
+        entries=TaggedItem.objects.get_by_model(Entry, tag).order_by('-date')
+        return render(request,'tag.html',{'entries':entries,'tag':tag,'page':page,'pagi_path': request.path})
     else:
         return HttpResponseRedirect('404.html')
     
@@ -132,7 +135,7 @@ def category(request,slug):
         if slug:
             cat = Category.objects.get(slug=slug)
             page=request.GET.get('page',1)
-            entry = Entry.publish.filter(categories__contains=cat.id)
+            entry = Entry.objects.filter(categories__contains=cat.id)
             entries = paginator(entry,g_blog.posts_per_page,page)
             return render(request,'category.html',{'entries':entries,'category':cat})
     except:

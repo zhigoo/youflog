@@ -13,7 +13,7 @@ class LatestEntryFeed(Feed):
     author="minhao123@gmail.com"
 
     def items(self):
-        return Entry.publish.order_by('-date')[:10]
+        return Entry.objects.get_posts().order_by('-date')[:10]
 
     def item_title(self, item):
         return item.title
@@ -53,7 +53,7 @@ class PostSitemap(Sitemap):
     changefreq = "daily"
     priority = 0.9
     def items(self):
-        return Entry.publish.all()
+        return Entry.objects.get_posts()
 
     def lastmod(self, obj):
         return obj.date

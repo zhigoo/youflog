@@ -165,6 +165,19 @@ class Comment(models.Model):
         }
         return _('Posted by %(user)s at %(date)s\n\n%(comment)s\n\n') % d
 
+class CommentMeta(models.Model):
+    name=models.CharField(max_length=200)
+    value=models.TextField()
+    
+    @classmethod
+    def getValue(cls,name):
+        CommentMeta.objects.filter(name=name)
+    
+    @classmethod
+    def setValue(cls,name,value):
+        CommentMeta.objects.get_or_create(name)
+        pass
+
 def on_comment_was_posted(sender, comment, request, *args, **kwargs):
 
     if hasattr(settings, 'AKISMET_API_KEY'):

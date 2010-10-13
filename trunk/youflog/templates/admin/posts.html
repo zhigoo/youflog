@@ -65,6 +65,7 @@
               		{%else%}
               		<a target="_self" href="/admin/editpost/{{entry.id}}" title="Edit &quot;{{entry.title}}&quot;" class="row-title">{{entry.title}}</a>
               		{%endif%}
+              		{%if entry.sticky%}[置顶]{%endif%}
               	</strong>
               </td>
               <td>{{entry.date|date:"Y-m-d"}}</td>
@@ -83,6 +84,8 @@
 			</tbody>
 		</table>
  	</form>
+ 	{%if entrys%}
  	{% end_pagination %}
+ 	{%endif%}
 </div>
 {%endblock%}

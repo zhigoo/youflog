@@ -30,12 +30,15 @@
 				{{entry.date|date:"Y/m/d H:i"}}
 			</div>
 			
+				{%if entry.get_tags%}
 				<div class="tags">Tags: 
-					{%for tag in entry.tagstr%}
-					<a href="/tag/{{tag|urlencode}}">{{tag}}</a>&nbsp;
+					{% for tag in entry.get_tags %}
+						{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+						{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+						{% endif %}
 					{% endfor %}
 				</div>
-			
+			 {%endif%}
 			<div class="fixed"></div>
 		</div>
 	</div>

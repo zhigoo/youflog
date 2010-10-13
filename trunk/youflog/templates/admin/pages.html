@@ -1,4 +1,5 @@
 {% extends "admin/base.html" %}
+{%load pagination%}
 {% block content %}
 <div class="wrap">
  	<h2>编辑页面</h2>
@@ -49,8 +50,9 @@
 				<th>状态</th><th>允许评论</th></tr>
 			</tfoot>
 			<tbody>
-         {%if entrys.object_list%}
-         {%for entry in entrys.object_list%}
+         {%if entrys%}
+         {%begin_pagination entrys page %}
+         {%for entry in entrys%}
 		<tr valign="middle" id="link-474002">
 			<th scope="row" class="check-column">
 				<input type="checkbox" name="checks" value="{{entry.id}}">
@@ -82,16 +84,9 @@
 		</table>
  	</form>
  	 <!-- pagenavi start -->
- 	 {%if entrys.object_list%}
-		  <div id="commentsnavi" style="font-size: 14px;">
-		  		{% if entrys.has_previous %}
-		            <a href="?page={{ entrys.previous_page_number }}">&laquo;上一页</a>
-		        {% endif %}
-		         {% if entrys.has_next %}
-		            <a href="?page={{ entrys.next_page_number }}">下一页&raquo;</a>
-		        {% endif %}
-		   </div>
-		   {%endif%}
+ 	 {%if entrys%}
+		  {%end_pagination%}
+	{%endif%}
 		<!-- pagenavi end -->
 </div>
 {%endblock%}

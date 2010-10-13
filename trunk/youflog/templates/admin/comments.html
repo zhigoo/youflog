@@ -1,4 +1,5 @@
 {% extends "admin/base.html" %}
+{% load pagination %}
 {% block content %}
 <div class="wrap">
  	<h2>编辑评论</h2>
@@ -29,8 +30,9 @@
 				<th>文章</th>
 			</tfoot>
 			<tbody>
-         {%if comments.object_list%}
-	         {%for comment in comments.object_list%}
+         {%if comments%}
+         	{% begin_pagination comments page %}
+	         {%for comment in comments%}
 			 <tr valign="middle" id="link-{{comment.id}}">
 				<th scope="row" class="check-column">
 					<input type="checkbox" name="checks" value="{{comment.id}}">
@@ -63,17 +65,10 @@
 			</tbody>
 		</table>
  	</form>
+ 	{%if comments%}
  	 <!-- pagenavi start -->
- 	 	{% if comments.object_list%}
-		  <div id="commentsnavi">
-		  		{% if comments.has_previous %}
-		            <a href="/admin/comments?page={{ comments.previous_page_number }}">上一页</a>
-		        {% endif %}
-		        {% if comments.has_next %}
-		            <a href="/admin/comments?page={{ comments.next_page_number }}">下一页</a>
-		        {% endif %}
-		   </div>
-		   {%endif%}
+ 	 	{% end_pagination %}
 		<!-- pagenavi end -->
+	{%endif%}
 </div>
 {%endblock%}

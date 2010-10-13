@@ -59,3 +59,15 @@ class CommentForm(forms.Form):
     def clean_comment(self):
         content = self.cleaned_data["content"]
         return content
+
+class PostForm(forms.Form):
+    title= forms.CharField(max_length=200)
+    content = forms.CharField(widget=forms.Textarea)
+    excerpt = forms.CharField(widget=forms.Textarea)
+    published=forms.BooleanField(initial = False, required = False)
+    tags=forms.CharField(max_length=200)
+    slug=forms.CharField(max_length=200)
+    allow_comment=forms.BooleanField(initial=True,required = False)
+    menu_order=forms.IntegerField()
+    sticky=forms.BooleanField()
+    

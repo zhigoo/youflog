@@ -2,24 +2,25 @@ from django.template import Library
 import hashlib,urllib
 from blog.models import Entry,Comment,Category,Link,Archive
 from settings import DATABASE_ENGINE
+from tagging.models import Tag
 register = Library()
 
 @register.inclusion_tag('sidebar/recent_posts.html', takes_context = True)
 def get_recent_posts(context):
-    entrys=Entry.publish.all()[:8]
+    entrys=Entry.objects.get_posts()[:8]
     return {'recentposts':entrys}
 
 @register.inclusion_tag('sidebar/hot_posts.html', takes_context = True)
 def get_hot_posts(context):
-    entrys=Entry.publish.order_by('-readtimes')[:8]
+    entrys=Entry.objects.get_posts().order_by('-readtimes')[:8]
     return {'hotposts':entrys}
 
 @register.inclusion_tag('sidebar/random_posts.html', takes_context = True)
 def get_random_posts(context):
     if DATABASE_ENGINE == 'sqlite3' :
-        entrys = Entry.publish.raw("select * from blog_entry where entrytype='post' order by random() limit 8")
+        entrys = Entry.objects.raw("select * from blog_entry where published=1 and entrytype='post' order by random() limit 8")
     elif DATABASE_ENGINE == 'mysql':
-        entrys = Entry.publish.raw("select * from blog_entry where entrytype='post' order by rand() limit 8")
+        entrys = Entry.objects.raw("select * from blog_entry where published=1 and entrytype='post' order by rand() limit 8")
     return {'randomposts':entrys}
 
 @register.inclusion_tag('sidebar/recent_comments.html', takes_context = True)
@@ -43,6 +44,12 @@ def get_archives(context):
     return {'archives':archives}
 
 import logging
+@register.inclusion_tag('sidebar/tags.html', takes_context = True)
+def get_tag_cloud(context):
+    tags=Tag.objects.all()
+    
+    return {'tags':tags}
+
 @register.inclusion_tag('readwall.html', takes_context = True)
 def get_reader_wall(context):
     sql="select count(email) as count,author,email,weburl  from comments_comment group by author order by count desc limit 12"

@@ -1,4 +1,5 @@
 {%extends "admin/base.html"%}
+{% load pagination %}
 {%block content%}
 <div class="wrap">
 	<h2>添加链接</h2>
@@ -71,8 +72,9 @@
 			</tfoot>
 
 			<tbody id="the-list" class="list:tag">
-				{%if links.object_list%}
-				{%for link in links.object_list%}
+				{%if links%}
+				{% begin_pagination links page %}
+				{%for link in links%}
 				<tr id="tag-{{link.id}}" class="iedit alternate">
 				<th scope="row" class="check-column"> 
 				<input name="checks" value="{{link.id}}" type="checkbox"></th>
@@ -94,18 +96,9 @@
 				{%endif%}
 			</tbody>
 </table>
-
-	<div class="tablenav">
-		{%if links.object_list%}
-		<div class="pagenav">
-			{%if links.has_previous%}
-			<a href="?page={{links.previous_page_number}}">上一页</a>
-			{%endif%}
-			{%if links.has_next%}<a href="?page={{links.next_page_number}}">下一页</a>{%endif%}
-		</div>
-		{%endif%}
-	</div>
-
+{%if links%}
+	{%end_pagination%}
+{%endif%}
 <br class="clear">
 </form>
 </div>

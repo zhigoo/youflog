@@ -131,8 +131,7 @@ padding:2px 8px 0 0;
 #lpcontent select {
 border-style:solid;
 border-width:1px;
-font:11px/20px "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
-height:2.3em;
+font:13px/20px "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
 padding:2px;
 vertical-align:top;
 }
@@ -286,6 +285,7 @@ border-color:#298CBA !important;
 color:#FFFFFF !important;
 font-weight:bold;
 }
+#categories{width:100%;overflow: scroll;height:120px;}
 #content{-moz-box-sizing:border-box;
 border:0 none;
 line-height:100%;

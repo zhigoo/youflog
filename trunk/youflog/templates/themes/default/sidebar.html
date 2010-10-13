@@ -17,7 +17,10 @@
 					</div>
 				</form>
 		</div>
-		
+		<div class="widget">
+			<h3>读者墙</h3>
+			{% get_reader_wall %}
+		</div>
 		<!-- recent posts -->
 		<div class="widget widget_pages">
 			<h3>最新文章</h3>
@@ -48,13 +51,7 @@
 	<!-- tag cloud -->
 		<div class="widget widget_tag_cloud">
 			<h3>标签云</h3>
-			<div>
-				{% if tags %}
-					{% for t in tags %}
-					<a title="{{ t.count }} pages" href="/tag/{{t.name|urlencode}}" style='font-size:{{ t.tagcount|add:11 }}px;'>{{t.name}}</a>
-					{%endfor%}
-				{% endif %}
-			</div>
+			{% get_tag_cloud %}
 		</div>
 
 		<div class="widget">

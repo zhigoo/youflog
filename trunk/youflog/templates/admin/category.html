@@ -1,4 +1,5 @@
 {%extends "admin/base.html"%}
+{%load pagination%}
 {%block content%}
 <div class="wrap">
 	<h2>分类目录</h2>
@@ -72,8 +73,9 @@
 			</tfoot>
 
 			<tbody id="the-list" class="list:tag">
-				{%if categories.object_list%}
-				{%for cat in categories.object_list%}
+				{%if categories%}
+				{%begin_pagination categories page%}
+				{%for cat in categories%}
 				<tr id="tag-{{cat.id}}" class="iedit alternate">
 				<th scope="row" class="check-column"> 
 				<input name="checks" value="{{cat.id}}" type="checkbox"></th>
@@ -95,13 +97,8 @@
 </table>
 
 	<div class="tablenav">
-		{%if categories.object_list%}
-		<div class="pagenav">
-			{%if categories.has_previous%}
-			<a href="/admin/categories?page={{categories.previous_page_number}}">上一页</a>
-			{%endif%}
-			{%if categories.has_next%}<a href="/admin/categories?page={{categories.next_page_number}}">下一页</a>{%endif%}
-		</div>
+		{%if categories%}
+		{%end_pagination%}
 		{%endif%}
 	</div>
 

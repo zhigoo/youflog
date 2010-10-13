@@ -32,15 +32,11 @@
 						<h3 class="hndle"><span>目录</span></h3>
 						<div id="allcategorys">
 						{%if cats%}
-							<ul class="categorychecklist">
+							<select id='categories' name="category" multiple="multiple">
 								{%for cat in cats%}
-								<li>
-									<b>
-									<input type="checkbox" name="category" value="{{cat.id}}" {%if cat.select %}checked="checked"{%endif%}>{{cat.name}}
-									</b>
-								</li>
-								{%endfor%}	
-							</ul>
+								<option value="{{cat.id}}" {%if cat.select %}selected="selected"{%endif%}>{{cat.name}}</option>
+								{%endfor%}
+							</select>
 							{%else%}
 							还没有分类目录,<a href="/admin/categories">添加</a>一个
 							{%endif%}
