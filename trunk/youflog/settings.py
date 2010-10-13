@@ -102,6 +102,7 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'blog',
     'blog.comments',
+    'tagging',
 )
 
 EMAIL_USE_TLS = True
