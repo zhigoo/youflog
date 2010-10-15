@@ -63,7 +63,7 @@ class Comment(models.Model):
         try:
             imgurl = "http://www.gravatar.com/avatar/"
             imgurl +=hashlib.md5(self.email.lower()).hexdigest()+"?"+ urllib.urlencode({
-                'd':'identicon', 's':str(50),'r':'G'})
+                'd':'monsterid', 's':str(50),'r':'G'})
             return imgurl
         except:
             return default

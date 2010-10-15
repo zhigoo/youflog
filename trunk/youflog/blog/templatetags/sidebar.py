@@ -11,7 +11,7 @@ def get_recent_posts(context):
     return {'recentposts':entrys}
 
 @register.inclusion_tag('sidebar/hot_posts.html', takes_context = True)
-def get_hot_posts(context):
+def get_popular_posts(context):
     entrys=Entry.objects.get_posts().order_by('-readtimes')[:8]
     return {'hotposts':entrys}
 

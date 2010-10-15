@@ -65,7 +65,20 @@
 		</div>
 	</div>
 
-
+	
+	<!-- related-posts start -->
+	{% if entry.relateposts %}
+	<div class="related-posts">
+		<h3 class="title">您还可以看看这些</h3>
+		<ul class="related_post">
+		{%for post in entry.relateposts%}
+			<li><a href="/{{post.get_absolute_url|escape}}">{{post.title|escape}} </a> - {{post.date|date:"Y/m/d"}} - 评论({{post.comments.count}})</li>
+		{%endfor%}
+		</ul>
+	</div>
+	{% endif %}	
+	<!-- related-posts end -->
+	
 {% else %}
 
 	<div class="block">

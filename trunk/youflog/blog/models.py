@@ -3,10 +3,11 @@
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.sites.models import Site
+from django.shortcuts import get_object_or_404
 from tagging.fields import TagField
 from datetime import datetime
 from blog.comments.models import Comment
-from tagging.models import Tag
+from tagging.models import Tag,TaggedItem
 from blog.managers import EntryPublishManager
 import logging
 
@@ -125,12 +126,12 @@ class Entry(models.Model):
     
     #next post
     def next(self):
-        next = Entry.objects.raw("select * from blog_entry where entrytype='post' and id > %s limit 1"%(str(self.id)))
+        next = Entry.objects.filter(published=True,entrytype='post',date__gt=self.date)
         return next[:1]
 
     #prev post
     def prev(self):
-        prev = Entry.objects.raw("select * from blog_entry where entrytype='post' and id < %s order by date desc limit 1"%(str(self.id)))
+        prev = Entry.objects.filter(published=True,entrytype='post',date__lt=self.date)
         return prev[:1]
 
     def get_tags(self):
@@ -143,7 +144,18 @@ class Entry(models.Model):
     def updateReadtimes (self):
         self.readtimes += 1
         super(Entry,self).save()
-
+    
+    '''相关文章'''
+    def relateposts(self):
+        posts=[]
+        for tag in self.get_tags():
+            entrys=TaggedItem.objects.get_by_model(self, tag).order_by('-date')
+            posts.extend(entrys)
+        #去掉自己和重复的文章
+        posts.remove(self)
+        posts=set(posts)
+        return list(posts)[:5]
+    
     def save(self,pub):
         self.date=datetime.now()
         g_blog = Blog.get()

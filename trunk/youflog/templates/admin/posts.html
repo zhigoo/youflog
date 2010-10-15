@@ -71,7 +71,7 @@
               <td>{{entry.date|date:"Y-m-d"}}</td>
               
               <td>{{entry.readtimes}}</td>
-              <td scope="col" class="num">{{entry.commentcount}}</td>
+              <td scope="col" class="num">{{entry.comments.count}}</td>
               <td>{%if entry.published%}发布{%else%}未发布{%endif%}</td>
               <td>{%if entry.allow_comment%}Yes{%else%}No{%endif%}</td>
 		</tr>
