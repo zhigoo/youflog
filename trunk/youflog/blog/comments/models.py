@@ -6,11 +6,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
 from blog.managers import CommentManager
-from blog.signals import comment_was_posted, comment_save
-
+from blog.signals import comment_was_posted
+from threading import Thread
 from blog.akismet import Akismet
 from blog.akismet import AkismetError
-
 
 class Comment(models.Model):
     
@@ -35,7 +34,6 @@ class Comment(models.Model):
     objects = CommentManager()
 
     class Meta:
-        #ordering = ('date',)
         permissions = [("can_moderate", "Can moderate comments")]
         
     def get_content_object_url(self):
@@ -56,7 +54,6 @@ class Comment(models.Model):
         if self.date is None:
             self.date = datetime.datetime.now()
         super(Comment, self).save(force_insert, force_update)
-        comment_save.send(sender = self.__class__, comment = self, object = self.object)
         
     @property
     def gravatar_url(self):
@@ -153,13 +150,9 @@ class Comment(models.Model):
 
     def get_absolute_url(self, anchor_pattern="#comment-%(id)s"):
         return self.get_content_object_url() + (anchor_pattern % self.__dict__)
-
-
-class CommentMeta(models.Model):
-    name=models.CharField(max_length=200)
-    value=models.TextField()
     
-def on_comment_was_posted(sender, comment, request, *args, **kwargs):
+    
+def validate_comment(sender, comment, request, *args, **kwargs):
     ak = Akismet(
             key = 'cda0f27f8e2f',
             blog_url=Site.objects.get_current().domain
@@ -176,8 +169,15 @@ def on_comment_was_posted(sender, comment, request, *args, **kwargs):
             if ak.comment_check(comment.content.encode('utf-8'), data=data, build_data=True):
                 comment.is_public = False
                 comment.save()
+                
+                ak.submit_spam(comment.content.encode('utf-8'), data=data, build_data=True)
+                
     except AkismetError:
         #comment.save()
         pass
+
+def on_comment_was_posted(sender,comment,request,*args,**kwargs):
+    th = Thread(target=validate_comment,args=(sender,comment,request))
+    th.start()
 
 comment_was_posted.connect(on_comment_was_posted)

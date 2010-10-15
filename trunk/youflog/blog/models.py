@@ -94,7 +94,6 @@ class Entry(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     objects=EntryPublishManager()
     
-    postname=''
     class Meta:
         ordering= ['-id']
     
@@ -139,8 +138,7 @@ class Entry(models.Model):
     
     def fullurl(self):
         '''返回文章的绝对路径'''
-        url=Site.objects.get_current().domain+"/"+self.link
-        return  url
+        return Site.objects.get_current().domain+"/"+self.link
     
     def updateReadtimes (self):
         self.readtimes += 1
@@ -213,9 +211,28 @@ class Entry(models.Model):
     
 class Link(models.Model):
     href=models.URLField()
-    text=models.CharField("text",max_length=20)
-    comment=models.CharField("comment",max_length=50,null=True, blank=True)
+    text=models.CharField(max_length=20)
+    comment=models.CharField(max_length=50,null=True, blank=True)
     createdate=models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
         return self.text
+
+class OptionSet(models.Model):
+    key=models.CharField(max_length=100)
+    value=models.TextField()
+    
+    @classmethod
+    def set(cls,k,v):
+        os,created = OptionSet.objects.get_or_create(key=k)
+        os.value=v
+        os.save()
+        return os
+    
+    @classmethod
+    def get(cls,k):
+        return OptionSet.objects.get(key=k).value
+    
+    @classmethod
+    def deloption(cls,k):
+        return OptionSet.objects.get(key=k).delete()

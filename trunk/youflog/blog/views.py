@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# *_* encoding=utf-8*_*
 from django.db import models
 from django import http
 from django.conf import settings
@@ -146,15 +148,18 @@ def post_comment(request, next = None):
         comment = comment,
         request = request
     )
-    
+    blog=Blog.get()
+    domain=Site.objects.get_current().domain
     if comment.parent_id != '0':
         old_c=comment.parent
-        entry=comment.object
-        domain=Site.objects.get_current().domain
+        emailtitle=u'您在 '+blog.title+u' 上的评论有了新的回复'
         if old_c.mail_notify:
-            sendmail({'old':old_c,"comment":comment,
-                      'entry':entry,'blog':g_blog,'domain':domain},
-                      'new Comment for ' +entry.title,old_c.email)
+            sendmail('email/reply_comment.txt',{'old':old_c,"comment":comment,
+                      'entry':comment.object,'blog':blog,'domain':domain},
+                      'new Comment for ' +comment.object.title,old_c.email)
+    else:
+        emailtitle=u'文章'+comment.object.title+u'有了新的评论'
+        sendmail('email/new_comment.txt',{'comment':comment,'entry':comment.object,'domain':domain},emailtitle,blog.email)
 
     response = HttpResponseRedirect('%s#comment-%d' % (target.fullurl(), comment.id))
 

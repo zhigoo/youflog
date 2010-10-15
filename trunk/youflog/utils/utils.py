@@ -8,7 +8,6 @@ from threading import Thread
 
 from django.template.loader import get_template
 from django.template.context import Context
-import blog.signals as signals
 from blog.models import Blog
 
 def render_response(request, *args, **kwargs):
@@ -42,20 +41,17 @@ def paginator(object_list,per_page,pagenum):
     paginator = Paginator(object_list, per_page)
     return paginator.page(pagenum)
 
-def sendmail(template_data,subject,reveivers):
-    template = get_template('email.txt')
+
+def sendmail(template,template_data,subject,reveivers):
+    template = get_template(template)
     msg = template.render(Context(template_data))
-    #send_html_email(subject,msg,reveivers)
+   
     th = Thread(target=send_html_email,args=(subject,msg,reveivers))
     th.start()
-    #signals.comment_sendEmail.send(sender=Comment,subject=subject,msg=msg,reveivers=reveivers)
 
 #发送html格式的邮件
 def send_html_email(subject,msg,reveivers,**kwargs):
-    sender = 'minhao123@gmail.com'
+    sender=Blog.get().email
     mailmsg = EmailMessage(subject,msg,sender, [reveivers])
     mailmsg.content_subtype = 'html'
     mailmsg.send(fail_silently=True)     
-
-
-signals.comment_sendEmail.connect(send_html_email)

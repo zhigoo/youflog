@@ -8,6 +8,8 @@
 
 <title>{% block title %} {{ blog.title|escape}}{% endblock %}</title>
 <link rel="shortcut icon" href="/static/favicon.ico" />
+<meta name="description" content="{{blog.sitedescription}}" />
+<meta name="Keywords" content="{{blog.sitekeywords}}" />
 <link rel="stylesheet" href="/static/themes/google/style.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="/static/themes/google/rtl.css" type="text/css" media="screen" />
 <link rel="alternate" type="application/rss+xml" title="{{blog.title}} RSS Feed" href="/feed" />

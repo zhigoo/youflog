@@ -9,7 +9,7 @@ def init_data(**kwargs):
     link=Link(text="dengmin's blog",href="http://www.iyouf.info")
     link.save()
     
-    default_cate=Category(name=u'未分类',slug='default')
+    default_cate=Category(name=u'未分类',slug='default',desc=u'未分类')
     default_cate.save()
     
     entry=Entry(title='Hello World!',content='Hello World, welcome to use youflog! thank you!',tags='youflog')

@@ -386,7 +386,7 @@ def save_setting(request):
             site = Site.objects.get_current()
             site.domain=domain
             site.name=blog.title
-            #site.save()
+            site.save()
             messages.add_message(request,messages.INFO,'setting save ok!')
         except:
             messages.add_message(request,messages.INFO,'setting save failure!')
