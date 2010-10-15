@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext_lazy as _
 from models import Comment
+from models import Blog
 
 MAX_TAG_LENGTH = getattr(settings, 'MAX_TAG_LENGTH', 50)
 
@@ -60,14 +61,44 @@ class CommentForm(forms.Form):
         content = self.cleaned_data["content"]
         return content
 
-class PostForm(forms.Form):
-    title= forms.CharField(max_length=200)
-    content = forms.CharField(widget=forms.Textarea)
-    excerpt = forms.CharField(widget=forms.Textarea)
-    published=forms.BooleanField(initial = False, required = False)
-    tags=forms.CharField(max_length=200)
-    slug=forms.CharField(max_length=200)
-    allow_comment=forms.BooleanField(initial=True,required = False)
-    menu_order=forms.IntegerField()
-    sticky=forms.BooleanField()
+class SettingForm(forms.Form):
+    title= forms.CharField(max_length=200,initial = False, required = False)
+    subtitle = forms.CharField(max_length=200,required = False)
+    blognotice = forms.CharField(widget=forms.Textarea(attrs={'rows':2,'cols':10}),required = False)
+    sitekeywords=forms.CharField(max_length=200,required = False)
+    sitedescription=forms.CharField(max_length=200,required = False)
+    email=forms.EmailField(required = False)
+    #theme=forms.ChoiceField()
+    
+    def __init__(self, data=None, initial=None):
+       
+        if initial is None:
+            initial = {}
+        initial.update(self.generate_initial_data())
+        super(SettingForm, self).__init__(data=data, initial=initial)
+    
+    def get_form_object(self):
+        if not self.is_valid():
+            raise ValueError("valid forms")
+        blog = Blog.get()
+        blog.title=self.cleaned_data['title']
+        blog.subtitle=self.cleaned_data['subtitle']
+        blog.blognotice=self.cleaned_data['blognotice']
+        blog.sitekeywords=self.cleaned_data['sitekeywords']
+        blog.sitedescription=self.cleaned_data['sitedescription']
+        blog.email=self.cleaned_data['email']
+            
+        return blog
+     
+    def generate_initial_data(self):
+        blog=Blog.get()
+        dict={
+             'title':blog.title,
+             'subtitle':blog.subtitle,
+             'blognotice':blog.blognotice,
+             'sitekeywords':blog.sitekeywords,
+             'sitedescription':blog.sitedescription,
+             'email':blog.email 
+        }
+        return dict
     

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.sitemaps import views as sitemap_views
 from django.views.decorators.cache import cache_page
 from blog import views,admin,feed_sitemap,wap
+from blog import xmlrpc
 
 sitemaps = {
     'posts': feed_sitemap.PostSitemap(),
@@ -70,7 +71,7 @@ urlpatterns = patterns('',
     url(r'^postcomment$',views.post_comment,name="post_comment"), #发表评论
     url(r'^recentComments',views.recentComments,name="recentComments"),  #通过ajax的方式获取最新的几条评论信息
     url(r'^archives/(?P<year>\d{4})/(?P<month>\d{1,2})/$', views.archives),
-    
+    url(r'^xmlrpc$',xmlrpc.rpc),
     (r'^([-\w]+)/$', views.anypage),
     
 )

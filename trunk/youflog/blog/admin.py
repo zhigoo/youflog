@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login ,logout as auth_logout
 from datetime import datetime
 from theme import ThemeIterator
-from blog.forms import PostForm
+from blog.forms import SettingForm
 from settings import MEDIA_ROOT
 from os.path import isdir, exists, dirname
 import logging
@@ -69,9 +69,8 @@ def admin_posts(request):
 
 @login_required
 def admin_addpost(request):
-    postform=PostForm()
     return render_response(request,"admin/post.html",{'cats':Category.objects.all(),\
-                                                      'action':'add','entrytype':'post','postform':postform})
+                                                      'action':'add','entrytype':'post'})
 
 @login_required
 def edit_post(request,id):
@@ -365,34 +364,29 @@ def settings(request):
     themeIter=ThemeIterator()
     themes=[t for t in themeIter if t]
     site = Site.objects.get_current()
-    return render_response(request,'admin/settings.html',{'themes':themes,'site':site})
+    form=SettingForm()
+    return render_response(request,'admin/settings.html',{'themes':themes,'site':site,'form':form})
 
 @login_required
 def save_setting(request):
     if request.method=='POST':
-        blogtitle= request.POST.get('blogname','')
-        subtitle=request.POST.get('subtitle','')
-        blognotice = request.POST.get('blognotice','')
-        sitekeywords=request.POST.get('sitekeywords','')
-        sitedesc=request.POST.get('sitedesc','')
+        data=request.POST.copy()
+        form=SettingForm(data=data)
+        
+        blog=form.get_form_object()
+       
         theme = request.POST.get('theme','default')
         domain = request.POST.get('domain','')
         if not domain.startswith('http://'):
             domain='http://'+domain
         try:    
-            g_blog=Blog.get()
-            g_blog.title=blogtitle
-            g_blog.subtitle=subtitle
-            g_blog.blognotice=blognotice
-            g_blog.sitekeywords=sitekeywords
-            g_blog.sitedescription=sitedesc
-            g_blog.theme_name=theme
-            g_blog.save()
+            blog.theme_name=theme
+            blog.save()
             #site info
             site = Site.objects.get_current()
             site.domain=domain
-            site.name=blogtitle
-            site.save()
+            site.name=blog.title
+            #site.save()
             messages.add_message(request,messages.INFO,'setting save ok!')
         except:
             messages.add_message(request,messages.INFO,'setting save failure!')

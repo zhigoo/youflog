@@ -25,15 +25,12 @@ class Archive(models.Model):
     
 class Blog(models.Model):
     author = models.CharField('admin',default='admin',max_length=20)
-    description = models.TextField();
-    baseurl = models.URLField();
-    domain = models.URLField()
+    email=models.EmailField(default='admin@iyouf.info')
+    description = models.TextField()
     title = models.CharField(max_length=100,default='youflog')
     subtitle = models.CharField(max_length=100,default='a simple blog named youflog')
-    entrycount = models.IntegerField(default=0);
     posts_per_page = models.IntegerField(default=8)
     comments_per_page = models.IntegerField(default=10)
-    feedurl = models.URLField()
     theme_name = models.CharField(default='default',max_length=30)
     link_format=models.CharField(max_length=100,default='%(year)s/%(month)s/%(day)s/%(postname)s.html')
     blognotice = models.TextField("notice")
