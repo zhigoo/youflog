@@ -3,7 +3,6 @@
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.sites.models import Site
-from django.shortcuts import get_object_or_404
 from tagging.fields import TagField
 from datetime import datetime
 from blog.comments.models import Comment

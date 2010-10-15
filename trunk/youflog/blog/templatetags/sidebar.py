@@ -1,8 +1,10 @@
 from django.template import Library
+from django.shortcuts import get_object_or_404
 import hashlib,urllib
 from blog.models import Entry,Comment,Category,Link,Archive
 from settings import DATABASE_ENGINE
-from tagging.models import Tag
+from tagging.models import Tag, TaggedItem
+from django.db.models import Count
 register = Library()
 
 @register.inclusion_tag('sidebar/recent_posts.html', takes_context = True)
@@ -45,9 +47,13 @@ def get_archives(context):
 
 @register.inclusion_tag('sidebar/tags.html', takes_context = True)
 def get_tag_cloud(context):
-    tags=Tag.objects.all()
-    
-    return {'tags':tags}
+    #tags=Tag.objects.all()
+    tags=TaggedItem.objects.values('tag').annotate(count=Count('tag'))
+    result=[]
+    for tag in tags:
+        t=get_object_or_404(Tag,id=tag['tag'])
+        result.append({'count':tag['count'],'tag':t})
+    return {'tags':result}
 
 @register.inclusion_tag('readwall.html', takes_context = True)
 def get_reader_wall(context):
