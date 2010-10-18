@@ -67,7 +67,7 @@ def get_reader_wall(context):
     for row in rows:
         imgurl = "http://www.gravatar.com/avatar/"
         imgurl +=hashlib.md5(row[2].lower()).hexdigest()+"?"+ urllib.urlencode({
-                'd':'identicon', 's':str(50),'r':'G'})
+                'd':'monsterid', 's':str(50),'r':'G'})
         count=row[0]
         author=row[1]
         weburl=row[3]

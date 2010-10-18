@@ -10,7 +10,6 @@ class LatestEntryFeed(Feed):
     title = g_blog.title
     description = g_blog.subtitle
     link = domain
-    author="minhao123@gmail.com"
 
     def items(self):
         return Entry.objects.get_posts().order_by('-date')[:10]
@@ -30,7 +29,6 @@ class LatestEntryFeed(Feed):
 class LatestComments(Feed):
     title = g_blog.title
     description = g_blog.subtitle
-    author="minhao123@gmail.com"
     link = domain
     
     def items(self):
@@ -46,7 +44,7 @@ class LatestComments(Feed):
         return item.content
     
     def item_link(self,item):
-        return item.entry().fullurl()+'#comment-'+str(item.id)
+        return item.object.fullurl()+'#comment-'+str(item.id)
     
     
 class PostSitemap(Sitemap):
@@ -59,4 +57,4 @@ class PostSitemap(Sitemap):
         return obj.date
     
     def location(self,obj):
-        return "/"+obj.link;
+        return '/'+obj.link

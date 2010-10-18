@@ -150,8 +150,9 @@ class Entry(models.Model):
         for tag in self.get_tags():
             entrys=TaggedItem.objects.get_by_model(self, tag).order_by('-date')
             posts.extend(entrys)
-        #去掉自己和重复的文章
-        posts.remove(self)
+        
+        if self in posts:
+            posts.remove(self)
         posts=set(posts)
         return list(posts)[:5]
     
@@ -189,13 +190,20 @@ class Entry(models.Model):
         #以前没有发布且点击了发布按钮 archive数量加1
         if not old_pub and pub:
             self.update_archive(1)
-        
+    
+    def __deleteTags(self):
+        tags= self.get_tags()
+        for tag in tags:
+            tt=TaggedItem.objects.filter(tag=tag)
+            tt.delete()
+    
     def delete(self):
         '''删除文章'''
         if self.published:
             #更新archinve
             self.update_archive(-1)
         #删除该文章下的所有评论
+        #self.__deleteTags()
         self.comments.all().delete()
         super(Entry,self).delete()
 
