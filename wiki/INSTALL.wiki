@@ -11,7 +11,8 @@
 
 按照安装程序的提示信息一步步地执行。
 
-在安装完成之后，关闭安装程序，打开 开始->程序->Python 2.6->IDLE (Python GUI)。您将看到类似如下的信息：{{{
+在安装完成之后，关闭安装程序，打开 开始->程序->Python 2.6->IDLE (Python GUI)。您将看到类似如下的信息：
+{{{
 Python 2.6.5 (r254:67916, Dec 23 2008, 15:10:54) [MSC v.1310 32 bit (Intel)] on win32
 Type "copyright", "credits" or "license()" for more information.
 
