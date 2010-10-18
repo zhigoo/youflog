@@ -43,17 +43,21 @@ cd Django-1.2.3
 sudo python setup.py install
 }}}
 django 也提供了Svn 地址
-{{{svn co http://code.djangoproject.com/svn/django/trunk/}}}
+{{{
+svn co http://code.djangoproject.com/svn/django/trunk/
+}}}
 
 =安装youflog=
 从svn 中检出 youflog
-{{{svn checkout http://youflog.googlecode.com/svn/trunk/ youflog-read-only}}}
-切换到youflog目录下面建立youflog需要的数据库表
-切换到改目录 执行 python manage.py syncdb
+{{{
+svn checkout http://youflog.googlecode.com/svn/trunk/ youflog-read-only
+}}}
+切换到youflog目录下面建立youflog需要的数据库表<p/>
+切换到改目录 执行 python manage.py syncdb<p/>
 
-完成上一步之后 就可以执行 python manage.py runserver 启动了
+完成上一步之后 就可以执行 python manage.py runserver 启动了<p/>
 
-本博客系统默认使用的是sqlite数据库如果想更换成mysql或其它的数据库<br/>
+youflog博客系统默认使用的是sqlite数据库如果想更换成mysql或其它的数据库<br/>
 请编辑settings.py中的这些项<br/>
 {{{
 DATABASE_ENGINE = 'mysql'  # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
