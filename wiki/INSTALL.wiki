@@ -1,0 +1,63 @@
+#labels YOUFLOG,djangoblog
+使用python,django开发的一个博客系统
+
+[http://demo.iyouf.info demo]
+
+*环境*<br/>
+python2.5+<br/>
+django 1.2+<br/>
+sqlite3/mysql<br/>
+
+*安装*<br/>
+安装好python 和django 之后<br/>
+把下载好的youflog解压<br/>
+本博客系统默认使用的是sqlite数据库如果想更换成mysql或其它的数据库<br/>
+请编辑settings.py中的这些项<br/>
+{{{
+DATABASE_ENGINE = 'mysql'  # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = 'youflog'         # Or path to database file if using sqlite3.
+DATABASE_USER = 'root'             # Not used with sqlite3.
+DATABASE_PASSWORD = 'root'         # Not used with sqlite3.
+DATABASE_HOST = '127.0.0.1'     # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = '3306' 
+}}}
+在命令行下 切换到改目录 执行 python manage.py syncdb
+安装youflog需要的数据库表
+{{{
+Creating table auth_permission
+Creating table auth_group_permissions
+Creating table auth_group
+Creating table auth_user_user_permissions
+Creating table auth_user_groups
+Creating table auth_user
+Creating table auth_message
+Creating table django_content_type
+Creating table django_session
+Creating table django_site
+Creating table blog_archive
+Creating table blog_tag
+Creating table blog_blog
+Creating table blog_category
+Creating table blog_entry
+Creating table blog_link
+Creating table blog_comment
+
+You just installed Django's auth system, which means you don't have any superuse
+rs defined.
+Would you like to create one now? (yes/no): yes  #输入yes
+Username: root  #输入用户名
+E-mail address: minhao123@gmail.com #email
+Password:  #两次密码
+Password (again):
+Superuser created successfully.
+Installing index for auth.Permission model
+Installing index for auth.Group_permissions model
+Installing index for auth.User_user_permissions model
+Installing index for auth.User_groups model
+Installing index for auth.Message model
+Installing index for blog.Tag model
+Installing index for blog.Category model
+Installing index for blog.Comment model
+No fixtures found.
+}}}
+完成上一步之后 就可以执行 python manage.py runserver 启动了
