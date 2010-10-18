@@ -34,7 +34,19 @@ cd python-2.6.5
 ./configure
 make && make install
 }}}
-*安装*<br/>
+
+*安装django*
+从django 官方 下载最新的django 1.2.3.tar.gz [http://www.djangoproject.com/download/ django]<br/>
+然后 执行 
+{{{
+tar xzvf Django-1.2.3.tar.gz
+cd Django-1.2.3
+sudo python setup.py install
+}}}
+django 也提供了Svn 地址
+{{{svn co http://code.djangoproject.com/svn/django/trunk/}}}
+
+*安装youflog*<br/>
 安装好python 和django 之后<br/>
 把下载好的youflog解压<br/>
 本博客系统默认使用的是sqlite数据库如果想更换成mysql或其它的数据库<br/>
