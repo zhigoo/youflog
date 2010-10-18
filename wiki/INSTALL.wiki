@@ -1,9 +1,8 @@
 #labels YOUFLOG,djangoblog
-*安装python*
+=安装 Python=
 
 =下载 python= [http://www.python.org/ftp/python/ python ftp]
 
-=安装=
 ==windows下安装==
 从 http://www.python.org/ftp/python/ 选择最新的 Python Windows 安装程序，下载 .exe 安装文件。
 
@@ -35,7 +34,7 @@ cd python-2.6.5
 make && make install
 }}}
 
-*安装django*
+=安装django=
 从django 官方 下载最新的django 1.2.3.tar.gz [http://www.djangoproject.com/download/ django]<br/>
 然后 执行 
 {{{
@@ -46,9 +45,14 @@ sudo python setup.py install
 django 也提供了Svn 地址
 {{{svn co http://code.djangoproject.com/svn/django/trunk/}}}
 
-*安装youflog*<br/>
-安装好python 和django 之后<br/>
-把下载好的youflog解压<br/>
+=安装youflog=
+从svn 中检出 youflog
+{{{svn checkout http://youflog.googlecode.com/svn/trunk/ youflog-read-only}}}
+切换到youflog目录下面建立youflog需要的数据库表
+切换到改目录 执行 python manage.py syncdb
+
+完成上一步之后 就可以执行 python manage.py runserver 启动了
+
 本博客系统默认使用的是sqlite数据库如果想更换成mysql或其它的数据库<br/>
 请编辑settings.py中的这些项<br/>
 {{{
@@ -59,43 +63,3 @@ DATABASE_PASSWORD = 'root'         # Not used with sqlite3.
 DATABASE_HOST = '127.0.0.1'     # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = '3306' 
 }}}
-在命令行下 切换到改目录 执行 python manage.py syncdb
-安装youflog需要的数据库表
-{{{
-Creating table auth_permission
-Creating table auth_group_permissions
-Creating table auth_group
-Creating table auth_user_user_permissions
-Creating table auth_user_groups
-Creating table auth_user
-Creating table auth_message
-Creating table django_content_type
-Creating table django_session
-Creating table django_site
-Creating table blog_archive
-Creating table blog_tag
-Creating table blog_blog
-Creating table blog_category
-Creating table blog_entry
-Creating table blog_link
-Creating table blog_comment
-
-You just installed Django's auth system, which means you don't have any superuse
-rs defined.
-Would you like to create one now? (yes/no): yes  #输入yes
-Username: root  #输入用户名
-E-mail address: minhao123@gmail.com #email
-Password:  #两次密码
-Password (again):
-Superuser created successfully.
-Installing index for auth.Permission model
-Installing index for auth.Group_permissions model
-Installing index for auth.User_user_permissions model
-Installing index for auth.User_groups model
-Installing index for auth.Message model
-Installing index for blog.Tag model
-Installing index for blog.Category model
-Installing index for blog.Comment model
-No fixtures found.
-}}}
-完成上一步之后 就可以执行 python manage.py runserver 启动了
