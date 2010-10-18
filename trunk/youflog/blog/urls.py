@@ -25,10 +25,7 @@ urlpatterns = patterns('',
     #comment
     url(r'^admin/comments',admin.comments,name="show all comments"), #分页显示所有的评论
     url(r'^admin/comment_delete',admin.comment_delete,name="delete comment"), #批量删除评论信息
-    #tag
-    url(r'^admin/tags',admin.tags,name='show all tags'),
-    url(r'^admin/tag/add$',admin.addTag,name='add tag'),
-    url(r'^admin/tag/delete$',admin.deleteTag,name='delete tags'),
+    
     #category
     url(r'^admin/categories',admin.categories,name='show all categories'),
     url(r'^admin/category/add$',admin.addCategory,name='add category'),
@@ -41,8 +38,10 @@ urlpatterns = patterns('',
     url(r'^admin/editlink/(?P<id>\d+)$',admin.editlink,name='editor link'), #编辑连接
     url(r'^admin/link/delete$',admin.deleteLink,name='delete links'), #删除连接
     #settings
-    url(r'admin/settings$',admin.settings,name='settings'), #基本设置页面
-    url(r'admin/settings/save',admin.save_setting,name='save settings'), #保持设置
+    url(r'^admin/settings$',admin.settings,name='settings'), #基本设置页面
+    url(r'^admin/settings/save$',admin.save_setting,name='save settings'), #保持设置
+    url(r'^admin/comment_setting$',admin.setting_comment),
+    url(r'^admin/save_commentOption$',admin.save_commentOption),
     
     #media
     url(r'^admin/media$',admin.media,name='show all media'),

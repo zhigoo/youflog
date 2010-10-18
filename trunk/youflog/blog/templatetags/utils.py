@@ -1,5 +1,8 @@
+from blog.models import OptionSet
 from django import template
-from django.template import Library, Node
+from django.template import Library, Node,resolve_variable
+
+import hashlib,urllib
 
 register = Library()
 
@@ -32,3 +35,35 @@ def var(parser, token):
             "'%s' statement requires the form {% %s foo = bar %}." % (
                 args[0], args[0]))
     return VarNode(args[1], args[3])
+
+
+class gravatorNode(Node):
+    
+    def __init__(self,email):
+        self.email = email
+        self.gavatar=OptionSet.get('gavatar')
+        
+    def render(self,context):
+        email = resolve_variable(self.email,context)
+        default = '/static/images/default.png'
+        if not self.email:
+            return default
+        try:
+            
+            imgurl = "http://www.gravatar.com/avatar/"
+            imgurl +=hashlib.md5(email).hexdigest()+"?"+ urllib.urlencode({
+                'd':self.gavatar, 's':str(50),'r':'G'})
+            return imgurl
+        except:
+            return default
+        
+
+
+@register.tag
+def gravator(parser,token):
+    tokens = token.contents.split()
+    
+    if len(tokens) != 2:
+        raise template.TemplateSyntaxError("useage 'gravator email '")
+    return gravatorNode(tokens[1])
+    

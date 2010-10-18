@@ -1,5 +1,6 @@
+{%load utils%}
 <li class="alt" id="comment-{{comment.id}}">
-<img class="avatar avatar-24 photo" width="30" height="30" src="{{comment.gravatar_url}}" alt="{{comment.author}}"></img>
+<img class="avatar avatar-24 photo" width="30" height="30" src="{% gravator comment.email %}" alt="{{comment.author}}"></img>
 <cite>
 {%if comment.weburl %}
 	<a id="commentauthor-{{comment.id}}" title="{{comment.author}}" href="{{comment.weburl}}" rel="external nofollow" target="_blank">

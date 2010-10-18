@@ -1,6 +1,5 @@
 from django.template import Library
 from django.shortcuts import get_object_or_404
-import hashlib,urllib
 from blog.models import Entry,Comment,Category,Link,Archive
 from settings import DATABASE_ENGINE
 from tagging.models import Tag, TaggedItem
@@ -57,7 +56,7 @@ def get_tag_cloud(context):
 
 @register.inclusion_tag('readwall.html', takes_context = True)
 def get_reader_wall(context):
-    sql="select count(email) as count,author,email,weburl  from comments_comment group by author order by count desc limit 12"
+    sql="select count(email) as count,author,email,weburl from comments_comment group by email order by count desc limit 12"
     from django.db import connection
     cursor = connection.cursor()
     cursor.execute(sql)
@@ -65,13 +64,11 @@ def get_reader_wall(context):
     comments=[]
     
     for row in rows:
-        imgurl = "http://www.gravatar.com/avatar/"
-        imgurl +=hashlib.md5(row[2].lower()).hexdigest()+"?"+ urllib.urlencode({
-                'd':'monsterid', 's':str(50),'r':'G'})
         count=row[0]
         author=row[1]
+        email=row[2]
         weburl=row[3]
-        comment={'author':author,'gravatar_url':imgurl,'weburl':weburl,'count':str(count)}
+        comment={'author':author,'weburl':weburl,'count':str(count),'email':email}
         comments.append(comment)
-    
+        
     return {'comments':comments}

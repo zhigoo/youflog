@@ -1,6 +1,7 @@
+{% load utils %}
 <li id="comment-{{comment.id}}" class="comment">
 	<div class="header regularheader">
-		<img class="avatar avatar-24 photo" width="30" height="30" src="{{comment.gravatar_url}}"></img>
+		<img class="avatar avatar-24 photo" width="30" height="30" src="{% gravator comment.email %}"></img>
 		<div class="author with_avatar">
 			{%if comment.weburl %}
 				<a id="commentauthor-{{comment.id}}" title="{{comment.author}}" href="{{comment.weburl}}" rel="external nofollow">

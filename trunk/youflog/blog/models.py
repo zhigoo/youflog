@@ -29,8 +29,6 @@ class Blog(models.Model):
     description = models.TextField()
     title = models.CharField(max_length=100,default='youflog')
     subtitle = models.CharField(max_length=100,default='a simple blog named youflog')
-    posts_per_page = models.IntegerField(default=8)
-    comments_per_page = models.IntegerField(default=10)
     theme_name = models.CharField(default='default',max_length=30)
     link_format=models.CharField(max_length=100,default='%(year)s/%(month)s/%(day)s/%(postname)s.html')
     blognotice = models.TextField("notice")
@@ -191,19 +189,12 @@ class Entry(models.Model):
         if not old_pub and pub:
             self.update_archive(1)
     
-    def __deleteTags(self):
-        tags= self.get_tags()
-        for tag in tags:
-            tt=TaggedItem.objects.filter(tag=tag)
-            tt.delete()
-    
     def delete(self):
         '''删除文章'''
         if self.published:
             #更新archinve
             self.update_archive(-1)
         #删除该文章下的所有评论
-        #self.__deleteTags()
         self.comments.all().delete()
         super(Entry,self).delete()
 
@@ -249,8 +240,12 @@ class OptionSet(models.Model):
         return os
     
     @classmethod
-    def get(cls,k):
-        return OptionSet.objects.get(key=k).value
+    def get(cls,k,v=''):
+        try:
+            option=OptionSet.objects.get(key=k)
+        except:
+            option=OptionSet.set(k, v)
+        return option.value
     
     @classmethod
     def deloption(cls,k):

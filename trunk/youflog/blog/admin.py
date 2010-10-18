@@ -1,7 +1,8 @@
-from blog.models import Entry,Comment,Link,Category,Blog,Tag
-from utils.utils import render_response,paginator
+from blog.models import Entry,Comment,Link,Category,OptionSet
+from utils.utils import render_response
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login ,logout as auth_logout
@@ -9,7 +10,7 @@ from datetime import datetime
 from theme import ThemeIterator
 from blog.forms import SettingForm
 from settings import MEDIA_ROOT
-from os.path import isdir, exists, dirname
+from os.path import isdir, dirname
 import logging
 
 #login process
@@ -223,38 +224,6 @@ def comment_delete(request):
         return HttpResponseRedirect('/admin/comments'); 
 
 @login_required
-def tags(request):
-    page=request.GET.get('page',1)
-    try:
-        page = int(page)
-    except:
-        page = 1
-    
-    tags=paginator(Tag.objects.all(),10,page)
-    return render_response(request,'admin/tags.html',{'tags':tags})
-
-@login_required
-def addTag(request):
-    if request.method == 'POST':
-        name = request.POST['name'];
-        slug=request.POST['slug']
-        tag = Tag(name=name,slug=slug)
-        tag.save()
-        return HttpResponseRedirect('/admin/tags')
-    
-@login_required
-def deleteTag(request):
-    if request.method == 'POST':
-        action = request.POST.get('action','')
-        checks = request.POST.getlist('checks')
-        if checks or action=='delete':
-            for id in checks:
-                if id:
-                    t = Tag.objects.get(id=id)
-                    t.delete()
-        return HttpResponseRedirect('/admin/tags')           
-
-@login_required
 def categories(request):
     page=request.GET.get('page',1)
     
@@ -411,3 +380,24 @@ def upload_media(request):
             f.write(chunk)
         f.close()
     return HttpResponseRedirect('/admin/media')
+
+@login_required
+def setting_comment(request):
+    gavatar=OptionSet.get('gavatar')
+    comments_per_page=OptionSet.get('comments_per_page',10)
+    comments_notify=OptionSet.get('comments_notify',1)
+    ctx={'gavatar':gavatar,'comments_per_page':comments_per_page,'comments_notify':eval(comments_notify)}
+    return render_response(request,'admin/comment_setting.html',ctx)
+
+@login_required
+@require_POST
+def save_commentOption(request):
+    
+    data=request.POST.copy()
+    gavatar=data['gavatar']
+    comments_per_page=data['comments_per_page']
+    comments_notify=request.POST.get('comments_notify',0)
+    OptionSet.set('gavatar', gavatar)
+    OptionSet.set('comments_per_page',comments_per_page)
+    OptionSet.set('comments_notify',comments_notify)
+    return HttpResponseRedirect('/admin/comment_setting')

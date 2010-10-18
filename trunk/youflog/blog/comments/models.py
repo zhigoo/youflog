@@ -1,5 +1,4 @@
 import datetime
-import hashlib,urllib
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
@@ -54,19 +53,6 @@ class Comment(models.Model):
         if self.date is None:
             self.date = datetime.datetime.now()
         super(Comment, self).save(force_insert, force_update)
-        
-    @property
-    def gravatar_url(self):
-        default = '/static/images/none.jpg'
-        if not self.email:
-            return default
-        try:
-            imgurl = "http://www.gravatar.com/avatar/"
-            imgurl +=hashlib.md5(self.email.lower()).hexdigest()+"?"+ urllib.urlencode({
-                'd':'monsterid', 's':str(50),'r':'G'})
-            return imgurl
-        except:
-            return default
     
     def has_parent(self):
         return bool(self.parent_id)
@@ -76,65 +62,6 @@ class Comment(models.Model):
             return Comment.objects.get(pk = self.parent_id)
         else:
             return None
-
-    def get_depth(self):
-        def _get_depth(object, list):
-            if object.has_parent():
-                parent = object.get_parent()
-                list.append(parent)
-                _get_depth(parent, list)
-
-        list = [1]
-        _get_depth(self, list)
-
-        return len(list)
-
-    def get_parity(self):
-        def _get_depth_odd(object):
-            comments = list(Comment.objects.filter(content_type = object.content_type, 
-                        object_pk = object.object_pk))
-            for comment in comments:
-                if comment.get_depth() != object.get_depth():
-                    comments.remove(comment)
-
-            if object.has_parent():
-                parent = object.get_parent()
-                podd = _get_depth_odd(parent)
-                return bool((podd + 1) % 2)
-
-            return bool((comments.index(object) + 1) % 2)
-
-        if _get_depth_odd(self):
-            return 'even'
-        else:
-            return 'odd'
-
-    def is_last_child(self):
-        '''Check whether this is the last child'''
-        def get_root(object):
-            if object.has_parent():
-                return get_root(object.get_parent())
-            else:
-                return object
-
-        def get_inherit(object, list):
-            if object and object.has_children():
-                for child in object.get_children():
-                    if child.has_children():
-                        list.append(child)
-                        get_inherit(child, list)
-                    else:
-                        list.append(child)
-
-        list = []
-        last = True
-        get_inherit(get_root(self), list)
-        for item in list:
-            if self.date < item.date:
-                last = False
-                break
-
-        return last
 
     def has_children(self):
         return bool(self.children.get_children_by_id(self.id))
@@ -173,7 +100,6 @@ def validate_comment(sender, comment, request, *args, **kwargs):
                 ak.submit_spam(comment.content.encode('utf-8'), data=data, build_data=True)
                 
     except AkismetError:
-        #comment.save()
         pass
 
 def on_comment_was_posted(sender,comment,request,*args,**kwargs):

@@ -12,7 +12,7 @@ from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.views.decorators.http import require_POST
-from blog.models import Blog,Entry,Comment,Category
+from blog.models import Blog,Entry,Comment,Category,OptionSet
 from utils.utils import paginator,urldecode,sendmail,render
 from django.utils import simplejson
 from django.contrib.sites.models import Site
@@ -158,8 +158,10 @@ def post_comment(request, next = None):
                       'entry':comment.object,'blog':blog,'domain':domain},
                       'new Comment for ' +comment.object.title,old_c.email)
     else:
-        emailtitle=u'文章'+comment.object.title+u'有了新的评论'
-        sendmail('email/new_comment.txt',{'comment':comment,'entry':comment.object,'domain':domain},emailtitle,blog.email)
+        comments_notify=OptionSet.get('comments_notify',1)
+        if comments_notify:
+            emailtitle=u'文章'+comment.object.title+u'有了新的评论'
+            sendmail('email/new_comment.txt',{'comment':comment,'entry':comment.object,'domain':domain},emailtitle,blog.email)
 
     response = HttpResponseRedirect('%s#comment-%d' % (target.fullurl(), comment.id))
 

@@ -87,7 +87,6 @@ class SettingForm(forms.Form):
         blog.sitekeywords=self.cleaned_data['sitekeywords']
         blog.sitedescription=self.cleaned_data['sitedescription']
         blog.email=self.cleaned_data['email']
-            
         return blog
      
     def generate_initial_data(self):
