@@ -1,13 +1,38 @@
 #labels YOUFLOG,djangoblog
-使用python,django开发的一个博客系统
+*安装python*
 
-[http://demo.iyouf.info demo]
+=下载 python= [http://www.python.org/ftp/python/ python ftp]
 
-*环境*<br/>
-python2.5+<br/>
-django 1.2+<br/>
-sqlite3/mysql<br/>
+=安装=
+==windows下安装==
+从 http://www.python.org/ftp/python/ 选择最新的 Python Windows 安装程序，下载 .exe 安装文件。
 
+双击安装程序 Python-x.x.x.exe。文件名依赖于您所下载的 Python 安装程序文件。
+
+按照安装程序的提示信息一步步地执行。
+
+在安装完成之后，关闭安装程序，打开 开始->程序->Python 2.6->IDLE (Python GUI)。您将看到类似如下的信息：{{{
+Python 2.6.5 (r254:67916, Dec 23 2008, 15:10:54) [MSC v.1310 32 bit (Intel)] on win32
+Type "copyright", "credits" or "license()" for more information.
+
+    ****************************************************************
+    Personal firewall software may warn about the connection IDLE
+    makes to its subprocess using this computer's internal loopback
+    interface.  This connection is not visible on any external
+    interface and no data is sent to or received from the Internet.
+    ****************************************************************
+    
+IDLE 1.2.4   
+}}}
+<p/>
+==linux 下安装==
+{{{
+wget http://www.python.org/ftp/python/2.6/Python-2.6.5.tgz
+tar xfz Python-2.6.5.tgz
+cd python-2.6.5
+./configure
+make && make install
+}}}
 *安装*<br/>
 安装好python 和django 之后<br/>
 把下载好的youflog解压<br/>
