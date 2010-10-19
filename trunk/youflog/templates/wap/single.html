@@ -2,9 +2,11 @@
 {%block content%}
 <div class="waptitle">{{ entry.title}}</div>
 {{ entry.content|striptags}}
-<div class="waplist">
+<div class="pagenavi">
+	{%if entry.prev%}上一篇:{%for post in entry.prev%}<a href="/wap/single/{{post.id}}">{{ post.title}}</a>{%endfor%}{%endif%}
+	{%if entry.next%}下一篇:{%for post in entry.next%}<a href="/wap/single/{{post.id}}">{{ post.title}}</a>{%endfor%}{%endif%}
 </div>
-<div class="waptitle">Recent Comments</div>
+<div class="waptitle">最新评论</div>
 
 <div class="waplist">
 {% if comments.object_list%}
@@ -17,8 +19,7 @@
 {%endif%}
 </div>
 
-
-<div class="pagenav">
+<div class="pagenavi">
 	{% if comments.has_previous %}
         <a href="?page={{ comments.previous_page_number }}">上一页</a>
     {% endif %}

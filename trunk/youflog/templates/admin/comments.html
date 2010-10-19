@@ -1,5 +1,5 @@
 {% extends "admin/base.html" %}
-{% load pagination %}
+{% load pagination utils%}
 {% block content %}
 <div class="wrap">
  	<h2>编辑评论</h2>
@@ -39,7 +39,7 @@
 				</th>
 				<td> 
 	             	<strong>
-	             		<img width="40" height="40" class="avatar" alt="" src="{{comment.gravatar_url}}" style="float:left;margin-top:3px;margin-right:10px;"/>
+	             		<img width="40" height="40" class="avatar" alt="" src="{% gravator comment.email %}" style="float:left;margin-top:3px;margin-right:10px;"/>
 	             		{{comment.author}}
 	             	</strong>
 	             	<br/>
