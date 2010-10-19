@@ -13,7 +13,7 @@ sitemaps = {
 
 urlpatterns = patterns('',
     
-    url(r'^admin/$',admin.index,name="admin_index"), # 后台管理页面
+    url(r'^admin$',admin.index,name="admin_index"), # 后台管理页面
     #post
     url(r'^admin/entrys',admin.admin_posts,name="admin_entrys"), #获取所有的文章
     url(r'^admin/post$',admin.admin_addpost,name="add post"), #跳转到文章添加页面
@@ -42,6 +42,8 @@ urlpatterns = patterns('',
     url(r'^admin/settings/save$',admin.save_setting,name='save settings'), #保持设置
     url(r'^admin/comment_setting$',admin.setting_comment),
     url(r'^admin/save_commentOption$',admin.save_commentOption),
+    url(r'^admin/permalink$',admin.permalink),
+    url(r'^admin/save_permalink',admin.save_permalink),
     
     #media
     url(r'^admin/media$',admin.media,name='show all media'),
@@ -65,12 +67,10 @@ urlpatterns = patterns('',
     url(r'^tag/(?P<tag>[-\w]+)',views.tag,name='find post by tag'), #查找所有包含tag的文章
     url(r'^category/(?P<name>[-\w]+)$',views.category,name=''), #文章分类
     url(r'^archive/(?P<id>\d+).html$',views.singlePostByID,name="single post"), #文章的详细页面
-    url(r'(?P<slug>[-\w]+).html$',views.singlePost,name='blog_single_post'), #文章的详细页面
-    url(r'^page/(?P<slug>[-\w]+)',views.singlePage,name='show page detail'),
     url(r'^postcomment$',views.post_comment,name="post_comment"), #发表评论
     url(r'^recentComments',views.recentComments,name="recentComments"),  #通过ajax的方式获取最新的几条评论信息
-    url(r'^archives/(?P<year>\d{4})/(?P<month>\d{1,2})/$', views.archives),
+    url(r'^archives/(?P<year>\d{4})/(?P<month>\d{1,2})$', views.archives),
     url(r'^xmlrpc$',xmlrpc.rpc),
-    (r'^([-\w]+)/$', views.anypage),
+    (r'^(.*)$', views.singlePost),
     
 )

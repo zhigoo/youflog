@@ -400,3 +400,25 @@ def save_commentOption(request):
     OptionSet.set('comments_per_page',comments_per_page)
     OptionSet.set('comments_notify',comments_notify)
     return HttpResponseRedirect('/admin/comment_setting')
+
+@login_required
+def permalink(request):
+    domain = Site.objects.get_current().domain
+    permalink_format=OptionSet.get('permalink_format', 'archive/%(id)s.html')
+    return render_response(request,'admin/permalink.html',{'domain':domain,'permalink_format':permalink_format})
+
+@login_required
+@require_POST
+def save_permalink(request):
+    linkformat=request.POST.get('permalink_format','archive/%(id)s.html')
+    
+    if linkformat== 'custom':
+        permalink_structure=request.POST.get('permalink_structure','%(year)s/%(month)s/%(day)s/%(postname)s')
+        OptionSet.set('permalink_format', 'custom')
+        OptionSet.set('permalink_structure', permalink_structure)
+    else:
+        OptionSet.set('permalink_format', linkformat)
+    messages.add_message(request, messages.INFO, 'save ok!')
+    return HttpResponseRedirect('/admin/permalink')
+    
+    

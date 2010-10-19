@@ -8,7 +8,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'',include('blog.urls')),
-    #(r'^admin/', include(admin.site.urls)),
     (r'^static/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.STATIC_ROOT}),
+    (r'',include('blog.urls')),
 )

@@ -30,7 +30,7 @@ class Blog(models.Model):
     title = models.CharField(max_length=100,default='youflog')
     subtitle = models.CharField(max_length=100,default='a simple blog named youflog')
     theme_name = models.CharField(default='default',max_length=30)
-    link_format=models.CharField(max_length=100,default='%(year)s/%(month)s/%(day)s/%(postname)s.html')
+    #link_format=models.CharField(max_length=100,default='%(year)s/%(month)s/%(day)s/%(postname)s.html')
     blognotice = models.TextField("notice")
     sitekeywords=models.CharField(max_length=100,default='youflog')
     sitedescription=models.CharField(max_length=200,default='simple blog system')
@@ -156,29 +156,27 @@ class Entry(models.Model):
     
     def save(self,pub):
         self.date=datetime.now()
-        g_blog = Blog.get()
         old_pub=self.published
         if pub: 
+            super(Entry,self).save()
             vals={'year':self.date.year,'month':str(self.date.month).zfill(2),\
-                  'day':self.date.day,'postname':self.slug}
+                  'day':self.date.day,'postname':self.slug,'id':self.id}
+            
+            permalink_format = OptionSet.get('permalink_format','archive/%(id)s.html')
             
             if self.entrytype == 'post':
-                if g_blog.link_format and self.slug:
-                    self.link=g_blog.link_format.strip()%vals
+                if not self.slug:
+                    vals.update({'postname':self.id})
+                if permalink_format == 'custom':
+                    permalink_structure = OptionSet.get('permalink_structure','%(year)s/%(month)s/%(day)s/%(postname)s')
+                    self.link=permalink_structure.strip()%vals
                 else:
-                    if self.id:
-                        vals.update({'post_id':self.id})
-                        self.link='archive/%(post_id)s.html'%vals
-                    else:
-                        super(Entry,self).save()
-                        vals.update({'post_id':self.id})
-                        self.link='archive/%(post_id)s.html'%vals
+                    self.link=permalink_format.strip()%vals
             else:
                 if self.slug:
-                    self.link='page/'+self.slug
+                    self.link=self.slug
                 else:
-                    super(Entry,self).save()
-                    self.link='page/%s'%(str(self.id))
+                    self.link=str(self.id)
         
         self.published=pub
         super(Entry,self).save()

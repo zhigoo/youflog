@@ -32,27 +32,27 @@ def index(request):
     entries = Entry.objects.get_posts()
     return render(request,'index.html',{'entries':entries,'ishome':True,'page':page})
 
-def singlePost(request,slug=None):
+def singlePost(request,slug):
     if slug:
         slug=urldecode(slug)
-        entrys=Entry.objects.filter(slug=slug)
-        entry=entrys[0]
-    entry.updateReadtimes()
-    return render(request,"single.html",{'entry':entry,'comment_meta':get_comment_cookie_meta(request)})
-
-def singlePage(request,slug=None):
-    if slug:
-        slug=urldecode(slug)
-        entrys=Entry.objects.filter(link='page/'+slug)
-        entry=entrys[0]
-    entry.updateReadtimes()
-    
-    return render(request,"page.html",{'entry':entry,'current':entry.link,
+        entries=Entry.objects.filter(link=slug)
+        if len(entries) <= 0:
+            return render_to_response('404.html')
+        entry=entries[0]
+        entry.updateReadtimes()
+        if entry.entrytype=='post':
+            return render(request,"single.html",{'entry':entry,'comment_meta':get_comment_cookie_meta(request)})
+        else:
+            return render(request,"page.html",{'entry':entry,'current':entry.link,
                                        'comment_meta':get_comment_cookie_meta(request)})
-
+    else:
+        return render_to_response('404.html')
 
 def singlePostByID (request,id=None):
-    entry=Entry.objects.get(id=id)
+    try:
+        entry=Entry.objects.get(id=id)
+    except:
+        return render_to_response('404.html')
     entry.updateReadtimes()
     return render(request,"single.html",{'entry':entry,'comment_meta':get_comment_cookie_meta(request)})
 
@@ -166,7 +166,3 @@ def post_comment(request, next = None):
     response = HttpResponseRedirect('%s#comment-%d' % (target.fullurl(), comment.id))
 
     return response
-
-
-def anypage(request,slug):
-    return HttpResponseRedirect('/')
