@@ -53,7 +53,7 @@ svn co http://code.djangoproject.com/svn/django/trunk/
 svn checkout http://youflog.googlecode.com/svn/trunk/ youflog-read-only
 }}}
 切换到youflog目录下面建立youflog需要的数据库表<p/>
-切换到改目录 执行 python manage.py syncdb<p/>
+执行 python manage.py syncdb<p/>
 
 完成上一步之后 就可以执行 python manage.py runserver 启动了<p/>
 
