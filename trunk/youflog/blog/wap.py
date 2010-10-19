@@ -25,6 +25,6 @@ def category(request,id=None):
     id=int(id)
     cate=Category.objects.get(id=id)
     page=request.GET.get('page',1)
-    entry = Entry.objects.filter(categories__contains=id)
-    entries = paginator(entry,10,page)
+    entries=Entry.objects.get_posts().filter(category=cate)
+    entries = paginator(entries,10,page)
     return render_response(request,'wap/category.html',{'entrys':entries,'category':cate})

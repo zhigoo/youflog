@@ -383,16 +383,15 @@ def upload_media(request):
 
 @login_required
 def setting_comment(request):
-    gavatar=OptionSet.get('gavatar')
+    gavatar=OptionSet.get('gavatar','gravatar_default')
     comments_per_page=OptionSet.get('comments_per_page',10)
     comments_notify=OptionSet.get('comments_notify',1)
-    ctx={'gavatar':gavatar,'comments_per_page':comments_per_page,'comments_notify':eval(comments_notify)}
+    ctx={'gavatar':gavatar,'comments_per_page':comments_per_page,'comments_notify':bool(comments_notify)}
     return render_response(request,'admin/comment_setting.html',ctx)
 
 @login_required
 @require_POST
 def save_commentOption(request):
-    
     data=request.POST.copy()
     gavatar=data['gavatar']
     comments_per_page=data['comments_per_page']

@@ -26,12 +26,12 @@
 
 
 		<div class="meta">
-			
-			<div class="act">
-				<a href="#respond">添加评论</a>
-			</div>
+			<div class="act">{{entry.comments.count}} 条评论</div>
 			<div class="info">
 				{{entry.date|date:"Y/m/d H:i"}}
+			</div>
+			<div class="act">
+				<a href="#respond">添加评论</a>
 			</div>
 			{% if entry.tags%}
 				<div class="tags">Tags: 
