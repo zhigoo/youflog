@@ -405,17 +405,18 @@ def save_commentOption(request):
 def permalink(request):
     domain = Site.objects.get_current().domain
     permalink_format=OptionSet.get('permalink_format', 'archive/%(id)s.html')
-    return render_response(request,'admin/permalink.html',{'domain':domain,'permalink_format':permalink_format})
+    permalink_structure=OptionSet.get('permalink_structure','%(year)s/%(month)s/%(day)s/%(postname)s.html')
+    return render_response(request,'admin/permalink.html',{'domain':domain,\
+                            'permalink_format':permalink_format,'permalink_structure':permalink_structure})
 
 @login_required
 @require_POST
 def save_permalink(request):
     linkformat=request.POST.get('permalink_format','archive/%(id)s.html')
-    
+    permalink_structure=request.POST.get('permalink_structure','%(year)s/%(month)s/%(day)s/%(postname)s')
+    OptionSet.set('permalink_structure', permalink_structure)
     if linkformat== 'custom':
-        permalink_structure=request.POST.get('permalink_structure','%(year)s/%(month)s/%(day)s/%(postname)s')
         OptionSet.set('permalink_format', 'custom')
-        OptionSet.set('permalink_structure', permalink_structure)
     else:
         OptionSet.set('permalink_format', linkformat)
     messages.add_message(request, messages.INFO, 'save ok!')
