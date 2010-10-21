@@ -47,6 +47,35 @@ def index(request):
     return render_response(request,"admin/index.html",{})
 
 @login_required
+def all_posts(request):
+    page=request.GET.get('page',1)
+    all_posts = Entry.objects.all().filter(entrytype='post')
+    publish_posts=Entry.objects.get_posts()
+    unpubcount=all_posts.count()-publish_posts.count()
+    return render_response(request,"admin/posts.html",{'entrys':all_posts,\
+                                   'publish_count':publish_posts.count(),'unpubcount':unpubcount,
+                                   'all_count':all_posts.count(),'page':page})
+@login_required
+def all_pub_posts(request):
+    page=request.GET.get('page',1)
+    all_posts = Entry.objects.all().filter(entrytype='post')
+    publish_posts=Entry.objects.get_posts()
+    unpubcount=all_posts.count()-publish_posts.count()
+    return render_response(request,"admin/posts.html",{'entrys':publish_posts,\
+                                   'publish_count':publish_posts.count(),'unpubcount':unpubcount,
+                                   'all_count':all_posts.count(),'page':page})
+@login_required
+def unpub_posts(request):
+    page=request.GET.get('page',1)
+    all_posts = Entry.objects.all().filter(entrytype='post')
+    publish_posts=Entry.objects.get_posts()
+    unpub_posts=Entry.objects.all().filter(entrytype='post',published=False)
+    unpubcount=all_posts.count()-publish_posts.count()
+    return render_response(request,"admin/posts.html",{'entrys':unpub_posts,\
+                                   'publish_count':publish_posts.count(),'unpubcount':unpubcount,
+                                   'all_count':all_posts.count(),'page':page})
+
+@login_required
 def admin_posts(request):
     page=request.GET.get('page',1)
     post_status = request.GET.get('post_status')

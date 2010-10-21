@@ -15,7 +15,10 @@ urlpatterns = patterns('',
     
     url(r'^admin$',admin.index,name="admin_index"), # 后台管理页面
     #post
-    url(r'^admin/entrys',admin.admin_posts,name="admin_entrys"), #获取所有的文章
+    #url(r'^admin/entrys',admin.admin_posts,name="admin_entrys"), #获取所有的文章
+    url(r'^admin/allposts',admin.all_posts,name='all posts'),
+    url(r'^admin/pubposts',admin.all_pub_posts,name='all publish posts'),
+    url(r'^admin/unpubposts',admin.unpub_posts,name='all unpublish posts'),
     url(r'^admin/post$',admin.admin_addpost,name="add post"), #跳转到文章添加页面
     url(r'^admin/submit_post',admin.submit_post,name='submit_post_page'), #提交文章 或者页面
     url(r'^admin/editpost/(?P<id>\d+)',admin.edit_post,name="editor post"),#文章火着页面的编辑

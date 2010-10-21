@@ -29,7 +29,10 @@ class Comment(models.Model):
 
     class Meta:
         permissions = [("can_moderate", "Can moderate comments")]
-        
+    
+    def shortcontent(self,len=25):
+        return self.content[0:len]
+    
     def get_content_object_url(self):
         
         model = ContentType.objects.get(pk = self.content_type_id).model_class()

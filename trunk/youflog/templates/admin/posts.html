@@ -6,16 +6,17 @@
  	<form id="posts-filter" action="/admin/post_delete" method="post">
  		<ul class="subsubsub">
  			<li>
- 				<a href="?post_status=all">
+ 				<a href="/admin/allposts">
  				全部<span class="count">({{all_count}})</span>
  				</a>
  				|
  			</li>
  			<li>
- 				<a href="?post_status=publish">
+ 				<a href="/admin/pubposts">
  				已发布<span class="count">({{publish_count}})</span>
- 				</a>
+ 				</a>|
  			</li>
+ 			<li><a href="/admin/unpubposts">未发布<span>({{unpubcount}})</span></a></li>
  		</ul>
  		<p class="search-box hidden">
 			<label class="hidden" for="post-search-input">搜索文章:</label>
