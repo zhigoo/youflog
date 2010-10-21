@@ -1,6 +1,6 @@
 from django.template import Library
 from django.shortcuts import get_object_or_404
-from blog.models import Entry,Comment,Category,Link,Archive
+from blog.models import Entry,Comment,Category,Link,Archive,Blog
 from settings import DATABASE_ENGINE
 from tagging.models import Tag, TaggedItem
 from django.db.models import Count
@@ -56,7 +56,8 @@ def get_tag_cloud(context):
 
 @register.inclusion_tag('readwall.html', takes_context = True)
 def get_reader_wall(context):
-    sql="select count(email) as count,author,email,weburl from comments_comment group by email order by count desc limit 12"
+    admin_email=Blog.get().email
+    sql="select count(email) as count,author,email,weburl from comments_comment where email !='%s' group by email order by count desc limit 12"%(admin_email)
     from django.db import connection
     cursor = connection.cursor()
     cursor.execute(sql)

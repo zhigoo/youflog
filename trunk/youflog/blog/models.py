@@ -30,7 +30,6 @@ class Blog(models.Model):
     title = models.CharField(max_length=100,default='youflog')
     subtitle = models.CharField(max_length=100,default='a simple blog named youflog')
     theme_name = models.CharField(default='default',max_length=30)
-    #link_format=models.CharField(max_length=100,default='%(year)s/%(month)s/%(day)s/%(postname)s.html')
     blognotice = models.TextField("notice")
     sitekeywords=models.CharField(max_length=100,default='youflog')
     sitedescription=models.CharField(max_length=200,default='simple blog system')
@@ -89,7 +88,7 @@ class Entry(models.Model):
     #所有评论
     comments =  generic.GenericRelation(Comment, object_id_field='object_pk',
                                         content_type_field='content_type')
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField()
     objects=EntryPublishManager()
     
     class Meta:
@@ -155,7 +154,10 @@ class Entry(models.Model):
         return list(posts)[:5]
     
     def save(self,pub):
-        self.date=datetime.now()
+        if not self.date:
+            self.date=datetime.now()
+        else:
+            self.date=datetime.strptime(self.date[0:19],"%Y-%m-%d %H:%M:%S")
         old_pub=self.published
         if pub: 
             super(Entry,self).save()

@@ -1,7 +1,7 @@
 {%if archives%}
 <ul>
 	{%for arch in archives%}
-	<li><a href="/{{arch.get_absolute_url}}" title='{{arch.date|date:"Y年m月"}}'>{{arch.date|date:"Y年m月"}}({{arch.entrycount}})</a></li>
+	<li><a href="/{{arch.get_absolute_url}}" title='{{arch.year}}年{{arch.month}}'>{{arch.year}}年{{arch.month}}({{arch.entrycount}})</a></li>
 	{%endfor%}
 </ul>
 {%endif%}

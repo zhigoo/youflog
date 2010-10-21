@@ -386,8 +386,9 @@ def setting_comment(request):
     gavatar=OptionSet.get('gavatar','gravatar_default')
     comments_per_page=OptionSet.get('comments_per_page',10)
     comments_notify=OptionSet.get('comments_notify',1)
-    ctx={'gavatar':gavatar,'comments_per_page':comments_per_page,'comments_notify':bool(comments_notify)}
-    return render_response(request,'admin/comment_setting.html',ctx)
+    enable_akismet=int(OptionSet.get('akismet_enable',0))
+    akismet_key=OptionSet.get('akismet_key')
+    return render_response(request,'admin/comment_setting.html',locals())
 
 @login_required
 @require_POST
@@ -396,6 +397,15 @@ def save_commentOption(request):
     gavatar=data['gavatar']
     comments_per_page=data['comments_per_page']
     comments_notify=request.POST.get('comments_notify',0)
+    akismet_enable=request.POST.get('akismet_enable')
+    akismet_key=request.POST.get('akismet_key')
+    
+    if akismet_enable:
+        OptionSet.set('akismet_enable',1)
+    else:
+        OptionSet.set('akismet_enable',0)
+    
+    OptionSet.set('akismet_key',akismet_key)
     OptionSet.set('gavatar', gavatar)
     OptionSet.set('comments_per_page',comments_per_page)
     OptionSet.set('comments_notify',comments_notify)
@@ -406,8 +416,7 @@ def permalink(request):
     domain = Site.objects.get_current().domain
     permalink_format=OptionSet.get('permalink_format', 'archive/%(id)s.html')
     permalink_structure=OptionSet.get('permalink_structure','%(year)s/%(month)s/%(day)s/%(postname)s.html')
-    return render_response(request,'admin/permalink.html',{'domain':domain,\
-                            'permalink_format':permalink_format,'permalink_structure':permalink_structure})
+    return render_response(request,'admin/permalink.html',locals())
 
 @login_required
 @require_POST

@@ -24,33 +24,7 @@ class CommentManager(models.Manager):
         return self.get_query_set().filter(is_public = True).order_by('-date')
 
     def in_moderation(self):
-       
         return self.get_query_set().filter(is_public=False)
-
-    def get_depth_odd(self, depth):
-        pass
-
-    def get_sorted_comments(self, qs):
-        def sort_comment(root, list, sorted):
-            sorted.append(root)
-            list.remove(root)
-            if root.has_children():
-                children = root.get_children()
-                for child in children:
-                    sort_comment(child, list, sorted)
-            elif len(list) > 0 and root.is_last_child():
-                sort_comment(list[0], list, sorted)
-
-        comments = list(qs)
-        if comments:
-            sorted = []
-            first = comments[0]
-            print comments
-            sort_comment(first, comments, sorted)
-
-            return sorted
-        else:
-            return comments
 
     def get_children_by_id(self, id):
         list = []

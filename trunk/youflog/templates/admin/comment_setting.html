@@ -29,6 +29,15 @@
 						有人发表评论时 
 					</td>
 				</tr>
+				<tr>
+					<th>
+						<label>启用Akismet</label>
+					</th>
+					<td>
+					<input type="checkbox" {%if enable_akismet %}checked="checked"{%endif%} class="regular-text code" id="akismet_enable" name="akismet_enable"/>
+					<input type="text" id="akismet_key" name="akismet_key" value="{{akismet_key}}"/>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 		<h3>头像</h3>
