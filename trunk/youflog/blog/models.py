@@ -120,15 +120,21 @@ class Entry(models.Model):
             else:
                 return spl[0]
     
-    #next post
+    #下一篇文章
     def next(self):
         next = Entry.objects.filter(published=True,entrytype='post',date__gt=self.date)
-        return next[:1]
-
-    #prev post
+        if len(next) >0:
+            return next[0]
+        else :
+            return None
+        
+    #上一篇文章
     def prev(self):
-        prev = Entry.objects.filter(published=True,entrytype='post',date__lt=self.date)
-        return prev[:1]
+        prev = Entry.objects.filter(published=True,entrytype='post',date__lt=self.date).order_by('-date')
+        if len(prev)>0:
+            return prev[0]
+        else:
+            return None
 
     def get_tags(self):
         return Tag.objects.get_for_object(self)

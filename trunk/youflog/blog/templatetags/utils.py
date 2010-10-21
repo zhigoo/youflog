@@ -1,10 +1,12 @@
 from blog.models import OptionSet
 from django import template
 from django.template import Library, Node,resolve_variable
+from threading import Thread
+import settings
 
-import hashlib,urllib
-
+import hashlib,urllib,os
 register = Library()
+
 
 class VarNode(Node):
     def __init__(self, var_name, var_to_resolve):
@@ -42,18 +44,27 @@ class gravatorNode(Node):
     def __init__(self,email):
         self.email = email
         self.gavatar=OptionSet.get('gavatar')
-        
+    
+    def write(self,url,path):
+        urllib.urlretrieve(url, path)
+    
     def render(self,context):
+        avator_path=settings.STATIC_ROOT+"/avator/"
         email = resolve_variable(self.email,context)
-        default = '/static/images/default.png'
+        default = '/static/avator/default.png'
         if not self.email:
             return default
         try:
-            
-            imgurl = "http://www.gravatar.com/avatar/"
-            imgurl +=hashlib.md5(email).hexdigest()+"?"+ urllib.urlencode({
-                'd':self.gavatar, 's':str(50),'r':'G'})
-            return imgurl
+            email_digest=hashlib.md5(email).hexdigest()
+            avator_path=avator_path+email_digest
+            if os.path.isfile(avator_path):
+                return '/static/avator/'+email_digest
+            else:
+                imgurl = "http://www.gravatar.com/avatar/"
+                imgurl +=email_digest+"?"+ urllib.urlencode({'d':self.gavatar, 's':str(50),'r':'G'})
+                th = Thread(target=self.write,args=(imgurl,avator_path))
+                th.start()
+                return imgurl
         except:
             return default
         

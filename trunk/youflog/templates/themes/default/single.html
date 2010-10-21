@@ -55,12 +55,22 @@
 
 	<div id="postnavi" class="block">
 		<div class="content g">
-			{%for prev in entry.prev%}
-			<span class="prev"><a href="/{{prev.link}}">&laquo; {{prev.title}}</a></span>
-			{%endfor%}
-			{%for next in  entry.next%}
-			<span class="next"><a href="/{{next.link}}">{{next.title}}&raquo;</a></span>
-			{%endfor%}
+			
+			<span class="prev">
+				{%if entry.prev%}<a href="/{{entry.prev.link}}">&laquo; {{entry.prev.title}}</a>
+				{%else%}
+				&laquo;没有了
+				{%endif%}
+			</span>
+			
+			
+			<span class="next">
+			{%if entry.next%}<a href="/{{entry.next.link}}">&raquo; {{entry.next.title}}</a>
+				{%else%}
+				&raquo;没有了
+				{%endif%}
+			</span>
+			
 			<div class="fixed"></div>
 		</div>
 	</div>

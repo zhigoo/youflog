@@ -3,8 +3,8 @@
 <div class="waptitle">{{ entry.title}}</div>
 {{ entry.content|striptags}}
 <div class="pagenavi">
-	{%if entry.prev%}上一篇:{%for post in entry.prev%}<a href="/wap/single/{{post.id}}">{{ post.title}}</a>{%endfor%}{%endif%}
-	{%if entry.next%}下一篇:{%for post in entry.next%}<a href="/wap/single/{{post.id}}">{{ post.title}}</a>{%endfor%}{%endif%}
+	上一篇:{%if entry.prev%}<a href="/wap/single/{{entry.prev.id}}">{{ entry.prev.title}}</a>{%else%}没有了{%endif%}<br/>
+	下一篇:{%if entry.next%}<a href="/wap/single/{{entry.next.id}}">{{ entry.next.title}}</a>{%else%}没有了{%endif%}
 </div>
 <div class="waptitle">最新评论</div>
 

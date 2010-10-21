@@ -8,19 +8,14 @@
 	{% if entry %}
 
 		<div class="navigation">
-		
 			{%if entry.prev%}		
 			<div class="alignleft">
-			{%for prev in entry.prev%}
-				<a href="/{{prev.link}}">&laquo;{{prev.title}} </a>
-			{%endfor%}
+				<a href="/{{prev.link}}">&laquo;{{entry.prev.title}} </a>
 			</div>
 			{%endif%}
 			{%if entry.next%}
 			<div class="alignright">
-			{%for next in  entry.next%}
-			<a href="/{{next.link}}">&raquo;{{next.title}}</a>
-			{%endfor%}
+				<a href="/{{next.link}}">&raquo;{{entry.next.title}}</a>
 			</div>
 			{%endif%}
 		</div>
