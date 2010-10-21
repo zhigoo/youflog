@@ -157,7 +157,7 @@ class Entry(models.Model):
         if not self.date:
             self.date=datetime.now()
         else:
-            self.date=datetime.strptime(self.date[0:19],"%Y-%m-%d %H:%M:%S")
+            self.date=datetime.strptime(str(self.date)[0:19],"%Y-%m-%d %H:%M:%S")
         old_pub=self.published
         if pub: 
             super(Entry,self).save()

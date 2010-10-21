@@ -15,7 +15,6 @@ urlpatterns = patterns('',
     
     url(r'^admin$',admin.index,name="admin_index"), # 后台管理页面
     #post
-    #url(r'^admin/entrys',admin.admin_posts,name="admin_entrys"), #获取所有的文章
     url(r'^admin/allposts',admin.all_posts,name='all posts'),
     url(r'^admin/pubposts',admin.all_pub_posts,name='all publish posts'),
     url(r'^admin/unpubposts',admin.unpub_posts,name='all unpublish posts'),

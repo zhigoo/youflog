@@ -4,7 +4,13 @@
 <div class="wrap">
  	<h2>编辑评论</h2>
  	<form id="posts-filter" action="/admin/comment_delete" method="post">
- 		
+ 		<ul class="subsubsub">
+ 			<li>
+ 				<a href="#">
+ 				所有评论<span class="count">({{all_count}})</span>
+ 				</a>
+ 			</li>
+ 		</ul>
  		<div class="tablenav">
  			<div class="alignleft actions">
 			<input type="submit" class="button-secondary action" id="doaction" name="delete" value="批量删除">
@@ -31,7 +37,7 @@
 			</tfoot>
 			<tbody>
          {%if comments%}
-         	{% begin_pagination comments page %}
+         	{% begin_pagination comments page 15%}
 	         {%for comment in comments%}
 			 <tr valign="middle" id="link-{{comment.id}}">
 				<th scope="row" class="check-column">
@@ -40,7 +46,11 @@
 				<td> 
 	             	<strong>
 	             		<img width="40" height="40" class="avatar" alt="" src="{% gravator comment.email %}" style="float:left;margin-top:3px;margin-right:10px;"/>
+	             		{% if comment.weburl%}
+	             		<a href="{{comment.weburl}}" target="_blank">{{comment.author}}</a>
+	             		{%else%}
 	             		{{comment.author}}
+	             		{%endif%}
 	             	</strong>
 	             	<br/>
 	             	<a href="mailto:{{comment.email}}">{{comment.email}}</a>

@@ -49,7 +49,7 @@ def index(request):
 @login_required
 def all_posts(request):
     page=request.GET.get('page',1)
-    all_posts = Entry.objects.all().filter(entrytype='post')
+    all_posts = Entry.objects.all().filter(entrytype='post').order_by('-date')
     publish_posts=Entry.objects.get_posts()
     unpubcount=all_posts.count()-publish_posts.count()
     return render_response(request,"admin/posts.html",{'entrys':all_posts,\
@@ -58,7 +58,7 @@ def all_posts(request):
 @login_required
 def all_pub_posts(request):
     page=request.GET.get('page',1)
-    all_posts = Entry.objects.all().filter(entrytype='post')
+    all_posts = Entry.objects.all().filter(entrytype='post').order_by('-date')
     publish_posts=Entry.objects.get_posts()
     unpubcount=all_posts.count()-publish_posts.count()
     return render_response(request,"admin/posts.html",{'entrys':publish_posts,\
@@ -67,35 +67,13 @@ def all_pub_posts(request):
 @login_required
 def unpub_posts(request):
     page=request.GET.get('page',1)
-    all_posts = Entry.objects.all().filter(entrytype='post')
+    all_posts = Entry.objects.all().filter(entrytype='post').order_by('-date')
     publish_posts=Entry.objects.get_posts()
-    unpub_posts=Entry.objects.all().filter(entrytype='post',published=False)
+    unpub_posts=Entry.objects.all().filter(entrytype='post',published=False).order_by('-date')
     unpubcount=all_posts.count()-publish_posts.count()
     return render_response(request,"admin/posts.html",{'entrys':unpub_posts,\
                                    'publish_count':publish_posts.count(),'unpubcount':unpubcount,
                                    'all_count':all_posts.count(),'page':page})
-
-@login_required
-def admin_posts(request):
-    page=request.GET.get('page',1)
-    post_status = request.GET.get('post_status')
-    try:
-        page = int(page)
-    except:
-        page =1
-    all = Entry.objects.all().filter(entrytype='post')
-    all_publish=Entry.objects.get_posts()
-    
-    if post_status =='all':
-        entrys = all
-    else:
-        entrys = all_publish
-    publish_count = all_publish.count()
-    all_count=all.count()
-    
-    return render_response(request,"admin/posts.html",{'entrys':entrys,\
-                                                       'publish_count':publish_count,
-                                                       'all_count':all_count,'page':page})
 
 @login_required
 def admin_addpost(request):
@@ -240,7 +218,8 @@ def comments(request):
     page=request.GET.get('page',1)
     page = int(page)
     comments = Comment.objects.all().order_by('-date')
-    return render_response(request,'admin/comments.html',{'comments':comments,'page':page})
+    
+    return render_response(request,'admin/comments.html',{'comments':comments,'page':page,'all_count':comments.count()})
 
 @login_required
 def comment_delete(request):
