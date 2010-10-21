@@ -4,7 +4,7 @@
 		<img class="avatar avatar-24 photo" width="30" height="30" src="{% gravator comment.email %}"></img>
 		<div class="author with_avatar">
 			{%if comment.weburl %}
-				<a id="commentauthor-{{comment.id}}" title="{{comment.author}}" href="{{comment.weburl}}" rel="external nofollow">
+				<a id="commentauthor-{{comment.id}}" title="{{comment.author}}" href="{{comment.weburl}}" rel="external nofollow" target="_blank">
 					{{comment.author}}
 				</a>
 			{% else %}
