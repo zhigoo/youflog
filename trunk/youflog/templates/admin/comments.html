@@ -6,8 +6,13 @@
  	<form id="posts-filter" action="/admin/comment_delete" method="post">
  		<ul class="subsubsub">
  			<li>
- 				<a href="#">
- 				所有评论<span class="count">({{all_count}})</span>
+ 				<a href="/admin/comments">
+ 				所有评论<span class="count">({{comment_count}})</span>
+ 				</a>
+ 			</li>
+ 			<li>
+ 				<a href="/admin/spam_comment">
+ 				垃圾评论<span class="count">({{spam_count}})</span>
  				</a>
  			</li>
  		</ul>

@@ -26,6 +26,7 @@ urlpatterns = patterns('',
     url(r'admin/pages$',admin.pages,name='show all pages'),#分页显示所有的页面
     #comment
     url(r'^admin/comments',admin.comments,name="show all comments"), #分页显示所有的评论
+    url(r'^admin/spam_comment',admin.spam_comment,name='spam comment'),
     url(r'^admin/comment_delete',admin.comment_delete,name="delete comment"), #批量删除评论信息
     
     #category

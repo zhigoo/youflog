@@ -11,6 +11,7 @@ from theme import ThemeIterator
 from blog.forms import SettingForm
 from settings import MEDIA_ROOT
 from os.path import isdir, dirname
+from tagging.models import Tag
 import logging
 
 #login process
@@ -44,7 +45,13 @@ def login(request):
 
 @login_required
 def index(request):
-    return render_response(request,"admin/index.html",{})
+    post_count=Entry.objects.all().filter(entrytype='post').count()
+    comment_count=Comment.objects.filter(is_public=True).count()
+    spam_count=Comment.objects.filter(is_public=False).count()
+    page_count=Entry.objects.all().filter(entrytype='page').count()
+    category_count=Category.objects.count()
+    tag_count=Tag.objects.count()
+    return render_response(request,"admin/index.html",locals())
 
 @login_required
 def all_posts(request):
@@ -217,9 +224,19 @@ def pages(request):
 def comments(request):
     page=request.GET.get('page',1)
     page = int(page)
-    comments = Comment.objects.all().order_by('-date')
-    
-    return render_response(request,'admin/comments.html',{'comments':comments,'page':page,'all_count':comments.count()})
+    comments = Comment.objects.filter(is_public=True).order_by('-date')
+    spam_count=Comment.objects.filter(is_public=False).count()
+    return render_response(request,'admin/comments.html',{'page':page,'comments':comments,\
+                                                          'spam_count':spam_count,'comment_count':comments.count()})
+@login_required
+def spam_comment(request):
+    page=request.GET.get('page',1)
+    page=int(page)
+    comments = Comment.objects.filter(is_public=False).order_by('-date')
+    comment_count=Comment.objects.filter(is_public=True).count()
+    return render_response(request,'admin/comments.html',{'page':page,'comments':comments,\
+                                                          'comment_count':comment_count,
+                                                          'spam_count':comments.count()})
 
 @login_required
 def comment_delete(request):

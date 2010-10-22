@@ -144,7 +144,20 @@ vertical-align:top;
 .tablenav select[name="action"], .tablenav select[name="action2"] {
 width:120px;
 }
+#dashboard-widgets-wrap .inner-sidebar {width:49%;}
+.inner-sidebar {clear:right;float:right;position:relative;width:280px;}
 
+#dashboard-widgets-wrap .has-sidebar {margin-right:-51%;}
+.has-sidebar {clear:left;float:left;margin-right:-340px;width:100%;}
+#dashboard-widgets-wrap .has-sidebar .has-sidebar-content {
+margin-right:51%;
+}
+#dashboard_right_now .spam {
+color:red;
+}
+.metabox-holder .postbox, #poststuff .postbox {
+background-color:#FFFFFF;
+}
 .widefat {
 border-collapse : collapse;
 clear : both;
@@ -274,8 +287,63 @@ input[type="text"], textarea {
 input[type="checkbox"], input[type="radio"] {
 vertical-align:text-top;
 }
+
 .metabox-holder .postbox, #poststuff .postbox, #titlediv, #poststuff .postarea, #poststuff .stuffbox, .postbox input[type="text"], .postbox textarea, .stuffbox input[type="text"], .stuffbox textarea {
 border-color:#DFDFDF;
+}
+#dashboard_right_now table td {
+border-top:1px solid #ECECEC;
+padding:3px 0;
+white-space:nowrap;
+}
+#dashboard_right_now .inside {
+font-size:12px;
+}
+#dashboard_right_now a.button {
+clear:right;
+float:right;
+position:relative;
+}
+.postbox p{font-size:12px;}
+div.postbox div.inside {
+margin:10px;
+position:relative;
+}
+#dashboard_right_now p.sub {
+color:#777777;
+font-family:Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+font-size:13px;
+font-style:italic;
+padding:5px 10px 15px;
+}
+#dashboard_right_now table {
+width:100%;
+}
+
+#dashboard_right_now p.sub, #dashboard_right_now .table, #dashboard_right_now .versions {
+margin:-12px;
+}
+#dashboard_right_now .versions {
+padding:6px 10px 12px;
+}
+#dashboard_right_now .table {
+background:none repeat scroll 0 0 #F9F9F9;
+border-bottom:1px solid #ECECEC;
+border-top:1px solid #ECECEC;
+margin:0 -9px 10px;
+padding:0 10px;
+}
+#dashboard_right_now table tr.first td {
+border-top:medium none;
+}
+#dashboard_right_now td.first, #dashboard_right_now td.last {
+width:1px;
+}
+#dashboard_right_now td.b {
+font-family:Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+font-size:14px;
+padding-right:6px;
+text-align:right;
 }
 .metabox-holder .postbox, #poststuff .postbox, #poststuff .stuffbox {
 -moz-border-radius:6px 6px 6px 6px;
