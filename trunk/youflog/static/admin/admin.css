@@ -158,6 +158,9 @@ color:red;
 .metabox-holder .postbox, #poststuff .postbox {
 background-color:#FFFFFF;
 }
+.widefat * {
+word-wrap:break-word;
+}
 .widefat {
 border-collapse : collapse;
 clear : both;
@@ -167,9 +170,10 @@ border-style : solid;
 border-width : 1px;
 margin : 0;
 }
-.widefat a {
-text-decoration : none;
-color : #2583ad;
+.column-author{width:20%;}
+.column-response{width:20%;}
+td.comment {
+word-wrap:break-word;
 }
 .widefat abbr {
 white-space : nowrap;

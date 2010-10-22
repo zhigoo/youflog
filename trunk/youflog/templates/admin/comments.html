@@ -48,7 +48,7 @@
 				<th scope="row" class="check-column">
 					<input type="checkbox" name="checks" value="{{comment.id}}">
 				</th>
-				<td> 
+				<td class="column-author"> 
 	             	<strong>
 	             		<img width="40" height="40" class="avatar" alt="" src="{% gravator comment.email %}" style="float:left;margin-top:3px;margin-right:10px;"/>
 	             		{% if comment.weburl%}
@@ -60,15 +60,15 @@
 	             	<br/>
 	             	<a href="mailto:{{comment.email}}">{{comment.email}}</a>
 	             	<br/>
-	             	{{comment.ip}}
+	             	{{comment.ip_address}}
 	             </td>
-	             <td>
+	             <td class="comment">
 	             	<div id="submited-on">
 	             		提交于 {{comment.date|date:"Y-m-d"}} @ {{comment.date|date:"H:i"}}
 	             	</div>
 	             <p>{{comment.content}}</p>
 	             </td>
-	             <td>{{comment.object.title}}</td>
+	             <td class="column-response">{{comment.object.title}}</td>
 			</tr>
 			{%endfor%}
 		{%else%}
