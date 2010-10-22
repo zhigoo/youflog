@@ -1,4 +1,4 @@
-from blog.models import Entry,Comment,Link,Category,OptionSet
+from blog.models import Entry,Comment,Link,Category,OptionSet,Blog
 from utils.utils import render_response
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -45,12 +45,14 @@ def login(request):
 
 @login_required
 def index(request):
+    
     post_count=Entry.objects.all().filter(entrytype='post').count()
-    comment_count=Comment.objects.filter(is_public=True).count()
-    spam_count=Comment.objects.filter(is_public=False).count()
+    comment_count=Comment.objects.in_public().count()
+    spam_count=Comment.objects.in_moderation().count()
     page_count=Entry.objects.all().filter(entrytype='page').count()
     category_count=Category.objects.count()
     tag_count=Tag.objects.count()
+    comments=Comment.objects.all().exclude(email=Blog.get().email).filter(is_public=True).order_by('-date')[:10]
     return render_response(request,"admin/index.html",locals())
 
 @login_required

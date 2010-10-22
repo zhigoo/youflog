@@ -144,6 +144,12 @@ vertical-align:top;
 .tablenav select[name="action"], .tablenav select[name="action2"] {
 width:120px;
 }
+#dashboard-widgets h4 {
+font-family:Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+font-size:13px;
+margin:0 0 0.2em;
+padding:0;
+}
 #dashboard-widgets-wrap .inner-sidebar {width:49%;}
 .inner-sidebar {clear:right;float:right;position:relative;width:280px;}
 
@@ -154,6 +160,32 @@ margin-right:51%;
 }
 #dashboard_right_now .spam {
 color:red;
+}
+#the-comment-list {
+position:relative;
+}
+.comment-item{border-top:medium none;border-color:#DFDFDF;}
+#the-comment-list .comment-item {
+border-top:0px solid;
+padding:1em 10px 1em 70px;
+}
+#the-comment-list .comment-item .avatar {
+float:left;
+margin-left:-60px;
+}
+#the-comment-list .comment-item h4 {
+color:#999999;
+font-weight:normal;
+line-height:1.4;
+margin-top:-0.2em;
+}
+#the-comment-list .comment-item blockquote p {
+display:inline;
+margin:0;
+padding:0;
+}
+.textright {
+text-align:right;
 }
 .metabox-holder .postbox, #poststuff .postbox {
 background-color:#FFFFFF;
