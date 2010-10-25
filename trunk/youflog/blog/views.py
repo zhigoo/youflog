@@ -13,7 +13,7 @@ from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.views.decorators.http import require_POST
 from blog.models import Blog,Entry,Comment,Category,OptionSet
-from utils.utils import paginator,urldecode,sendmail,render
+from utils.utils import paginator,urldecode,sendmail,render,loadTempalte
 from django.utils import simplejson
 from django.contrib.sites.models import Site
 from blog.forms import CommentForm
@@ -59,9 +59,9 @@ def singlePostByID (request,id=None):
 def recentComments(request,page=1):
     page=request.GET.get('page',1)
     page = int(page)
-    allcomment=Comment.objects.all()
-    comments = paginator(allcomment,g_blog.comments_per_page,page)
-    t = get_template('themes/default/recentcomments.html')
+    allcomment=Comment.objects.exclude(email=Blog.get().email).filter(is_public=True).order_by('-date')
+    comments = paginator(allcomment,10,page)
+    t = loadTempalte('recentcomments')
     html = t.render(Context({'comments': comments}))
     json = simplejson.dumps((True,html))
     return HttpResponse(json)

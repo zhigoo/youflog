@@ -60,7 +60,9 @@
 	             	<br/>
 	             	<a href="mailto:{{comment.email}}">{{comment.email}}</a>
 	             	<br/>
+	             	{%if comment.ip_address%}
 	             	{{comment.ip_address}}
+	             	{%endif%}
 	             </td>
 	             <td class="comment">
 	             	<div id="submited-on">

@@ -9,7 +9,7 @@ def index(request):
     page = int(page)
     entrys = Entry.objects.get_posts()
     categories=Category.objects.all()
-    comments=Comment.objects.all()[:8]
+    comments=Comment.objects.all().order_by('-date')[:8]
     return render_response(request,'wap/index.html',{'entrys':entrys,'comments':comments,'page':page,'categories':categories})
 
 def single(request,id=None):

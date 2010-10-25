@@ -1,6 +1,7 @@
 from blog.models import Entry,Comment,Link,Category,OptionSet,Blog
 from utils.utils import render_response
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.sites.models import Site
@@ -12,6 +13,7 @@ from blog.forms import SettingForm
 from settings import MEDIA_ROOT
 from os.path import isdir, dirname
 from tagging.models import Tag
+from settings import DATABASE_ENGINE,DATABASE_NAME
 import logging
 
 #login process
@@ -111,7 +113,7 @@ def post_delete(request):
             entry = Entry.objects.get(id=id)
             entry.delete()
     finally:
-        return HttpResponseRedirect('/admin/entrys')
+        return HttpResponseRedirect('/admin/allposts')
     
 @login_required
 def submit_post(request):
@@ -457,5 +459,12 @@ def save_permalink(request):
         OptionSet.set('permalink_format', linkformat)
     messages.add_message(request, messages.INFO, 'save ok!')
     return HttpResponseRedirect('/admin/permalink')
-    
-    
+
+def backup_db(request):
+    if DATABASE_ENGINE == 'sqlite3':
+        f = open(DATABASE_NAME, "rb")
+        data = f.read()
+        f.close()
+        response = HttpResponse(data,mimetype='application/octet-stream') 
+        response['Content-Disposition'] = 'attachment; filename=youflog.sqlite'
+        return response
