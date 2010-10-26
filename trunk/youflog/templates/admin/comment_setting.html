@@ -49,7 +49,7 @@
 			<td class="defaultavatarpicker"><fieldset><legend class="hidden">默认头像</legend>
 			对于那些没有自定义头像的用户，您可以显示一个通用头像或者根据他们的邮件地址产生一个头像。<br>
 				<label><input type="radio" {%ifequal gavatar "gravatar_default"%}checked="checked"{%endifequal%} value="gravatar_default" id="avatar_gravatar_default" name="gavatar"> 
-				<img width="32" height="32" class="avatar avatar-32 photo" src="/static/avator/default.png" alt=""> Gravatar标志</label><br>
+				<img width="32" height="32" class="avatar avatar-32 photo" src="/static/images/default.png" alt=""> Gravatar标志</label><br>
 				<label><input type="radio" {%ifequal gavatar "identicon"%}checked="checked"{%endifequal%} value="identicon" id="avatar_identicon" name="gavatar"> 
 				<img width="32" height="32" class="avatar avatar-32 photo" src="/static/images/identicon.png" alt=""> 抽象图形(自动产生)</label><br>
 				<label><input type="radio" {%ifequal gavatar "wavatar"%}checked="checked"{%endifequal%} value="wavatar" id="avatar_wavatar" name="gavatar"> 

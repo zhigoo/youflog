@@ -2,6 +2,7 @@ from blog.models import OptionSet
 from django import template
 from django.template import Library, Node,resolve_variable
 from threading import Thread
+
 import settings
 
 import hashlib,urllib,os
@@ -67,8 +68,6 @@ class gravatorNode(Node):
                 return imgurl
         except:
             return default
-        
-
 
 @register.tag
 def gravator(parser,token):
@@ -77,4 +76,3 @@ def gravator(parser,token):
     if len(tokens) != 2:
         raise template.TemplateSyntaxError("useage 'gravator email '")
     return gravatorNode(tokens[1])
-    

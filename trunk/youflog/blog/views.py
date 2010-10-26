@@ -61,7 +61,7 @@ def recentComments(request,page=1):
     page = int(page)
     allcomment=Comment.objects.exclude(email=Blog.get().email).filter(is_public=True).order_by('-date')
     comments = paginator(allcomment,10,page)
-    t = loadTempalte('recentcomments')
+    t = loadTempalte('recentcomments.html')
     html = t.render(Context({'comments': comments}))
     json = simplejson.dumps((True,html))
     return HttpResponse(json)
@@ -139,6 +139,7 @@ def post_comment(request, next = None):
     comment = form.get_comment_object()
     comment.parent_id = data['parent_id']
     comment.ip_address = request.META.get("REMOTE_ADDR", None)
+    comment.useragent=request.META.get('HTTP_USER_AGENT','unknown')
 
     comment.save()
     
@@ -156,10 +157,10 @@ def post_comment(request, next = None):
         if old_c.mail_notify:
             sendmail('email/reply_comment.txt',{'old':old_c,"comment":comment,
                       'entry':comment.object,'blog':blog,'domain':domain},
-                      'new Comment for ' +comment.object.title,old_c.email)
+                      emailtitle,old_c.email)
     else:
         comments_notify=OptionSet.get('comments_notify',1)
-        if comments_notify:
+        if int(comments_notify) == 1:
             emailtitle=u'文章'+comment.object.title+u'有了新的评论'
             sendmail('email/new_comment.txt',{'comment':comment,'entry':comment.object,'domain':domain},emailtitle,blog.email)
 

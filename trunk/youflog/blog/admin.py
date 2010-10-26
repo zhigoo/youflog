@@ -460,6 +460,11 @@ def save_permalink(request):
     messages.add_message(request, messages.INFO, 'save ok!')
     return HttpResponseRedirect('/admin/permalink')
 
+@login_required
+@require_POST
+def format_permalink(request):
+    pass
+
 def backup_db(request):
     if DATABASE_ENGINE == 'sqlite3':
         f = open(DATABASE_NAME, "rb")

@@ -4,6 +4,7 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 from blog.managers import CommentManager
+from utils.uasparser import UASparser
 
 class Comment(models.Model):
     
@@ -19,17 +20,14 @@ class Comment(models.Model):
     ip_address  = models.IPAddressField(_('IP address'), blank=True, null=True)
     is_public   = models.BooleanField(_('is public'), default=True)
     date = models.DateTimeField()
-    
+    useragent=models.CharField(max_length=300)
     content_type   = models.ForeignKey(ContentType)
     object_pk      = models.PositiveIntegerField(_('object id'))
     content_object = generic.GenericForeignKey(ct_field="content_type", fk_field="object_pk")
     
     # Manager
     objects = CommentManager()
-
-    class Meta:
-        permissions = [("can_moderate", "Can moderate comments")]
-    
+   
     def shortcontent(self,len=25):
         return self.content[0:len]
     
@@ -75,3 +73,10 @@ class Comment(models.Model):
 
     def get_absolute_url(self, anchor_pattern="#comment-%(id)s"):
         return self.get_content_object_url() + (anchor_pattern % self.__dict__)
+   
+    def ua(self):
+        if self.useragent:
+            result=UASparser().parse(self.useragent)
+            return result
+        else:
+            return None
