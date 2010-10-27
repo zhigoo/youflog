@@ -122,7 +122,7 @@ class Entry(models.Model):
     
     #下一篇文章
     def next(self):
-        next = Entry.objects.filter(published=True,entrytype='post',date__gt=self.date)
+        next = Entry.objects.filter(published=True,entrytype='post',date__gt=self.date).order_by('date')
         if len(next) >0:
             return next[0]
         else :

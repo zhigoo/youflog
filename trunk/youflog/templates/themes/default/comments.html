@@ -1,8 +1,7 @@
-{% load comment %}
+{% load comment pagination%}
 {% get_comment_form for object as commentform %}
 <script type="text/javascript" src="/static/themes/{{ blog.theme_name }}/js/comments.js"></script>
 <script type="text/javascript" src="/static/js/comment-reply.js"></script>
-
 
 {% get_threaded_comment_list for object %}
  

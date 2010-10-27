@@ -2,12 +2,10 @@ from blog.models import OptionSet
 from django import template
 from django.template import Library, Node,resolve_variable
 from threading import Thread
-import time
 import settings
+import hashlib,urllib,os,time
 
-import hashlib,urllib,os
 register = Library()
-
 
 class VarNode(Node):
     def __init__(self, var_name, var_to_resolve):
@@ -22,13 +20,11 @@ class VarNode(Node):
 
     def render(self, context):
         try:
-            resolved_var = template.resolve_variable(self.var_to_resolve,
-                                                     context)
+            resolved_var = template.resolve_variable(self.var_to_resolve,context)
             self.get_context(context)[self.var_name] = resolved_var
         except template.VariableDoesNotExist:
             self.get_context(context)[self.var_name] = ''
         return ''
-    
     
 @register.tag
 def var(parser, token):

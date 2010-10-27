@@ -16,10 +16,7 @@
 			<a class="comment-reply-link" onclick="return addComment.moveForm('comment-{{comment.id}}','{{comment.id}}','respond')" href="#respond" rel="nofollow">Reply</a>
 			|
 			<a onclick="quote('{{comment.id}}','{{comment.author}}')" href="javascript:void(0);">Quote</a>
-			{%if comment.useragent%}
-			<img alt="{{comment.ua.ua_family}}" style="border: 0px none; vertical-align: middle;" title="{{comment.ua.ua_family}}" src="/static/user-agent/ua/{{comment.ua.ua_icon}}">{{comment.ua.ua_name}}
-			<img alt="{{comment.ua.os_family}}" style="border: 0px none; vertical-align: middle;" title="{{comment.ua.os_family}}" src="/static/user-agent/os/{{comment.ua.os_icon}}">{{comment.ua.os_name}}
-			{%endif%}
+			
 		</div>
 		
 		<div class="date">
