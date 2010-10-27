@@ -2,7 +2,7 @@ from blog.models import OptionSet
 from django import template
 from django.template import Library, Node,resolve_variable
 from threading import Thread
-
+import time
 import settings
 
 import hashlib,urllib,os
@@ -41,13 +41,29 @@ def var(parser, token):
 
 
 class gravatorNode(Node):
-    
+    update_interval = 3600*24*10 # 10 days
     def __init__(self,email):
         self.email = email
         self.gavatar=OptionSet.get('gavatar')
     
-    def write(self,url,path):
+    def write2file(self,url,path):
         urllib.urlretrieve(url, path)
+    
+    def _check_cache(self,path):
+        if not os.path.exists(path):
+            return False
+        else:
+            mtime = os.path.getmtime(path)
+            if mtime < time.time() - self.update_interval:
+                return False
+        return True
+    
+    def _fetchGravatarImage(self,email_digest,avator_path):
+        imgurl = "http://www.gravatar.com/avatar/"
+        imgurl +=email_digest+"?"+ urllib.urlencode({'d':self.gavatar, 's':str(50),'r':'G'})
+        th = Thread(target=self.write2file,args=(imgurl,avator_path))
+        th.start()
+        return imgurl
     
     def render(self,context):
         avator_path=settings.STATIC_ROOT+"/avator/"
@@ -58,21 +74,16 @@ class gravatorNode(Node):
         try:
             email_digest=hashlib.md5(email).hexdigest()
             avator_path=avator_path+email_digest
-            if os.path.isfile(avator_path):
+            if self._check_cache(avator_path):
                 return '/static/avator/'+email_digest
             else:
-                imgurl = "http://www.gravatar.com/avatar/"
-                imgurl +=email_digest+"?"+ urllib.urlencode({'d':self.gavatar, 's':str(50),'r':'G'})
-                th = Thread(target=self.write,args=(imgurl,avator_path))
-                th.start()
-                return imgurl
+                return self._fetchGravatarImage(email_digest, avator_path)
         except:
             return default
 
 @register.tag
 def gravator(parser,token):
     tokens = token.contents.split()
-    
     if len(tokens) != 2:
         raise template.TemplateSyntaxError("useage 'gravator email '")
     return gravatorNode(tokens[1])
