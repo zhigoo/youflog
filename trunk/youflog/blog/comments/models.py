@@ -4,7 +4,6 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 from blog.managers import CommentManager
-from utils.uasparser import UASparser
 
 class Comment(models.Model):
     
@@ -73,10 +72,3 @@ class Comment(models.Model):
 
     def get_absolute_url(self, anchor_pattern="#comment-%(id)s"):
         return self.get_content_object_url() + (anchor_pattern % self.__dict__)
-   
-    def ua(self):
-        if self.useragent:
-            result=UASparser().parse(self.useragent)
-            return result
-        else:
-            return None

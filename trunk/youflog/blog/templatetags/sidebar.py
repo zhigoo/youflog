@@ -26,7 +26,7 @@ def get_random_posts(context):
 
 @register.inclusion_tag('sidebar/recent_comments.html', takes_context = True)
 def get_recent_comment(context):
-    comments=Comment.objects.in_public()[:10]
+    comments=Comment.objects.in_public().exclude(email=Blog.get().email)[:10]
     return {'comments':comments}
 
 @register.inclusion_tag('sidebar/categories.html', takes_context = True)

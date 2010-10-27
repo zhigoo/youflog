@@ -25,6 +25,8 @@
 		<div class="fixed"></div>
 	</div>
 	<div id="commentbody-{{comment.id}}" class="body">
-		<p>{{comment.content|safe}}</p>
+	{% autoescape on %}
+		<p>{{comment.content}}</p>
+		{% endautoescape %}
 	</div>
 	<div class="fixed"></div>
