@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib.sitemaps import views as sitemap_views
 from django.views.decorators.cache import cache_page
 from blog import views,admin,feed_sitemap,wap
-from blog import xmlrpc
 
 sitemaps = {
     'posts': feed_sitemap.PostSitemap(),
@@ -15,6 +14,7 @@ urlpatterns = patterns('',
     
     url(r'^admin$',admin.index,name="admin_index"), # 后台管理页面
     #post
+    url(r'^admin/quick_post',admin.quick_post,name="quick_post"),#快速发布
     url(r'^admin/allposts',admin.all_posts,name='all posts'),
     url(r'^admin/pubposts',admin.all_pub_posts,name='all publish posts'),
     url(r'^admin/unpubposts',admin.unpub_posts,name='all unpublish posts'),

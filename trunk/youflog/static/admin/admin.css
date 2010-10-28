@@ -36,7 +36,14 @@ li{margin-bottom:6px;}
 #lp_wrap {height:auto;min-height:100%;width:100%;}
 #lpcontent {height:100%;padding-bottom:40px;}
 #lpheader{background-color: #464646;height:46px;}
-
+form .input-text-wrap {
+border:1px solid #CCCCCC;
+padding:2px 3px;
+}
+form .textarea-wrap {
+border:1px solid #CCCCCC;
+padding:2px;
+}
 #lpheader h1 {float:left;
 font:22px Georgia,"Times New Roman","Bitstream Charter",Times,serif;
 margin:0;padding:10px 8px 5px;
@@ -294,7 +301,7 @@ border-width:1px;
 font-size:1.7em;
 outline:medium none;
 padding:3px 4px;
-width:100%;
+width:99%;
 }
 #permalink_structure{
 -moz-border-radius:6px 6px 6px 6px;
@@ -381,6 +388,42 @@ font-size:14px;
 padding-right:6px;
 text-align:right;
 }
+#side-sortables{min-height:300px;}
+#dashboard_quick_press h4 {
+clear:both;
+float:left;
+font-family:"Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
+font-size:12px;
+font-weight:normal;
+padding-top:5px;
+text-align:right;
+width:4.5em;
+display:block;
+}
+#dashboard_quick_press .input-text-wrap, #dashboard_quick_press .textarea-wrap {
+margin:0 0 1em 5em;
+}
+#dashboard-widgets #dashboard_quick_press form p.submit input {
+float:left;
+}
+p.submit {
+border-color:#DFDFDF;
+margin-left:4.6em;
+}
+#dashboard-widgets #dashboard_quick_press form p.submit #save-post {
+margin:0 1em 0 10px;
+}
+#dashboard-widgets #dashboard_quick_press form p.submit #publish {
+float:right;
+}
+#dashboard-widgets form .input-text-wrap input {
+border:0 none;
+color:#333333;
+margin:0;
+outline:medium none;
+padding:0;
+width:99%;
+}
 .metabox-holder .postbox, #poststuff .postbox, #poststuff .stuffbox {
 -moz-border-radius:6px 6px 6px 6px;
 border-style:solid;
@@ -420,7 +463,7 @@ padding:7px 9px;
 #excerpt {
 height:6em;
 margin:0;
-width:100%;
+width:99%;
 }
 code{background: none repeat scroll 0 0 #EAEAEA;}
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# *_* encoding=utf-8*_*
 from blog.models import Entry,Comment,Link,Category,OptionSet,Blog
 from utils.utils import render_response
 from django.http import HttpResponseRedirect
@@ -56,6 +58,26 @@ def index(request):
     tag_count=Tag.objects.count()
     comments=Comment.objects.all().exclude(email=Blog.get().email).filter(is_public=True).order_by('-date')[:10]
     return render_response(request,"admin/index.html",locals())
+
+@login_required
+@require_POST
+def quick_post(request):
+    title=request.POST.get('title')
+    content=request.POST.get('content','')
+    tags=request.POST.get('tags','')
+    save=request.POST.get('save')
+    publish=request.POST.get('publish')
+    entry=Entry(title=title,content=content,tags=tags,slug='',allow_comment=True)
+    entry.category_id=1
+    if save:
+        entry.save(False)
+        html=u"<p>文章已保存.&nbsp;<a href='/admin/editpost/%s'>编辑文章</a></p>"%(str(entry.id))
+    elif publish:
+        entry.save(True)
+        html=u"<p>文章已发布.&nbsp;<a href='%s' target='_blank'>查看文章</a></p>"%(entry.get_absolute_url())
+    
+    return HttpResponse(html)
+    
 
 @login_required
 def all_posts(request):

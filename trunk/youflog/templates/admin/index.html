@@ -1,11 +1,54 @@
 {% extends "admin/base.html" %}
 {%load utils %}
 {% block content %}
+<script type="text/javascript" src="/static/js/jquery.form.utf8.js"></script>
+<script type="text/javascript">
+$(document).ready(function() { 
+    $('#quick_post').ajaxForm({
+    	resetForm: true,
+    	clearForm: true,
+        success:function(responseText,statusText, xhr,form){
+			$('.message').empty().append(responseText)
+        }
+     }); 
+}); 
+</script>
 <div class="wrap">
  <h2>控制板</h2>
  <div id="dashboard-widgets-wrap">
  	<div id="dashboard-widgets" style="padding-top:10px;">
  		<div id="side-info-column" class="inner-sidebar">
+ 			<div id="side-sortables" style="position: relative;" class="metabox-holder">
+ 				<div id="dashboard_quick_press" class="postbox">
+ 					<h3 class="hndle"><span>快速发布</span></h3>
+ 					<div class="inside">
+ 						<div class="message">
+ 						  
+ 						</div>
+ 						<p class="textright"></p>
+ 						<form method="post" action="/admin/quick_post" id="quick_post">
+ 							<h4 id="quick-post-title"><label for="title">标题</label></h4>
+ 							<div class="input-text-wrap">
+								<input type="text" value="" autocomplete="off" tabindex="1" id="title" name="title">
+							</div>
+							<h4 id="content-label"><label for="content">内容</label></h4>
+							<div class="textarea-wrap">
+								<textarea tabindex="2" cols="15" rows="3" class="mceEditor" id="content" name="content"></textarea>
+							</div>
+							<h4><label for="tags-input">标签</label></h4>
+							<div class="input-text-wrap">
+								<input type="text" value="" tabindex="3" id="tags-input" name="tags">
+							</div>
+							<p class="submit">
+								<input type="submit" value="保存草稿" tabindex="4" class="button" id="save-post" name="save">
+								<input type="reset" class="cancel" value="取消">
+								<input type="submit" value="发布" class="button-primary" tabindex="5" accesskey="p" id="publish" name="publish">
+								<br class="clear">
+							</p>
+ 						</form>
+ 					</div>
+ 				</div>
+ 			</div>
  		</div>
  		<div class="has-sidebar" id="post-body">
  			<div class="has-sidebar-content" id="dashboard-widgets-main-content">
