@@ -67,6 +67,8 @@ def quick_post(request):
     tags=request.POST.get('tags','')
     save=request.POST.get('save')
     publish=request.POST.get('publish')
+    if not title and not content:
+        return HttpResponse(u"文章标题和内容不能为空!")
     entry=Entry(title=title,content=content,tags=tags,slug='',allow_comment=True)
     entry.category_id=1
     if save:
