@@ -16,6 +16,7 @@ def init_data(**kwargs):
     entry.allow_comment=True
     entry.slug=''
     entry.category=default_cate
+    entry.author_id=1
     entry.save(True)
     
     comment=Comment(author='admin',email='admin@iyouf.info',weburl='http://iyouf.info',content=u'测试第一条评论')

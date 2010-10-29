@@ -67,9 +67,11 @@ def quick_post(request):
     tags=request.POST.get('tags','')
     save=request.POST.get('save')
     publish=request.POST.get('publish')
+    
     if not title and not content:
         return HttpResponse(u"文章标题和内容不能为空!")
     entry=Entry(title=title,content=content,tags=tags,slug='',allow_comment=True)
+    entry.author=request.user
     entry.category_id=1
     if save:
         entry.save(False)
@@ -183,6 +185,7 @@ def submit_post(request):
             entry.allow_pingback=allow_pingback
             entry.entrytype=posttype
             entry.sticky=sticky
+            entry.author=request.user
             if posttype and posttype =='page':
                 menu_order=request.POST.get('order',0)
                 if menu_order:

@@ -3,6 +3,7 @@
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.sites.models import Site
+from django.contrib.auth.models import User
 from tagging.fields import TagField
 from datetime import datetime
 from blog.comments.models import Comment
@@ -66,6 +67,7 @@ class Category(models.Model):
  
 class Entry(models.Model):
     ENTRY_TYPE_CHOICES=(('page','page'),('post','post'))
+    author=models.ForeignKey(User)
     title = models.CharField(max_length=200)
     content = models.TextField()
     excerpt = models.TextField(null=True, blank=True)

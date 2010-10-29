@@ -209,8 +209,8 @@ border-style : solid;
 border-width : 1px;
 margin : 0;
 }
-.column-author{width:20%;}
-.column-response{width:20%;}
+.column-author{width:30%;}
+.column-response{width:25%;}
 td.comment {
 word-wrap:break-word;
 }
