@@ -19,7 +19,6 @@ from django.shortcuts import get_object_or_404
 from tagging.models import Tag, TaggedItem
 import blog.comments.signals as signals
 from django.views.decorators.cache import cache_page
-import logging
 
 def get_comment_cookie_meta(request):
     return {}
@@ -77,10 +76,14 @@ def recentComments(request,page=1):
 @cache_page(60*10)
 def tag(request,tag):
     if tag:
-        page=request.GET.get('page',1)
-        tag = get_object_or_404(Tag, name =tag)
-        entries=TaggedItem.objects.get_by_model(Entry, tag).order_by('-date')
-        return render(request,'tag.html',{'entries':entries,'tag':tag,'page':page,'pagi_path': request.path})
+        response=get_cache('posts_for_tag')
+        if not response:
+            page=request.GET.get('page',1)
+            tag = get_object_or_404(Tag, name =tag)
+            entries=TaggedItem.objects.get_by_model(Entry, tag).order_by('-date')
+            response=render(request,'tag.html',{'entries':entries,'tag':tag,'page':page,'pagi_path': request.path})
+            set_cache('posts_for_tag',response)
+        return response
     else:
         return HttpResponseRedirect('404.html')
 
