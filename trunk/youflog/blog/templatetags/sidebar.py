@@ -4,6 +4,7 @@ from blog.models import Entry,Comment,Category,Link,Archive,Blog
 from settings import DATABASE_ENGINE
 from tagging.models import Tag, TaggedItem
 from django.db.models import Count
+
 register = Library()
 
 @register.inclusion_tag('sidebar/recent_posts.html', takes_context = True)

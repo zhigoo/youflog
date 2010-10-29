@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# *_* encoding=utf-8 *_*
 from django.dispatch import Signal
 from django.contrib.sites.models import Site
 from threading import Thread
@@ -5,7 +7,8 @@ from threading import Thread
 from blog.akismet import Akismet
 from blog.akismet import AkismetError
 
-from blog.models import OptionSet
+from blog.models import Blog,OptionSet
+from utils.utils import sendmail
 
 comment_was_submit=Signal(providing_args=['comment'])
 
@@ -45,4 +48,21 @@ def on_comment_was_posted(sender,comment,request,*args,**kwargs):
     th = Thread(target=validate_comment,args=(sender,comment,request))
     th.start()
 
+def on_comment_was_submit(sender,comment,*args,**kwargs):
+    blog=Blog.get()
+    domain=Site.objects.get_current().domain
+    if comment.parent_id != '0':
+        old_c=comment.parent
+        emailtitle=u'您在 '+blog.title+u' 上的评论有了新的回复'
+        if old_c.mail_notify:
+            sendmail('email/reply_comment.txt',{'old':old_c,"comment":comment,
+                                'blog':blog,'domain':domain},
+                      emailtitle,old_c.email)
+    else:
+        comments_notify=OptionSet.get('comments_notify',1)
+        if int(comments_notify) == 1:
+            emailtitle=u'文章'+comment.object.title+u'有了新的评论'
+            sendmail('email/new_comment.txt',{'comment':comment,'domain':domain},emailtitle,blog.email)
+
 comment_was_posted.connect(on_comment_was_posted)
+comment_was_submit.connect(on_comment_was_submit)

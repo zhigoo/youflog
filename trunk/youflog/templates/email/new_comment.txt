@@ -1,5 +1,5 @@
-文章<b>{{entry.title}}</b> 有了新的评论<br/>
-{{entry.fullurl}}
+文章<b>{{comment.object.title}}</b> 有了新的评论<br/>
+{{comment.object.fullurl}}
 <p/>
 作者：{{comment.author}} (IP: {{comment.ip_address}})<br/>
 电子邮件： {{comment.email}}<br/>
