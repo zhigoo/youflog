@@ -28,6 +28,8 @@ urlpatterns = patterns('',
     url(r'^admin/comments',admin.comments,name="show all comments"), #分页显示所有的评论
     url(r'^admin/spam_comment',admin.spam_comment,name='spam comment'),
     url(r'^admin/comment_delete',admin.comment_delete,name="delete comment"), #批量删除评论信息
+    url(r'^admin/flag_spam_comment/(?P<id>\d+)$',admin.flag_comment_for_spam),
+    url(r'^admin/del_comment/(?P<id>\d+)$',admin.delete_single_comment),
     
     #category
     url(r'^admin/categories',admin.categories,name='show all categories'),
@@ -76,4 +78,5 @@ urlpatterns = patterns('',
     url(r'^archives/(?P<year>\d{4})/(?P<month>\d{1,2})$', views.archives),
     (r'^(.*)$', views.singlePost),
     
+   
 )

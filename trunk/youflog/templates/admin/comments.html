@@ -69,6 +69,18 @@
 	             		提交于 {{comment.date|date:"Y-m-d"}} @ {{comment.date|date:"H:i"}}
 	             	</div>
 	             <p>{{comment.content}}</p>
+	             
+	             <div class="row-actions">
+	             	{% if comment.is_public%}
+	             	<span class="spam"><a title="标记这个评论为垃圾评论" href="/admin/flag_spam_comment/{{comment.id}}?approve=0">垃圾评论</a></span>
+	             	{%else%}
+	             	<span class="approve"><a title="获准这条评论" href="/admin/flag_spam_comment/{{comment.id}}?approve=1">获准</a></span>
+	             	{%endif%}
+	             	<span class="delete">| <a href="/admin/del_comment/{{comment.id}}">删除</a></span>
+	             	<span class="edit">| 编辑评论</span>
+	             	<span class="reply">| 回复</span>
+	             </div>
+	             
 	             </td>
 	             <td class="column-response">{{comment.object.title}}</td>
 			</tr>

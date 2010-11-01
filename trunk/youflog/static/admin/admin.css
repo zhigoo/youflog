@@ -275,6 +275,14 @@ text-decoration:none;
 background-color : #464646;
 color : #d7d7d7;
 }
+
+.row-actions{padding: 2px 0 0;visibility: hidden;}
+tr:hover .row-actions, div.comment-item:hover .row-actions {
+visibility:visible;
+}
+.row-actions .delete a {color:#BC0B0B;}
+.row-actions .approve a{color:#006505;}
+
 tfoot{background-color : #464646;color : #d7d7d7;}
 #lpbody-content .metabox-holder {
 	padding-top: 10px;

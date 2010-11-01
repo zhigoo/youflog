@@ -65,3 +65,6 @@ def get_cache(key):
 
 def set_cache(key,value,timeout=600):
     cache.set(get_cache_key(key), value, timeout)
+    
+def delete_cache(key):
+    cache.delete(get_cache_key(key))

@@ -93,5 +93,5 @@ $(document).ready(function(){
 		this.style.color=randomColor()
 	})
 
-	//loadRecentComments(1);
+	loadRecentComments(1);
 })

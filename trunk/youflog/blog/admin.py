@@ -4,6 +4,7 @@ from blog.models import Entry,Comment,Link,Category,OptionSet,Blog
 from utils.utils import render_response
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.sites.models import Site
@@ -15,7 +16,7 @@ from blog.forms import SettingForm
 from settings import MEDIA_ROOT
 from os.path import isdir, dirname
 from tagging.models import Tag
-from settings import DATABASE_ENGINE,DATABASE_NAME
+from settings import DATABASE_ENGINE,DATABASE_NAME,STATIC_ROOT
 import logging
 
 #login process
@@ -268,6 +269,23 @@ def spam_comment(request):
     return render_response(request,'admin/comments.html',{'page':page,'comments':comments,\
                                                           'comment_count':comment_count,
                                                           'spam_count':comments.count()})
+    
+@login_required
+def flag_comment_for_spam(request,id):
+    approve=request.GET.get('approve',0)
+    comment=get_object_or_404(Comment,id=id)
+    if int(approve) == 0:
+        comment.is_public=False
+    else:
+        comment.is_public=True
+    comment.save()
+    return HttpResponseRedirect('/admin/comments');
+    
+@login_required
+def delete_single_comment(request,id):
+    comment=get_object_or_404(Comment,id=id)
+    comment.delete()
+    return HttpResponseRedirect('/admin/comments');
 
 @login_required
 def comment_delete(request):
@@ -500,3 +518,14 @@ def backup_db(request):
         response = HttpResponse(data,mimetype='application/octet-stream') 
         response['Content-Disposition'] = 'attachment; filename=youflog.sqlite'
         return response
+
+import zipfile,os,mimetypes
+def tinymce(request,path):
+    fullpath = os.path.join(STATIC_ROOT+'/tinymce', path)
+    tinymce = zipfile.ZipFile(STATIC_ROOT+'/tinymce.zip', "r")
+    file="tinymce/"+path
+    mimetype = mimetypes.guess_type(fullpath)[0] or 'application/octet-stream'
+    content=tinymce.read(file)
+    response = HttpResponse(content, mimetype=mimetype)
+    response["Content-Length"] = len(content)
+    return response

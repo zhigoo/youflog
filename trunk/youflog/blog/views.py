@@ -19,11 +19,10 @@ from django.shortcuts import get_object_or_404
 from tagging.models import Tag, TaggedItem
 import blog.comments.signals as signals
 from django.views.decorators.cache import cache_page
-
+import logging
 def get_comment_cookie_meta(request):
     return {}
 
-@cache_page(60*3)
 def index(request):
     page=request.GET.get('page',1)
     posts=get_cache('index_posts')
@@ -35,13 +34,10 @@ def index(request):
 def singlePost(request,slug):
     if slug:
         slug=urldecode(slug)
-        entry=get_cache('post:slug:%s' %(slug))
-        if not entry:
-            try:
-                entry=Entry.objects.get(link=slug)
-                set_cache('post:slug:%s' %(slug),entry)
-            except:
-                return render_to_response('404.html')
+        try:
+            entry=Entry.objects.get(link=slug)
+        except:
+            return render_to_response('404.html')
         entry.updateReadtimes()
         
         if entry.entrytype=='post':
@@ -53,14 +49,11 @@ def singlePost(request,slug):
         return render_to_response('404.html')
 
 def singlePostByID (request,id=None):
-    entry=get_cache('post:id:%s' %(id))
-    if not entry:
-        try:
-            entry=Entry.objects.get(id=id)
-            set_cache('post:id:%s'%(id),entry)
-        except:
-            return render_to_response('404.html')
-    entry.updateReadtimes()
+    try:
+        entry=Entry.objects.get(id=id)
+        entry.updateReadtimes()
+    except:
+        return render_to_response('404.html')
     return render(request,"single.html",{'entry':entry,'comment_meta':get_comment_cookie_meta(request)})
 
 def recentComments(request,page=1):
@@ -172,3 +165,4 @@ def post_comment(request, next = None):
     )
 
     return HttpResponseRedirect(comment.get_absolute_url())
+

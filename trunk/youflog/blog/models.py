@@ -65,6 +65,7 @@ class Category(models.Model):
     class Meta:
         ordering = ('name',)
  
+from utils.utils import delete_cache
 class Entry(models.Model):
     ENTRY_TYPE_CHOICES=(('page','page'),('post','post'))
     author=models.ForeignKey(User)
@@ -187,6 +188,7 @@ class Entry(models.Model):
                     self.link=self.slug
                 else:
                     self.link=str(self.id)
+            delete_cache('index_posts')
         
         self.published=pub
         super(Entry,self).save()

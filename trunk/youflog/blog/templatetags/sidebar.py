@@ -5,22 +5,17 @@ from blog.models import Entry,Comment,Category,Link,Archive,Blog
 from settings import DATABASE_ENGINE
 from tagging.models import Tag, TaggedItem
 from django.db.models import Count
+from django.db import connection
 register = Library()
 
 @register.inclusion_tag('sidebar/recent_posts.html', takes_context = True)
 def get_recent_posts(context):
-    posts=cache.get('sidebar:recent_posts')
-    if not posts:
-        posts=Entry.objects.get_posts()[:8]
-        cache.set('sidebar:recent_posts',posts,60* 10)
+    posts=Entry.objects.get_posts()[:8]
     return {'recentposts':posts}
 
 @register.inclusion_tag('sidebar/hot_posts.html', takes_context = True)
 def get_popular_posts(context):
-    posts=cache.get('sidebar:popular')
-    if not posts:
-        posts=Entry.objects.get_posts().order_by('-readtimes')[:8]
-        cache.set('sidebar:popular',posts,60 * 10)
+    posts=Entry.objects.get_posts().order_by('-readtimes')[:8]
     return {'hotposts':posts}
 
 @register.inclusion_tag('sidebar/random_posts.html', takes_context = True)
@@ -77,8 +72,7 @@ def get_reader_wall(context):
     comments=cache.get('sidebar:readerwall')
     if not comments:
         admin_email=Blog.get().email
-        sql="select count(email) as count,author,email,weburl from comments_comment where email !='%s' group by email order by count desc limit 12"%(admin_email)
-        from django.db import connection
+        sql="select count(email) as count,author,email,weburl from comments_comment where is_public=1 and email !='%s' group by email order by count desc limit 12"%(admin_email)
         cursor = connection.cursor()
         cursor.execute(sql)
         rows=cursor.fetchall()
@@ -91,5 +85,5 @@ def get_reader_wall(context):
             weburl=row[3]
             comment={'author':author,'weburl':weburl,'count':str(count),'email':email}
             comments.append(comment)
-        cache.set('sidebar:readerwall',comments,60 * 5)
+        cache.set('sidebar:readerwall',comments,30)
     return {'comments':comments}
