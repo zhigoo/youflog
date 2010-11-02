@@ -16,7 +16,7 @@ from blog.forms import SettingForm
 from settings import MEDIA_ROOT
 from os.path import isdir, dirname
 from tagging.models import Tag
-from settings import DATABASE_ENGINE,DATABASE_NAME,STATIC_ROOT
+from settings import DATABASE_ENGINE,DATABASE_NAME
 import logging
 
 #login process
@@ -518,14 +518,3 @@ def backup_db(request):
         response = HttpResponse(data,mimetype='application/octet-stream') 
         response['Content-Disposition'] = 'attachment; filename=youflog.sqlite'
         return response
-
-import zipfile,os,mimetypes
-def tinymce(request,path):
-    fullpath = os.path.join(STATIC_ROOT+'/tinymce', path)
-    tinymce = zipfile.ZipFile(STATIC_ROOT+'/tinymce.zip', "r")
-    file="tinymce/"+path
-    mimetype = mimetypes.guess_type(fullpath)[0] or 'application/octet-stream'
-    content=tinymce.read(file)
-    response = HttpResponse(content, mimetype=mimetype)
-    response["Content-Length"] = len(content)
-    return response

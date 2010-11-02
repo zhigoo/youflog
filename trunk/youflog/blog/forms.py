@@ -2,20 +2,16 @@ import datetime
 
 from django import forms
 from django.forms.util import ErrorDict
-from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import force_unicode
-from django.utils.translation import ugettext_lazy as _
 from models import Comment
 from models import Blog
 
-MAX_TAG_LENGTH = getattr(settings, 'MAX_TAG_LENGTH', 50)
-
 class CommentForm(forms.Form):
-    author = forms.CharField(label=_("Name"), max_length=50)
-    email = forms.EmailField(label=_("Email address"))
-    url = forms.URLField(label=_("URL"), required=False)
-    content = forms.CharField(label=_('Comment'), widget=forms.Textarea,max_length=300)
+    author = forms.CharField(widget=forms.TextInput(attrs={'id':'author'}),max_length=50)
+    email = forms.EmailField(widget=forms.TextInput(attrs={'id':'email'}))
+    url = forms.URLField(widget=forms.TextInput(attrs={'id':'url'}),required=False)
+    content = forms.CharField(widget=forms.Textarea,max_length=300)
     
     content_type = forms.CharField(widget=forms.HiddenInput)
     object_pk = forms.CharField(widget=forms.HiddenInput)

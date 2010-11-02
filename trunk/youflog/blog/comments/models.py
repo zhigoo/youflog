@@ -2,9 +2,7 @@ import datetime
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.utils.translation import ugettext_lazy as _
 from blog.managers import CommentManager
-import re
 
 class Comment(models.Model):
     
@@ -17,12 +15,12 @@ class Comment(models.Model):
     mail_notify = models.BooleanField(default = False)
 
     # Metadata about the comment
-    ip_address  = models.IPAddressField(_('IP address'), blank=True, null=True)
-    is_public   = models.BooleanField(_('is public'), default=True)
+    ip_address  = models.IPAddressField( blank=True, null=True)
+    is_public   = models.BooleanField(default=True)
     date = models.DateTimeField()
     useragent=models.CharField(max_length=300)
     content_type   = models.ForeignKey(ContentType)
-    object_pk      = models.PositiveIntegerField(_('object id'))
+    object_pk      = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey(ct_field="content_type", fk_field="object_pk")
     
     # Manager

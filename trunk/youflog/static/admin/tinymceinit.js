@@ -13,5 +13,5 @@ tinyMCE.init({
 	theme_advanced_statusbar_location : "bottom",
 	theme_advanced_resizing : true,
 	language : "ch",
-	content_css : "/static/tinymce/wordpress.css"
+	content_css : "/static/wordpress.css"
 });

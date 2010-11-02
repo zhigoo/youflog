@@ -56,8 +56,13 @@
 							<div id="minor-publishing-actions">
 							<span id="sticky-span" style="display: inline;">
 							<input type="checkbox" tabindex="4" value="sticky" name="sticky" id="sticky" {%if entry.sticky%} checked{%endif%}> 
-							<label class="selectit" for="sticky">置顶这篇文章到首页</label><br></span>
-							
+							<label class="selectit" for="sticky">置顶这篇文章到首页</label>
+							<br>
+							</span>
+							<span style="display:inline;">
+								<input type="checkbox" checked="checked" value="open" id="comment_status" name="allow_comment"> 
+							<label class="selectit" for="sticky">这篇文章接受评论</label><br/>
+							</span>
 							<div id="save-action" class="alignleft">
 							<input type="submit" class="button button-highlighted" tabindex="4" value="保存" id="save-post" name="save">
 							</div>
@@ -97,19 +102,6 @@
 							<h3 class="hndle">摘要</h3>
 							<textarea id="excerpt" tabindex="6" name="excerpt" cols="40" rows="2">{{entry.excerpt}}</textarea>
 							<p><b><b>摘要是您手动添加的内容概要。</b></b></p>
-						</div>
-						<div id="commentstatusdiv" class="postbox">
-							<h3 class="hndle">讨论</h3>
-							<p class="meta-options">
-							<b><b>
-							<label class="selectit" for="comment_status"> 
-								<input type="checkbox" checked="checked" value="open" id="comment_status" name="allow_comment"> 这篇文章接受评论
-							</label>
-							<br>
-							<label class="selectit" for="ping_status">
-								<input type="checkbox" checked="checked" value="open" id="ping_status" name="allow_pingback"> 这篇文章接收
-								<a target="_blank" href="http://codex.wordpress.org/Introduction_to_Blogging#Managing_Comments">trackbacks 和 pingbacks</a></label>
-							</b></b></p>
 						</div>
 					</div>
 				</div>

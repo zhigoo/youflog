@@ -90,9 +90,6 @@ margin:-5px 0 0;
 input[type="text"], textarea {
 -moz-box-sizing:border-box;
 }
-input[type="text"], textarea {
--moz-box-sizing:border-box;
-}
 .search-input {
 border-style:solid;
 border-width:1px;

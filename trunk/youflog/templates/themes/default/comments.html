@@ -25,14 +25,13 @@
 				<div class="part">
 					<div id="author_info">
 						<div><label for="author" class="small">Name* </label></div>
-						<div><input type="text" class="textfield" name="author" id="author" value="" tabindex="1" /></div>
+						<div>{{commentform.author}}</div>
 						<div><label for="email" class="small">E-Mail* (不公布)</label></div>
-						<div><input type="text" class="textfield" name="email" id="email" value="" tabindex="2" /></div>
+						<div>{{commentform.email}}</div>
 						<div><label for="url" class="small">Website</label></div>
-						<div><input type="text" class="textfield" name="url" id="url" value="" tabindex="3" /></div>
+						<div>{{commentform.url}}</div>
 					</div>
 				</div>
-
 				{{ commentform.content_type }}
 			    {{ commentform.object_pk }}
 			    {{ commentform.parent_id }}

@@ -9,7 +9,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^static/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.STATIC_ROOT}),
-    url(r'^tinymce/(?P<path>.*)$', 'blog.admin.tinymce'),
+    url(r'^tinymce/(?P<path>.*)$', 'blog.ext_views.tinymce'),
     (r'',include('blog.urls')),
     
 )

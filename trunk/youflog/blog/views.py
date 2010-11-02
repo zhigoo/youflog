@@ -19,9 +19,18 @@ from django.shortcuts import get_object_or_404
 from tagging.models import Tag, TaggedItem
 import blog.comments.signals as signals
 from django.views.decorators.cache import cache_page
-import logging
+
 def get_comment_cookie_meta(request):
-    return {}
+    author = ''
+    email = ''
+    weburl = ''
+    if 'author' in request.COOKIES:
+        author = request.COOKIES['author']
+    if 'email' in request.COOKIES:
+        email = request.COOKIES['email']
+    if 'weburl' in request.COOKIES:
+        weburl = request.COOKIES['weburl']
+    return {'author': author, 'email': email, 'url': weburl}
 
 def index(request):
     page=request.GET.get('page',1)
@@ -118,14 +127,7 @@ def post_comment(request, next = None):
     try:
         model = models.get_model(*ctype.split(".", 1))
         target = model._default_manager.get(pk=object_pk)
-    except TypeError:
-        return CommentPostBadRequest(
-            "Invalid content_type value: %r" % escape(ctype))
-    except AttributeError:
-        return CommentPostBadRequest(
-            "The given content-type %r does not resolve to a valid model." % \
-                escape(ctype))
-    except ObjectDoesNotExist:
+    except (TypeError,AttributeError,ObjectDoesNotExist):
         return CommentPostBadRequest(
             "No object matching content-type %r and object PK %r exists." % \
                 (escape(ctype), escape(object_pk)))
@@ -163,6 +165,13 @@ def post_comment(request, next = None):
         sender  = comment.__class__,
         comment = comment                             
     )
-
-    return HttpResponseRedirect(comment.get_absolute_url())
+    response = HttpResponseRedirect(comment.get_absolute_url())
+    try:
+        response.set_cookie('author', comment.author, max_age = 31536000)
+        response.set_cookie('email', comment.email, max_age = 31536000)
+        response.set_cookie('weburl', comment.weburl, max_age = 31536000)
+    except:
+        pass
+    
+    return response
 
