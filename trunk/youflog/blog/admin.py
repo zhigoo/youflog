@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # *_* encoding=utf-8*_*
+import blog.cache as cache
 from blog.models import Entry,Comment,Link,Category,OptionSet,Blog
 from utils.utils import render_response
 from django.http import HttpResponseRedirect
@@ -371,6 +372,7 @@ def addLink(request):
         if type and type == 'add':
             link=Link(text=text,href=href,comment=comment)
             link.save()
+            cache.delete_cache('sidebar:links')
         else:
             id=request.POST.get('id','')
             link=Link.objects.get(id=id)
@@ -378,6 +380,7 @@ def addLink(request):
             link.href=href
             link.comment=comment
             link.save()
+            cache.delete_cache('sidebar:links')
     return HttpResponseRedirect('/admin/links')
 
 @login_required
@@ -389,6 +392,7 @@ def deleteLink(request):
             for id in checks:
                 link=Link.objects.get(id=id)
                 link.delete()
+                cache.delete_cache('sidebar:links')
         return HttpResponseRedirect('/admin/links')
 
 @login_required

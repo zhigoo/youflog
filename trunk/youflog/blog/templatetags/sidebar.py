@@ -1,7 +1,8 @@
-from django.core.cache import cache
+#from django.core.cache import cache
 from django.template import Library
 from django.shortcuts import get_object_or_404
 from blog.models import Entry,Comment,Category,Link,Archive,Blog
+import blog.cache as cache
 from settings import DATABASE_ENGINE
 from tagging.models import Tag, TaggedItem
 from django.db.models import Count
@@ -33,43 +34,43 @@ def get_recent_comment(context):
 
 @register.inclusion_tag('sidebar/categories.html', takes_context = True)
 def get_categories(context):
-    categories=cache.get('sidebar:categories')
+    categories=cache.get_cache('sidebar:categories')
     if not categories:
         categories=Category.objects.all()
-        cache.set('sidebar:categories',categories,60 * 60)
+        cache.set_cache('sidebar:categories',categories,60 * 60)
     return {'categories':categories}
 
 @register.inclusion_tag('sidebar/links.html', takes_context = True)
 def get_links(context):
-    links=cache.get('sidebar:links')
+    links=cache.get_cache('sidebar:links')
     if not links:
         links=Link.objects.all()[:20]
-        cache.set('sidebar:links',links,60*60)
+        cache.set_cache('sidebar:links',links,60*60)
     return {'links':links}
 
 @register.inclusion_tag('sidebar/archives.html', takes_context = True)
 def get_archives(context):
-    archives=cache.get('sidebar:archives')
+    archives=cache.get_cache('sidebar:archives')
     if not archives:
         archives=Archive.objects.all()[:12]
-        cache.set('sidebar:archives',archives,60*20)
+        cache.set_cache('sidebar:archives',archives,60*20)
     return {'archives':archives}
 
 @register.inclusion_tag('sidebar/tags.html', takes_context = True)
 def get_tag_cloud(context):
-    result=cache.get('sidebar:tagcloud')
+    result=cache.get_cache('sidebar:tagcloud')
     if not result:
         result=[]
         tags=TaggedItem.objects.values('tag').annotate(count=Count('tag'))
         for tag in tags:
             t=get_object_or_404(Tag,id=tag['tag'])
             result.append({'count':tag['count'],'tag':t})
-        cache.set('sidebar:tagcloud',result,60*10)
+        cache.set_cache('sidebar:tagcloud',result,60*10)
     return {'tags':result}
 
 @register.inclusion_tag('readwall.html', takes_context = True)
 def get_reader_wall(context):
-    comments=cache.get('sidebar:readerwall')
+    comments=cache.get_cache('sidebar:readerwall')
     if not comments:
         admin_email=Blog.get().email
         sql="select count(email) as count,author,email,weburl from comments_comment where is_public=1 and email !='%s' group by email order by count desc limit 12"%(admin_email)
@@ -85,5 +86,5 @@ def get_reader_wall(context):
             weburl=row[3]
             comment={'author':author,'weburl':weburl,'count':str(count),'email':email}
             comments.append(comment)
-        cache.set('sidebar:readerwall',comments,30)
+        cache.set_cache('sidebar:readerwall',comments,30)
     return {'comments':comments}

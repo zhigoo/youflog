@@ -9,6 +9,7 @@ from datetime import datetime
 from blog.comments.models import Comment
 from tagging.models import Tag,TaggedItem
 from blog.managers import EntryPublishManager
+import blog.cache as cache
 import logging
 
 class Archive(models.Model):
@@ -65,7 +66,6 @@ class Category(models.Model):
     class Meta:
         ordering = ('name',)
  
-from utils.utils import delete_cache
 class Entry(models.Model):
     ENTRY_TYPE_CHOICES=(('page','page'),('post','post'))
     author=models.ForeignKey(User)
@@ -188,7 +188,9 @@ class Entry(models.Model):
                     self.link=self.slug
                 else:
                     self.link=str(self.id)
-            delete_cache('index_posts')
+            cache.delete_cache('index_posts')
+            cache.delete_cache('sidebar:categories')
+            cache.delete_cache('sidebar:archives')
         
         self.published=pub
         super(Entry,self).save()

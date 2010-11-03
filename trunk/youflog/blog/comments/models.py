@@ -28,10 +28,7 @@ class Comment(models.Model):
    
     def shortcontent(self,len=25):
         return self.content[0:len]
-    
-    def safecontent(self):
-        return self.content.replace('<script','&lt;script').replace('</script>','&lt;/script&gt;')
-    
+
     def get_content_object_url(self):
         model = ContentType.objects.get(pk = self.content_type_id).model_class()
         object = model.objects.get(pk = self.object_pk)

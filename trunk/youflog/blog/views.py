@@ -12,12 +12,13 @@ from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.views.decorators.http import require_POST
 from blog.models import Blog,Entry,Comment,Category
-from utils.utils import paginator,urldecode,render,loadTempalte,get_cache,set_cache
+from utils.utils import paginator,urldecode,render,loadTempalte
 from django.utils import simplejson
 from blog.forms import CommentForm
 from django.shortcuts import get_object_or_404
 from tagging.models import Tag, TaggedItem
 import blog.comments.signals as signals
+import blog.cache as cache
 from django.views.decorators.cache import cache_page
 
 def get_comment_cookie_meta(request):
@@ -34,10 +35,10 @@ def get_comment_cookie_meta(request):
 
 def index(request):
     page=request.GET.get('page',1)
-    posts=get_cache('index_posts')
+    posts=cache.get_cache('index_posts')
     if not posts:
         posts = Entry.objects.get_posts()
-        set_cache('index_posts',posts)
+        cache.set_cache('index_posts',posts)
     return render(request,'index.html',{'entries':posts,'ishome':True,'page':page})
 
 def singlePost(request,slug):
@@ -78,13 +79,10 @@ def recentComments(request,page=1):
 @cache_page(60*10)
 def tag(request,tag):
     if tag:
-        response=get_cache('posts_for_tag')
-        if not response:
-            page=request.GET.get('page',1)
-            tag = get_object_or_404(Tag, name =tag)
-            entries=TaggedItem.objects.get_by_model(Entry, tag).order_by('-date')
-            response=render(request,'tag.html',{'entries':entries,'tag':tag,'page':page,'pagi_path': request.path})
-            set_cache('posts_for_tag',response)
+        page=request.GET.get('page',1)
+        tag = get_object_or_404(Tag, name =tag)
+        entries=TaggedItem.objects.get_by_model(Entry, tag).order_by('-date')
+        response=render(request,'tag.html',{'entries':entries,'tag':tag,'page':page,'pagi_path': request.path})
         return response
     else:
         return HttpResponseRedirect('404.html')
@@ -103,10 +101,7 @@ def category(request,name):
 @cache_page(60*10)
 def archives(request,year,month):
     page=request.GET.get('page',1)
-    posts=get_cache('post::archives')
-    if not posts:
-        posts=Entry.objects.get_post_by_date(year,month)
-        set_cache('post::archives',posts)
+    posts=Entry.objects.get_post_by_date(year,month)
     return render(request,'archives.html',{'entries':posts,'page':page,'year':year,'month':month})
 
 class CommentPostBadRequest(http.HttpResponseBadRequest):

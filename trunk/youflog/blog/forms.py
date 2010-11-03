@@ -1,5 +1,4 @@
 import datetime
-
 from django import forms
 from django.forms.util import ErrorDict
 from django.contrib.contenttypes.models import ContentType
@@ -40,13 +39,12 @@ class CommentForm(forms.Form):
             author    = self.cleaned_data["author"],
             email   = self.cleaned_data["email"],
             weburl     = self.cleaned_data["url"],
-            content      = self.cleaned_data["content"],
+            content      = self.cleaned_data["content"].replace('<script','&lt;script').replace('</script>','&lt;/script&gt;'),
             date  = datetime.datetime.now(),
             mail_notify=self.cleaned_data["mail_notify"],
             is_public    = True,
-            parent_id    = 0,
+            parent_id    = self.cleaned_data["parent_id"],
         )
-
         return new
 
     def security_errors(self):

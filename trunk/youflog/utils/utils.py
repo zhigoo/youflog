@@ -1,6 +1,5 @@
 #*_* coding=utf-8 *_*
 import urllib
-from django.core.cache import cache
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.paginator import Paginator
@@ -10,7 +9,7 @@ from threading import Thread
 from django.template.loader import get_template
 from django.template.context import Context
 from blog.models import Blog
-from settings import CACHE_PREFIX
+
 
 def render_response(request, *args, **kwargs):
     kwargs['context_instance'] = RequestContext(request)
@@ -57,14 +56,3 @@ def send_html_email(subject,msg,reveivers,**kwargs):
     mailmsg = EmailMessage(subject,msg,sender, [reveivers])
     mailmsg.content_subtype = 'html'
     mailmsg.send(fail_silently=True)     
-
-get_cache_key= lambda key: "cache::%s::%s" % (CACHE_PREFIX, key)
-
-def get_cache(key):
-    return cache.get(get_cache_key(key))
-
-def set_cache(key,value,timeout=600):
-    cache.set(get_cache_key(key), value, timeout)
-    
-def delete_cache(key):
-    cache.delete(get_cache_key(key))
