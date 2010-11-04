@@ -270,6 +270,18 @@ def spam_comment(request):
     return render_response(request,'admin/comments.html',{'page':page,'comments':comments,\
                                                           'comment_count':comment_count,
                                                           'spam_count':comments.count()})
+@login_required
+def save_comment(request):
+    comment_status=request.POST.get('comment_status')
+    id=request.POST.get('id')
+    comment=get_object_or_404(Comment,id=id)
+    comment.author=request.POST.get('name')
+    comment.email=request.POST.get('email')
+    comment.weburl=request.POST.get('url')
+    comment.content=request.POST.get('content')
+    comment.is_public=True and comment_status==1
+    comment.save()
+    return HttpResponseRedirect('/admin/comments')
     
 @login_required
 def flag_comment_for_spam(request,id):
@@ -280,13 +292,18 @@ def flag_comment_for_spam(request,id):
     else:
         comment.is_public=True
     comment.save()
-    return HttpResponseRedirect('/admin/comments');
+    return HttpResponseRedirect('/admin/comments')
     
 @login_required
 def delete_single_comment(request,id):
     comment=get_object_or_404(Comment,id=id)
     comment.delete()
-    return HttpResponseRedirect('/admin/comments');
+    return HttpResponseRedirect('/admin/comments')
+
+@login_required
+def edit_comment(request,id):
+    comment=get_object_or_404(Comment,id=id)
+    return render_response(request,'admin/comment-edit.html',{'comment':comment})
 
 @login_required
 def comment_delete(request):
@@ -296,7 +313,7 @@ def comment_delete(request):
             c = Comment.objects.get(id=id)
             c.delete()
     finally:
-        return HttpResponseRedirect('/admin/comments'); 
+        return HttpResponseRedirect('/admin/comments')
 
 @login_required
 def categories(request):

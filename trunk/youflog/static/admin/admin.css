@@ -299,7 +299,27 @@ width:100%;
 .has-sidebar .has-sidebar-content {
 margin-right:305px;
 }
-#titlediv #title, #tags,#slug,#name{
+.stuffbox h3 {
+background:url("../images/gray-grad.png") repeat-x scroll left top #DFDFDF;
+text-shadow:0 1px 0 #FFFFFF;
+}
+#editorcontainer textarea{border-color: #DFDFDF;border-style:solid;border-width:1px;}
+#namediv table{width:100%;}
+#namediv td.first {white-space:nowrap;width:10px;}
+#major-publishing-actions {
+background:none repeat scroll 0 0 #EAF2FA;
+}
+#delete-action {
+float:left;
+line-height:25px;
+text-align:left;
+vertical-align:middle;
+}
+#publishing-action {
+float:right;
+text-align:right;
+}
+input[type="text"]{
 -moz-border-radius:6px 6px 6px 6px;
 border-style:solid;
 border-width:1px;
@@ -429,13 +449,32 @@ outline:medium none;
 padding:0;
 width:99%;
 }
-.metabox-holder .postbox, #poststuff .postbox, #poststuff .stuffbox {
+.metabox-holder .stuffbox{
+-moz-border-radius:6px 6px 6px 6px;
+border-style:solid;
+border-width:1px;
+line-height:1;
+margin-bottom:20px;
+border-color: #DFDFDF;
+}
+.metabox-holder .postbox , #poststuff .postbox, #poststuff .stuffbox {
 -moz-border-radius:6px 6px 6px 6px;
 border-style:solid;
 border-width:1px;
 line-height:1;
 margin-bottom:20px;
 }
+.submitbox .submitdelete, a.delete {
+border-bottom-color:#FF0000;
+color:#FF0000;
+}
+.submitbox .submitdelete {
+border-bottom-style:solid;
+border-bottom-width:1px;
+padding:1px 2px;
+text-decoration:none;
+}
+
 #titlediv, #poststuff .postarea {
 margin-bottom:20px;
 }

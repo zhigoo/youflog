@@ -142,7 +142,7 @@ blockquote.adminquote {
 .feed,.feed a {
 	color: #E05C23;
 }
-
+#respond input{width:175px;}
 input[type="text"], textarea {
 	border: 1px solid #A4B97F;
 	padding: 2px 1px;
@@ -152,41 +152,15 @@ input[type="text"], textarea {
 	-moz-border-radius: 5px 5px 5px 5px;
 	-moz-box-shadow: 0 0 1px 1px #E9EEF1;
 }
+.textarea {background: url("images/comment-bg.JPG") no-repeat scroll right bottom#FFF;}
 
-.textarea {
-	background: url("images/comment-bg.JPG") no-repeat scroll right bottom
-		#FFF;
-}
+.clear,.fixed {clear: both;}
+.alignleft {float: left;text-align: left;margin-right: 10px;}
+.alignright {float: right;text-align: right;margin-left: 10px;}
+.aligncenter {display: block;margin-left: auto;margin-right: auto;}
 
-.clear,.fixed {
-	clear: both;
-}
-
-.alignleft {
-	float: left;
-	text-align: left;
-	margin-right: 10px;
-}
-
-.alignright {
-	float: right;
-	text-align: right;
-	margin-left: 10px;
-}
-
-.aligncenter {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.floatleft {
-	float: left;
-}
-
-.floatright {
-	float: right;
-}
+.floatleft {float: left;}
+.floatright {float: right;}
 
 .left {
 	float: left;
