@@ -169,4 +169,3 @@ def post_comment(request, next = None):
         pass
     
     return response
-

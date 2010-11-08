@@ -4,7 +4,7 @@ from django.conf.urls.defaults import *
 from django.conf import settings
 from django.contrib.sitemaps import views as sitemap_views
 from django.views.decorators.cache import cache_page
-from blog import views,admin,feed_sitemap,wap
+from blog import views,admin,feed_sitemap,wap,album
 
 sitemaps = {
     'posts': feed_sitemap.PostSitemap(),
@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^admin/post$',admin.admin_addpost,name="add post"), #跳转到文章添加页面
     url(r'^admin/submit_post',admin.submit_post,name='submit_post_page'), #提交文章 或者页面
     url(r'^admin/editpost/(?P<id>\d+)',admin.edit_post,name="editor post"),#文章火着页面的编辑
+    url(r'^admin/delpost',admin.delpost),
     url(r'^admin/post_delete$',admin.post_delete,name="delete post"), #删除文章或者页面
     url(r'admin/page$',admin.addPage,name='add page '), #跳转到页面添加
     url(r'admin/pages$',admin.pages,name='show all pages'),#分页显示所有的页面
@@ -56,6 +57,8 @@ urlpatterns = patterns('',
     #media
     url(r'^admin/media$',admin.media,name='show all media'),
     url(r'^admin/upload_media$',admin.upload_media),
+    url(r'^admin/albums$',album.albums,name=''),
+    url(r'^admin/save_album',album.add_album),
     
     #sitemap
     url(r'^sitemap.xml$', cache_page(sitemap_views.sitemap, 60 * 60 * 6),{'sitemaps': sitemaps}),#sitemap

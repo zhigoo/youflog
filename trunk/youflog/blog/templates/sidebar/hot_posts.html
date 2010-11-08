@@ -1,7 +1,7 @@
 {% if hotposts %}
 <ul>
 	{% for entry in hotposts %}
-	<li><a href="/{{entry.get_absolute_url|escape}}" title="{{entry.title|escape}}">{{entry.title|escape}}</a>({{entry.readtimes}})</li>
+	<li><a href="{{entry.get_absolute_url|escape}}" title="{{entry.title|escape}}">{{entry.title|escape}}</a>({{entry.readtimes}})</li>
 	{%endfor%}
 </ul>	
 {% endif %}

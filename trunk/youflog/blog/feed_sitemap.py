@@ -24,7 +24,8 @@ class LatestEntryFeed(Feed):
         return item.content
     
     def item_link(self,item):
-        return domain+'/'+item.link
+        #return domain+'/'+item.link
+        return "/%s" %(item.get_absolute_url())
     
 class LatestComments(Feed):
     title = g_blog.title
@@ -32,7 +33,7 @@ class LatestComments(Feed):
     link = domain
     
     def items(self):
-        return Comment.objects.order_by('-date')[:10]
+        return Comment.objects.in_public()[:10]
 
     def item_title(self, item):
         return item.author
@@ -44,7 +45,7 @@ class LatestComments(Feed):
         return item.content
     
     def item_link(self,item):
-        return item.object.fullurl()+'#comment-'+str(item.id)
+        return item.get_absolute_url()
     
     
 class PostSitemap(Sitemap):
@@ -53,8 +54,8 @@ class PostSitemap(Sitemap):
     def items(self):
         return Entry.objects.get_posts()
 
-    def lastmod(self, obj):
-        return obj.date
+    def lastmod(self, item):
+        return item.date
     
-    def location(self,obj):
-        return '/'+obj.link
+    def location(self,item):
+        return '/%s'%(item.get_absolute_url())

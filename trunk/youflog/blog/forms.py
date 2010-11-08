@@ -94,4 +94,3 @@ class SettingForm(forms.Form):
              'email':blog.email 
         }
         return dict
-    

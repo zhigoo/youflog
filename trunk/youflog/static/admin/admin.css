@@ -534,28 +534,31 @@ code{background: none repeat scroll 0 0 #EAEAEA;}
 .form-table th, .form-wrap label{font-weight: normal;}
 .setting-description{color:#666666;font-style: italic;}
 #settings #akismet_key{width:40%;}
+/*
+-------pagination-----------
+*/
 .pagenavi{clear:both;margin:15px 0;}
-.pagenavi span.pages {
-background-color:#FFFFFF;
-border:1px solid #000000;
-color:#000000;
-margin:2px;
-padding:2px 4px;
-}
 
-.pagenavi span.current {
-background-color:#FFFFFF;
-border:1px solid #000000;
-color:#000000;
-font-weight:bold;
-margin:2px;
-padding:2px 4px;
-}
-.pagenavi a, .pagenavi a:link, .pagenavi a:active {
-background-color:#FFFFFF;
-border:1px solid #225588;
-color:#225588;
-margin:2px;
-padding:2px 4px;
-text-decoration:none;
+.pagenavi span.pages {background-color:#FFFFFF;border:1px solid #000000;color:#000000;margin:2px;padding:2px 4px;}
+
+.pagenavi span.current {background-color:#FFFFFF;border:1px solid #000000;color:#000000;font-weight:bold;margin:2px;padding:2px 4px;}
+
+.pagenavi a, .pagenavi a:link, .pagenavi a:active {background-color:#FFFFFF;border:1px solid #225588;color:#225588;margin:2px;padding:2px 4px;text-decoration:none;}
+
+/*
+-------------album----------
+*/
+.picbox{background:none repeat scroll 0 0 #EFF3EF;border-top:1px solid #FFFFFF;padding:8px 0 7px 12px;margin-top:10px;position:relative;}
+
+.picul{padding:3px;}
+
+.picul li{float:left;height:180px;overflow:hidden;padding:4px 8px 0;width:174px;}
+
+.picul li #photo div{background:url("../images/nopic.jpg") no-repeat scroll left top transparent;height:122px;overflow:hidden;padding:7px;width:162px;}
+
+.picul li p {font-size:12px;line-height:14px;margin:4px 0 0;padding:0;text-align:center;}
+
+.opreat{visibility: hidden;}
+.picul li:HOVER .opreat{
+	visibility: visible;
 }

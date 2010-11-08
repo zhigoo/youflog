@@ -12,12 +12,12 @@
 				{%begin_pagination entries page %}
 					{% for entry in entries %}
 						<li class="archive-post">
-							<h3><a href="/{{ entry.link|escape }}" rel="bookmark">{{entry.title|escape}}</a></h3>
+							<h3><a href="/{{ entry.get_absolute_url|escape }}" rel="bookmark">{{entry.title|escape}}</a></h3>
 							<div class="excerpt">
 								{{entry.excerpt_content|safe}}
 							</div>
 							<div class="small">
-								<a href="/{{entry.link|escape}}#comments">{{entry.comments.count}} 条评论</a>
+								<a href="/{{entry.get_absolute_url|escape}}#comments">{{entry.comments.count}} 条评论</a>
 							</div>
 							<div class="small">
 								{{entry.date|date:"Y/m/d H:i"}}| posted in: {{entry.category.name}}

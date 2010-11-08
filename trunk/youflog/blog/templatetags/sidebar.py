@@ -88,3 +88,9 @@ def get_reader_wall(context):
             comments.append(comment)
         cache.set_cache('sidebar:readerwall',comments,30)
     return {'comments':comments}
+
+@register.inclusion_tag('menus.html', takes_context = True)
+def get_menus(context):
+    pages=Entry.objects.get_pages()
+    current = 'current' in context and context['current']
+    return {'menus':pages,'current': current}

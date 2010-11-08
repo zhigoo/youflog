@@ -11,7 +11,7 @@
 	{% for entry in entries %}
 	<div class="post">
 		<h3 class="title">
-			<a href="/{{ entry.link|escape }}" title="Permanent Link to {{entry.title|escape}}" rel="bookmark">
+			<a href="/{{ entry.get_absolute_url|escape }}" title="Permanent Link to {{entry.title|escape}}" rel="bookmark">
 			{%if entry.sticky%}<b>[置顶]</b>{%endif%}{{entry.title|escape}}
 			</a>
 		</h3>
@@ -24,7 +24,7 @@
 		<div class="meta">
 			
 			<div class="act">
-				<a href="/{{entry.link|escape}}#commentlist">{{entry.comments.in_public.count}} Comments</a>
+				<a href="/{{entry.get_absolute_url|escape}}#commentlist">{{entry.comments.in_public.count}} Comments</a>
 			</div>
 			<div class="info">
 				{{entry.date|date:"Y/m/d H:i"}}

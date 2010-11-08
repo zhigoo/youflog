@@ -1,6 +1,6 @@
 from django.http import HttpResponse,HttpResponseNotModified
 from django.utils.http import http_date
-from settings import STATIC_ROOT
+from settings import STATIC_ROOT,HERE
 import zipfile,mimetypes
 from email.Utils import formatdate,parsedate_tz, mktime_tz
 import time,os,stat,re
@@ -30,9 +30,8 @@ def tinymce(request,path):
     SetCachingHeaders(response)
     return response
 
-cwd = os.getcwd()
 def theme(request,path):
-    file_path = os.path.normpath(os.path.join(cwd, 'templates/themes', path))
+    file_path = os.path.normpath(os.path.join(HERE, 'templates/themes', path))
     statobj = os.stat(file_path)
     mimetype = mimetypes.guess_type(file_path)[0] or 'application/octet-stream'
     if not _was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),

@@ -23,7 +23,7 @@ class Archive(models.Model):
         return self.monthyear
     
     def get_absolute_url(self):
-        return 'archives/%s/%s'%(self.year,self.month)
+        return '/archives/%s/%s'%(self.year,self.month)
     
 class Blog(models.Model):
     author = models.CharField('admin',default='admin',max_length=20)
@@ -101,7 +101,7 @@ class Entry(models.Model):
         if self.link:
             return self.link
         else:
-            return 'archive/%s.html'%(str(self.id))
+            return '/archive/%s.html'%(str(self.id))
     
     def shortcontent(self,len=200):
         return self.content[:len]
@@ -144,7 +144,7 @@ class Entry(models.Model):
     
     def fullurl(self):
         '''返回文章的绝对路径'''
-        return Site.objects.get_current().domain+"/"+self.link
+        return "http://%s/%s" %(Site.objects.get_current().domain,self.link)
     
     def updateReadtimes (self):
         self.readtimes += 1
@@ -200,6 +200,8 @@ class Entry(models.Model):
         #以前没有发布且点击了发布按钮 archive数量加1
         if not old_pub and pub:
             self.update_archive(1)
+            
+        #signals.post_save.send(self.__class__)
     
     def delete(self):
         '''删除文章'''
@@ -262,3 +264,21 @@ class OptionSet(models.Model):
     @classmethod
     def deloption(cls,k):
         return OptionSet.objects.get(key=k).delete()
+
+class Album(models.Model):
+    name=models.CharField(max_length=100)
+    description=models.TextField()
+    createdate=models.DateTimeField(auto_now_add=True)
+    class Meta:
+        db_table = 'album'
+
+
+class Photo(models.Model):
+    name=models.CharField(max_length=100)
+    image=models.ImageField(upload_to='upload/',blank=True,null=True)
+    description=models.TextField()
+    createdate=models.DateTimeField(auto_now_add=True)
+    album=models.ForeignKey(Album)
+    modifydate=models.DateTimeField(auto_now=True)
+    class Meta:
+        db_table = 'photo'

@@ -34,12 +34,12 @@
 				<tr>
 				<th scope="col" class="check-column">
 				<input type="checkbox" onclick="$('input[name=checks]').attr('checked',this.checked);"></th>
-				<th style="width:30%;">标题</th>
+				<th style="width:28%;">标题</th>
 				<th>作者</th>
 				<th>分类目录</th>
 				<th>标签</th>
-				<th scope="col" class="num"><div class="vers"><img alt="Comments" src="/static/images/comment-grey-bubble.png"></div></th>
-				<th style="width: 15%;">日期</th>
+				<th class="num"><div class="vers"><img alt="Comments" src="/static/images/comment-grey-bubble.png"></div></th>
+				<th style="width: 10%;">日期</th>
 				</tr>
 			</thead>
 			<tfoot>
@@ -51,33 +51,41 @@
 				<th>作者</th>
 				<th>分类目录</th>
 				<th>标签</th>
-				<th scope="col" class="num"><div class="vers"><img alt="Comments" src="/static/images/comment-grey-bubble.png"></div></th>
-				<th style="width: 15%;">日期</th>
+				<th class="num"><img alt="Comments" src="/static/images/comment-grey-bubble.png"></th>
+				<th >日期</th>
 				</tr>
 			</tfoot>
 			<tbody>
          {%if entrys%}
          {% begin_pagination entrys page 12%}
          {%for entry in entrys%}
-		<tr valign="middle" id="link-474002">
+		<tr valign="middle" id="post-{{entry.id}}">
 			<th scope="row" class="check-column">
 				<input type="checkbox" name="checks" value="{{entry.id}}">
 			</th>
 			<td> 
-              	<a href="/admin/editpost/{{entry.id}}?entrytype=post" title="Edit &quot;{{entry.title}}&quot;" style="color: gray;" class="row-title">[编辑]</a> 
               	<strong>
               		{%if entry.published%}
-              		<a target="_blank" href="{{entry.fullurl}}" title="{{entry.title}}" class="row-title">{{entry.title}}</a>
+              		<a target="_blank" href="/{{entry.get_absolute_url}}" title="{{entry.title}}" class="row-title">{{entry.title}}</a>
               		{%else%}
               		<a target="_self" href="/admin/editpost/{{entry.id}}" title="Edit &quot;{{entry.title}}&quot;" class="row-title">{{entry.title}}</a>
               		{%endif%}
               		{%if entry.sticky%}[置顶]{%endif%}
               	</strong>
+              	<div class="row-actions">
+	              	<span> <a href="/admin/editpost/{{entry.id}}?entrytype=post" title="Edit &quot;{{entry.title}}&quot;">编辑</a></span>
+	              	<span class="delete">| <a href="/admin/delpost?id={{entry.id}}">删除</a></span>
+	              	{%if entry.published%}
+	              	<span class="editor">| 
+              			<a target="_blank" href="/{{entry.get_absolute_url}}" title="{{entry.title}}">浏览</a>
+              		</span>
+              		{%endif%}
+              	</div>
               </td>
               <td>{{entry.author.username}}</td>
               <td>{{entry.category.name}}</td>
               <td>{{entry.tags}}</td>
-              <td scope="col" class="num">{{entry.comments.count}}</td>
+              <td class="num">{{entry.comments.count}}</td>
               <td>{{entry.date|date:"Y-m-d"}}
               <br/>{%if entry.published%}已发布{%else%}未发布{%endif%}
               </td>

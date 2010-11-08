@@ -232,6 +232,13 @@ def submit_post(request):
     return render_response(request,"admin/post.html",ctx)
 
 @login_required
+def delpost(request):
+    id=request.GET.get('id')
+    entry=get_object_or_404(Entry,id=id)
+    entry.delete()
+    return HttpResponseRedirect('/admin/allposts') 
+
+@login_required
 def addPage(request):
     return render_response(request,"admin/post.html",\
                 {'cats':Category.objects.all(),'action':'add','entrytype':'page'})
@@ -441,8 +448,8 @@ def save_setting(request):
        
         theme = request.POST.get('theme','default')
         domain = request.POST.get('domain','')
-        if not domain.startswith('http://'):
-            domain='http://'+domain
+        if domain.startswith('http://'):
+            domain=domain[7:]
         try:    
             blog.theme_name=theme
             blog.save()
@@ -508,7 +515,7 @@ def save_commentOption(request):
 
 @login_required
 def permalink(request):
-    domain = Site.objects.get_current().domain
+    domain = 'http://%s'%Site.objects.get_current().domain
     permalink_format=OptionSet.get('permalink_format', 'archive/%(id)s.html')
     permalink_structure=OptionSet.get('permalink_structure','%(year)s/%(month)s/%(day)s/%(postname)s.html')
     return render_response(request,'admin/permalink.html',locals())

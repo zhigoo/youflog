@@ -1,4 +1,4 @@
-{% load menu %}
+{% load sidebar %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head profile="http://gmpg.org/xfn/11">
@@ -11,7 +11,7 @@
 	<link rel="shortcut icon" href="/static/favicon.ico" />
 	<meta name="robots" content="all" />
 	<link rel="alternate" type="application/atom+xml" title="{{ blog.title }}" href="/feed" />
-	
+	<link rel="pingback" href="http://127.0.0.1:8000/xmlrpc/" />
 	<!-- style START -->
 	<link rel="stylesheet" href="/themes/{{ blog.theme_name }}/static/style.css" type="text/css" media="screen"/>
 	<link rel="stylesheet" href="/themes/{{ blog.theme_name }}/static/chinese.css" type="text/css" media="screen" />

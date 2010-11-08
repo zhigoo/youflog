@@ -5,7 +5,7 @@
 {% block head_block %}
 
 {% if entry %}
-{%if entry.strtags%}<meta name="Keywords" content="{{entry.strtags|escape}}" />{%endif%}
+{%if entry.tags%}<meta name="Keywords" content="{{entry.tags|escape}}" />{%endif%}
 {%if entry.excerpt%} <meta name="Description" content="{{entry.excerpt|escape}}" />{%endif%}
 {% endif %}
 
