@@ -11,6 +11,6 @@ urlpatterns = patterns('',
     (r'^static/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.STATIC_ROOT}),
     url(r'^themes/(?P<path>.*)$','blog.ext_views.theme'),
     url(r'^tinymce/(?P<path>.*)$', 'blog.ext_views.tinymce'),
+    (r'^media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT}),
     (r'',include('blog.urls')),
-    
 )

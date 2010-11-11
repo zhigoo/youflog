@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.sites.models import Site
 from django.contrib import messages
+from django.contrib.sitemaps import ping_google
 from django.contrib.auth import authenticate, login as auth_login ,logout as auth_logout
 from datetime import datetime
 from theme import ThemeIterator

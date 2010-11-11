@@ -19,6 +19,9 @@ class Archive(models.Model):
     entrycount = models.IntegerField(default=1)
     date = models.DateTimeField(auto_now_add=True)
     
+    class META:
+        ordering=('date',)
+    
     def __unicode__(self):
         return self.monthyear
     
@@ -162,6 +165,25 @@ class Entry(models.Model):
         posts=set(posts)
         return list(posts)[:5]
     
+    def __update_link(self):
+        
+        vals={'year':self.date.year,'month':str(self.date.month).zfill(2),'day':self.date.day,'postname':self.slug,'id':self.id}
+        permalink_format = OptionSet.get('permalink_format','archive/%(id)s.html')
+            
+        if self.entrytype == 'post':
+            if not self.slug:
+                vals.update({'postname':self.id})
+            if permalink_format == 'custom':
+                permalink_structure = OptionSet.get('permalink_structure','%(year)s/%(month)s/%(day)s/%(postname)s')
+                self.link=permalink_structure.strip()%vals
+            else:
+                self.link=permalink_format.strip()%vals
+        else:
+            if self.slug:
+                self.link=self.slug
+            else:
+                self.link=str(self.id)
+    
     def save(self,pub):
         if not self.date:
             self.date=datetime.now()
@@ -170,27 +192,7 @@ class Entry(models.Model):
         old_pub=self.published
         if pub: 
             super(Entry,self).save()
-            vals={'year':self.date.year,'month':str(self.date.month).zfill(2),\
-                  'day':self.date.day,'postname':self.slug,'id':self.id}
-            
-            permalink_format = OptionSet.get('permalink_format','archive/%(id)s.html')
-            
-            if self.entrytype == 'post':
-                if not self.slug:
-                    vals.update({'postname':self.id})
-                if permalink_format == 'custom':
-                    permalink_structure = OptionSet.get('permalink_structure','%(year)s/%(month)s/%(day)s/%(postname)s')
-                    self.link=permalink_structure.strip()%vals
-                else:
-                    self.link=permalink_format.strip()%vals
-            else:
-                if self.slug:
-                    self.link=self.slug
-                else:
-                    self.link=str(self.id)
-            cache.delete_cache('index_posts')
-            cache.delete_cache('sidebar:categories')
-            cache.delete_cache('sidebar:archives')
+            self.__update_link()
         
         self.published=pub
         super(Entry,self).save()
@@ -200,8 +202,9 @@ class Entry(models.Model):
         #以前没有发布且点击了发布按钮 archive数量加1
         if not old_pub and pub:
             self.update_archive(1)
-            
-        #signals.post_save.send(self.__class__)
+        cache.delete_cache('index_posts')
+        cache.delete_cache('sidebar:categories')
+        cache.delete_cache('sidebar:archives')
     
     def delete(self):
         '''删除文章'''
@@ -264,21 +267,3 @@ class OptionSet(models.Model):
     @classmethod
     def deloption(cls,k):
         return OptionSet.objects.get(key=k).delete()
-
-class Album(models.Model):
-    name=models.CharField(max_length=100)
-    description=models.TextField()
-    createdate=models.DateTimeField(auto_now_add=True)
-    class Meta:
-        db_table = 'album'
-
-
-class Photo(models.Model):
-    name=models.CharField(max_length=100)
-    image=models.ImageField(upload_to='upload/',blank=True,null=True)
-    description=models.TextField()
-    createdate=models.DateTimeField(auto_now_add=True)
-    album=models.ForeignKey(Album)
-    modifydate=models.DateTimeField(auto_now=True)
-    class Meta:
-        db_table = 'photo'

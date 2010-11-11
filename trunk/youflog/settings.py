@@ -53,7 +53,7 @@ MEDIA_URL = ''
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = '/media/upload/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '33ukrm_%_r9!)(o4&#3)=*9411$dfqehfgg**h0rlf^)2$63kc'
@@ -99,6 +99,7 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'blog',
     'blog.comments',
+    'blog.photo',
     'tagging',
 )
 

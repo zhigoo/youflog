@@ -4,7 +4,8 @@ from django.conf.urls.defaults import *
 from django.conf import settings
 from django.contrib.sitemaps import views as sitemap_views
 from django.views.decorators.cache import cache_page
-from blog import views,admin,feed_sitemap,wap,album
+from blog import views,admin,feed_sitemap,wap
+from blog.photo import views as photo
 
 sitemaps = {
     'posts': feed_sitemap.PostSitemap(),
@@ -57,8 +58,10 @@ urlpatterns = patterns('',
     #media
     url(r'^admin/media$',admin.media,name='show all media'),
     url(r'^admin/upload_media$',admin.upload_media),
-    url(r'^admin/albums$',album.albums,name=''),
-    url(r'^admin/save_album',album.add_album),
+    url(r'^admin/albums$',photo.albums,name=''),
+    url(r'^admin/save_album',photo.add_album),
+    url(r'^admin/album_detail',photo.detail),
+    url(r'^admin/upload_photo',photo.upload),
     
     #sitemap
     url(r'^sitemap.xml$', cache_page(sitemap_views.sitemap, 60 * 60 * 6),{'sitemaps': sitemaps}),#sitemap

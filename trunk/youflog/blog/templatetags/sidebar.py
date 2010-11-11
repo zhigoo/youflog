@@ -52,7 +52,7 @@ def get_links(context):
 def get_archives(context):
     archives=cache.get_cache('sidebar:archives')
     if not archives:
-        archives=Archive.objects.all()[:12]
+        archives=Archive.objects.all().order_by('date')[:12]
         cache.set_cache('sidebar:archives',archives,60*20)
     return {'archives':archives}
 
