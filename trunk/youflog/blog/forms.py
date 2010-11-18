@@ -39,7 +39,8 @@ class CommentForm(forms.Form):
             author    = self.cleaned_data["author"],
             email   = self.cleaned_data["email"],
             weburl     = self.cleaned_data["url"],
-            content      = self.cleaned_data["content"].replace('<script','&lt;script').replace('</script>','&lt;/script&gt;'),
+            #content      = self.cleaned_data["content"].replace('<script','&lt;script').replace('</script>','&lt;/script&gt;'),
+            content=self.clean_comment(),
             date  = datetime.datetime.now(),
             mail_notify=self.cleaned_data["mail_notify"],
             is_public    = True,
@@ -52,7 +53,7 @@ class CommentForm(forms.Form):
         return errors
     
     def clean_comment(self):
-        content = self.cleaned_data["content"]
+        content = self.cleaned_data["content"].replace('<script','&lt;script').replace('</script>','&lt;/script&gt;')
         return content
 
 class SettingForm(forms.Form):

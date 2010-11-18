@@ -2,14 +2,9 @@
 # *_* encoding=utf-8 *_*
 from django.conf.urls.defaults import *
 from django.conf import settings
-from django.contrib.sitemaps import views as sitemap_views
-from django.views.decorators.cache import cache_page
-from blog import views,admin,feed_sitemap,wap
+from blog import views,admin,wap
 from blog.photo import views as photo
 
-sitemaps = {
-    'posts': feed_sitemap.PostSitemap(),
-}
 
 urlpatterns = patterns('',
     
@@ -63,11 +58,6 @@ urlpatterns = patterns('',
     url(r'^admin/album_detail',photo.detail),
     url(r'^admin/upload_photo',photo.upload),
     
-    #sitemap
-    url(r'^sitemap.xml$', cache_page(sitemap_views.sitemap, 60 * 60 * 6),{'sitemaps': sitemaps}),#sitemap
-    #feed
-    url(r'^feed$', feed_sitemap.LatestEntryFeed()),
-    url(r'^feed/comments$',feed_sitemap.LatestComments()),
     #login logout
     url(r'^accounts/login', admin.login,name="login"), #登录
     url(r'^accounts/logout$',admin.logout,name='logout'), #退出
@@ -85,6 +75,5 @@ urlpatterns = patterns('',
     url(r'^recentComments',views.recentComments,name="recentComments"),  #通过ajax的方式获取最新的几条评论信息
     url(r'^archives/(?P<year>\d{4})/(?P<month>\d{1,2})$', views.archives),
     (r'^(.*)$', views.singlePost),
-    
    
 )

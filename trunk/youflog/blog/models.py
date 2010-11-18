@@ -9,6 +9,7 @@ from datetime import datetime
 from blog.comments.models import Comment
 from tagging.models import Tag,TaggedItem
 from blog.managers import EntryPublishManager
+from django.contrib.sitemaps import ping_google
 import blog.cache as cache
 import logging
 
@@ -74,7 +75,7 @@ class Entry(models.Model):
     author=models.ForeignKey(User)
     title = models.CharField(max_length=200)
     content = models.TextField()
-    excerpt = models.TextField(null=True, blank=True)
+    excerpt = models.TextField(default='',null=True, blank=True)
     published = models.BooleanField(default=False)
     entrytype = models.CharField(max_length=10,choices=ENTRY_TYPE_CHOICES,default='post')
     #标签
@@ -205,6 +206,8 @@ class Entry(models.Model):
         cache.delete_cache('index_posts')
         cache.delete_cache('sidebar:categories')
         cache.delete_cache('sidebar:archives')
+        if pub:
+            ping_google(sitemap_url='sitemap.xml')
     
     def delete(self):
         '''删除文章'''

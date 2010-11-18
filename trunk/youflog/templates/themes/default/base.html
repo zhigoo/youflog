@@ -10,22 +10,23 @@
 	<meta name="Keywords" content="{{blog.sitekeywords}}" />
 	<link rel="shortcut icon" href="/static/favicon.ico" />
 	<meta name="robots" content="all" />
-	<link rel="alternate" type="application/atom+xml" title="{{ blog.title }}" href="/feed" />
-	<link rel="pingback" href="http://127.0.0.1:8000/xmlrpc/" />
+	
 	<!-- style START -->
+	<link rel="alternate" type="application/atom+xml" title="{{ blog.title }}" href="/feed" />
 	<link rel="stylesheet" href="/themes/{{ blog.theme_name }}/static/style.css" type="text/css" media="screen"/>
 	<link rel="stylesheet" href="/themes/{{ blog.theme_name }}/static/chinese.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="/themes/{{ blog.theme_name }}/static/recentcomments.css" type="text/css" media="screen" />
+	<link href="/static/prettify.css" type="text/css" rel="stylesheet" />
 	<!--[if IE]>
 		<link rel="stylesheet" href="/themes/{{ blog.theme_name }}/static/ie.css" type="text/css" media="screen" />
 	<![endif]-->
 	<!-- style END -->
-		<link href="/static/prettify.css" type="text/css" rel="stylesheet" />
-		<script type="text/javascript" src="/static/js/prettify.js"></script>
+		
 	<!-- script START -->
 	<!--
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js "></script>
 	-->
+	<script type="text/javascript" src="/static/js/prettify.js"></script>
 	<script type="text/javascript" src="/static/js/jquery-1.2.6.js"></script>
 	<script type="text/javascript" src="/themes/{{ blog.theme_name }}/static/js/base.js"></script>
 	<script type="text/javascript" src="/themes/{{ blog.theme_name }}/static/js/menu.js"></script>
@@ -47,6 +48,7 @@
 				<div id="tagline">{{ blog.subtitle|escape}}</div>
 			</div>
 			<div id="ads" style="float:right;">
+			
 			</div>
 			<div class="fixed"></div>
 		</div>
@@ -105,7 +107,6 @@
 		</div>
 	</div>
 	<!-- footer END -->
-
 </div>
 </body>
 </html>

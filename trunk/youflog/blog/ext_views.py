@@ -5,14 +5,17 @@ import zipfile,mimetypes
 from email.Utils import formatdate,parsedate_tz, mktime_tz
 import time,os,stat,re
 
+zipfile_cache={}
+MAX_AGE=600
+
 def SetCachingHeaders(response):
-    MAX_AGE=600
-    response['Cache-Control'] = 'max-age=%d,public'%(MAX_AGE)
+    response['Cache-Control'] = 'public, max-age=%d'%(MAX_AGE)
     response['Expires']=formatdate(time.time() + MAX_AGE, usegmt=True)
+    response["Content-Length"] = len(response.content)
 
 def tinymce(request,path):
     zipfileName=STATIC_ROOT+'/tinymce.zip'
-    zipfile_cache={}
+    
     zf_object = zipfile_cache.get(zipfileName)
     if zf_object is None:
         try:
@@ -22,11 +25,10 @@ def tinymce(request,path):
         zipfile_cache[zipfileName]=zf_object
     if zf_object == '':
         return HttpResponse('Not Found')
-    file="tinymce/"+path
+   
     mimetype = mimetypes.guess_type(path)[0] or 'application/octet-stream'
-    content=zf_object.read(file)
+    content=zf_object.read(path)
     response = HttpResponse(content,mimetype=mimetype)
-    response["Content-Length"] = len(content)
     SetCachingHeaders(response)
     return response
 

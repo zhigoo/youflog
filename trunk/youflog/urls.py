@@ -3,14 +3,23 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 
-# Uncomment the next two lines to enable the admin:
-from django.contrib import admin
-admin.autodiscover()
+from django.contrib.sitemaps import views as sitemap_views
+from django.views.decorators.cache import cache_page
+from blog import feed_sitemap
+
+sitemaps = {
+    'posts': feed_sitemap.PostSitemap(),
+}
 
 urlpatterns = patterns('',
     (r'^static/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.STATIC_ROOT}),
     url(r'^themes/(?P<path>.*)$','blog.ext_views.theme'),
     url(r'^tinymce/(?P<path>.*)$', 'blog.ext_views.tinymce'),
     (r'^media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT}),
+    #sitemap and feed
+    url(r'^sitemap.xml$', cache_page(sitemap_views.sitemap, 60 * 60 * 6),{'sitemaps': sitemaps}),
+    url(r'^feed$', cache_page(feed_sitemap.LatestEntryFeed(),60 * 60 * 6)),
+    url(r'^feed/comments$',cache_page(feed_sitemap.LatestComments(),60 * 60 * 10)),
+    
     (r'',include('blog.urls')),
 )
