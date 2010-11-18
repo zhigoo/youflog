@@ -16,7 +16,7 @@ comment_was_posted = Signal(providing_args=["comment", "request"])
 
 def validate_comment(sender, comment, request, *args, **kwargs):
     akismet_enable=OptionSet.get('akismet_enable', 0)
-    domain="https://%s"%(Site.objects.get_current().domain)
+    domain="http://%s"%(Site.objects.get_current().domain)
     if int(akismet_enable) == 0:
         return
     
@@ -50,7 +50,7 @@ def on_comment_was_posted(sender,comment,request,*args,**kwargs):
 
 def on_comment_was_submit(sender,comment,*args,**kwargs):
     blog=Blog.get()
-    domain="https://%s"%(Site.objects.get_current().domain)
+    domain="http://%s"%(Site.objects.get_current().domain)
     if comment.parent_id != '0':
         old_c=comment.parent
         emailtitle=u'您在 '+blog.title+u' 上的评论有了新的回复'

@@ -7,7 +7,7 @@
 {{comment.content}}<br/>
 <p/>
 您可以点击以下链接查看具体内容:<br/>
-{{domain}}/{{comment.get_absolute_url}}<br/>
+<a href="{{domain}}/{{comment.get_absolute_url}}">{{domain}}/{{comment.get_absolute_url}}</><br/>
 <p/>
 感谢您对 <a href="{{domain}}" target="_blank">{{blog.title}}</a> 的关注<br/>
 <p/>
