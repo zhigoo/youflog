@@ -12,5 +12,6 @@ tinyMCE.init({
 	theme_advanced_toolbar_align : "left",
 	theme_advanced_statusbar_location : "bottom",
 	theme_advanced_resizing : true,
-	language : "ch"
+	language : "ch",
+	content_css : "/tinymce/wordpress.css"
 });

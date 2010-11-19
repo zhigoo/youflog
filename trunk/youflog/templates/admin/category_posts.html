@@ -1,35 +1,9 @@
-{% extends "admin/base.html" %}
-{% load pagination %}
-{% block content %}
+{%extends "admin/base.html"%}
+{%load pagination%}
+{%block content%}
 <div class="wrap">
- 	<h2>编辑文章</h2>
- 	<form id="posts-filter" action="/admin/post_delete" method="post">
- 		<ul class="subsubsub">
- 			<li>
- 				<a href="/admin/allposts">
- 				全部<span class="count">({{all_count}})</span>
- 				</a>
- 				|
- 			</li>
- 			<li>
- 				<a href="/admin/pubposts">
- 				已发布<span class="count">({{publish_count}})</span>
- 				</a>|
- 			</li>
- 			<li><a href="/admin/unpubposts">未发布<span>({{unpubcount}})</span></a></li>
- 		</ul>
- 		<p class="search-box hidden">
-			<label class="hidden" for="post-search-input">搜索文章:</label>
-			<input class="search-input" id="post-search-input" name="s" value="" type="text">
-			<input value="搜索文章" class="button" type="submit">
- 		</p>
- 		<div class="tablenav">
- 			<div class="alignleft actions">
-			<input type="submit" class="button-secondary action" id="doaction" name="delete" value="批量删除">
- 			</div>
- 		</div>
- 		<div class="clear"></div>
- 		<table class="widefat">
+	<h2>文章分类</h2>
+	<table class="widefat">
 			<thead>
 				<tr>
 				<th scope="col" class="check-column">
@@ -56,9 +30,9 @@
 				</tr>
 			</tfoot>
 			<tbody>
-         {%if entrys%}
-         {% begin_pagination entrys page 12%}
-         {%for entry in entrys%}
+         {%if posts%}
+         {% begin_pagination posts page 12%}
+         {%for entry in posts%}
 		<tr valign="middle" id="post-{{entry.id}}">
 			<th scope="row" class="check-column">
 				<input type="checkbox" name="checks" value="{{entry.id}}">
@@ -98,8 +72,7 @@
 		{%endif%}
 			</tbody>
 		</table>
- 	</form>
- 	{%if entrys%}
+	{%if posts%}
  	{% end_pagination %}
  	{%endif%}
 </div>

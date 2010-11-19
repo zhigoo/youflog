@@ -104,6 +104,16 @@ $(document).ready(function() {
 									 {%endif%}
 									 </cite> 的评论 </h4>
 									<blockquote><p>{{comment.content}} </p></blockquote>
+									<p class="row-actions">
+										{% if comment.is_public%}
+						             	<span class="spam"><a title="标记这个评论为垃圾评论" href="/admin/flag_spam_comment/{{comment.id}}?approve=0">垃圾评论</a></span>
+						             	{%else%}
+						             	<span class="approve"><a title="获准这条评论" href="/admin/flag_spam_comment/{{comment.id}}?approve=1">获准</a></span>
+						             	{%endif%}
+						             	<span class="delete">| <a href="/admin/del_comment/{{comment.id}}">删除</a></span>
+						             	<span class="edit">|<a href="/admin/edit_comment/{{comment.id}}"> 编辑评论</a></span>
+						             	<span class="reply">| 回复</span>
+									</p>
 								</div>
 								{%endfor%}
 							</div>

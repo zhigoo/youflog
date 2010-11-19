@@ -26,16 +26,18 @@
 			<h3>最新文章</h3>
 			{% get_recent_posts %}
 		</div>
-		<div class="widget"><script type="text/javascript"><!--
-google_ad_client = "ca-pub-8325911329891044";
-google_ad_slot = "7005241998";
-google_ad_width = 250;
-google_ad_height = 200;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script></div>
+		<div class="widget">
+			<script type="text/javascript"><!--
+			google_ad_client = "ca-pub-8325911329891044";
+			google_ad_slot = "7005241998";
+			google_ad_width = 300;
+			google_ad_height = 250;
+			//-->
+			</script>
+			<script type="text/javascript"
+			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			</script>
+		</div>
 		<div class="widget">
 			<h3 class="widget-title">热门文章</h3>
 			{% get_popular_posts %}
@@ -56,7 +58,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 	
 	
-	<!-- tag cloud -->
+	<!-- tag cloud -->{%comment%}
 		<div class="widget widget_tag_cloud">
 			<h3>标签云</h3>
 			{% get_tag_cloud %}
@@ -65,7 +67,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 		<div class="widget">
 			<h3>文章分类</h3>
 			{% get_categories %}
-		</div>
+		</div>{%endcomment%}
 		<div class="widget">
 			<h3>文章归档</h3>
 			{%get_archives%}

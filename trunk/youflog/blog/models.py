@@ -242,7 +242,7 @@ class Entry(models.Model):
 class Link(models.Model):
     href=models.URLField()
     text=models.CharField(max_length=20)
-    comment=models.CharField(max_length=50,null=True, blank=True)
+    comment=models.CharField(max_length=50,null=True, blank=True,default='')
     createdate=models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):

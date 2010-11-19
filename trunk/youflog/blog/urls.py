@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^admin/post_delete$',admin.post_delete,name="delete post"), #删除文章或者页面
     url(r'admin/page$',admin.addPage,name='add page '), #跳转到页面添加
     url(r'admin/pages$',admin.pages,name='show all pages'),#分页显示所有的页面
+    url(r'admin/posts_cate/(?P<slug>[-\w]+)$',admin.posts_by_category),
     #comment
     url(r'^admin/comments',admin.comments,name="show all comments"), #分页显示所有的评论
     url(r'^admin/spam_comment',admin.spam_comment,name='spam comment'),

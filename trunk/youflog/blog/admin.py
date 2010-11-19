@@ -10,7 +10,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.sites.models import Site
 from django.contrib import messages
-from django.contrib.sitemaps import ping_google
 from django.contrib.auth import authenticate, login as auth_login ,logout as auth_logout
 from datetime import datetime
 from theme import ThemeIterator
@@ -114,6 +113,14 @@ def unpub_posts(request):
     return render_response(request,"admin/posts.html",{'entrys':unpub_posts,\
                                    'publish_count':publish_posts.count(),'unpubcount':unpubcount,
                                    'all_count':all_posts.count(),'page':page})
+
+@login_required
+def posts_by_category(request,slug):
+    if slug:
+        cat = Category.objects.get(slug=slug)
+        posts=Entry.objects.get_posts().filter(category=cat)
+        page=request.GET.get('page',1)
+        return render_response(request,'admin/category_posts.html',{'posts':posts,'page':page})
 
 @login_required
 def admin_addpost(request):
