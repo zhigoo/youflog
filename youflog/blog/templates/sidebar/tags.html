@@ -1,0 +1,8 @@
+<div>
+	{% if tags %}
+		{% for tag in tags %}
+		<a title="{{ tag.count }} posts" href="{{tag.tag.get_absolute_url}}" style='font-size:{{ tag.count|add:12 }}px;'>
+		{{tag.tag.name}}</a>
+		{%endfor%}
+	{% endif %}
+</div>

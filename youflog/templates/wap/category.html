@@ -1,0 +1,19 @@
+{%extends 'wap/base.html'%}
+{%block content%}
+<div class="waptitle">archives for {{category.name}}</div>
+<div class="waplist">
+	{% for entry in entrys.object_list %}
+	<a href="/wap/single/{{entry.id}}">{{ entry.title}}</a>
+	<br />
+	{% endfor %}
+</div>
+<div class="pagenav">
+	{% if entrys.has_previous %}
+        <a href="?page={{ entrys.previous_page_number }}">上一页</a>
+    {% endif %}
+     {% if entrys.has_next %}
+        <a href="?page={{ entrys.next_page_number }}">下一页</a>
+    {% endif %}
+</div>
+Back to <a href="/wap">{{ blog.title}}</a>
+{%endblock%}

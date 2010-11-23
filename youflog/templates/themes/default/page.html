@@ -1,0 +1,48 @@
+{% extends "themes/default/base.html" %}
+{% load utils %}
+{% block title %} {{entry.title|escape}} - {{blog.title|escape}} {% endblock %}
+
+{% block head_block %}
+
+{% if entry %}
+{%if entry.tags%}<meta name="Keywords" content="{{entry.tags|escape}}" />{%endif%}
+{%if entry.excerpt%} <meta name="Description" content="{{entry.excerpt|escape}}" />{%endif%}
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+{% if entry %}
+	<div class="post">
+		<h3 class="title">{{entry.title|escape}}</h3>
+
+		<div class="content">
+			{{entry.content|safe}}
+			<div class="fixed"></div>
+		</div>
+
+		<div class="meta">
+			<div class="act">
+				
+			</div>
+			<div class="info">
+				{{entry.comments.count}} Comments
+			</div>
+			<div class="fixed"></div>
+		</div>
+	</div>
+{% else %}
+
+	<div class="block">
+		<div class="content small r">
+			Sorry, no posts matched your criteria.
+		</div>
+	</div>
+
+{% endif %}
+{% var object = entry %}
+
+{% include "themes/default/comments.html" %}
+{% endblock %}

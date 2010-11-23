@@ -1,0 +1,10 @@
+{% load utils %}
+{% if comments %} 
+<ul>
+{% for c in comments %}
+	<a href='{{c.weburl}}'title='{{c.author}}({{c.count}} comments)' target="_blank">
+		<img width='36' height='36' src='{% gravator c.email %}' alt='{{c.author}}' />
+	</a>
+{% endfor %} 
+</ul>
+{% endif %}

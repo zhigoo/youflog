@@ -1,0 +1,79 @@
+{%extends "admin/base.html"%}
+{%load pagination%}
+{%block content%}
+<div class="wrap">
+	<h2>文章分类</h2>
+	<table class="widefat">
+			<thead>
+				<tr>
+				<th scope="col" class="check-column">
+				<input type="checkbox" onclick="$('input[name=checks]').attr('checked',this.checked);"></th>
+				<th style="width:28%;">标题</th>
+				<th>作者</th>
+				<th>分类目录</th>
+				<th>标签</th>
+				<th class="num"><div class="vers"><img alt="Comments" src="/static/images/comment-grey-bubble.png"></div></th>
+				<th style="width: 10%;">日期</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+				<th scope="col" class="check-column">
+				<input type="checkbox" onclick="$('input[name=checks]').attr('checked',this.checked);"></th>
+				<th>标题</th>
+				
+				<th>作者</th>
+				<th>分类目录</th>
+				<th>标签</th>
+				<th class="num"><img alt="Comments" src="/static/images/comment-grey-bubble.png"></th>
+				<th >日期</th>
+				</tr>
+			</tfoot>
+			<tbody>
+         {%if posts%}
+         {% begin_pagination posts page 12%}
+         {%for entry in posts%}
+		<tr valign="middle" id="post-{{entry.id}}">
+			<th scope="row" class="check-column">
+				<input type="checkbox" name="checks" value="{{entry.id}}">
+			</th>
+			<td> 
+              	<strong>
+              		{%if entry.published%}
+              		<a target="_blank" href="/{{entry.get_absolute_url}}" title="{{entry.title}}" class="row-title">{{entry.title}}</a>
+              		{%else%}
+              		<a target="_self" href="/admin/editpost/{{entry.id}}" title="Edit &quot;{{entry.title}}&quot;" class="row-title">{{entry.title}}</a>
+              		{%endif%}
+              		{%if entry.sticky%}[置顶]{%endif%}
+              	</strong>
+              	<div class="row-actions">
+	              	<span> <a href="/admin/editpost/{{entry.id}}?entrytype=post" title="Edit &quot;{{entry.title}}&quot;">编辑</a></span>
+	              	<span class="delete">| <a href="/admin/delpost?id={{entry.id}}">删除</a></span>
+	              	{%if entry.published%}
+	              	<span class="editor">| 
+              			<a target="_blank" href="/{{entry.get_absolute_url}}" title="{{entry.title}}">浏览</a>
+              		</span>
+              		{%endif%}
+              	</div>
+              </td>
+              <td>{{entry.author.username}}</td>
+              <td><a href="/admin/posts_cate/{{entry.category.slug}}">{{entry.category.name}}</a></td>
+              <td>{{entry.tags}}</td>
+              <td class="num">{{entry.comments.count}}</td>
+              <td>{{entry.date|date:"Y-m-d"}}
+              <br/>{%if entry.published%}已发布{%else%}未发布{%endif%}
+              </td>
+		</tr>
+		{%endfor%}
+		{%else%}
+		<tr>
+			<td colspan="7" align="center" style="font-size: 16px;">还没有新文章,<a href="/admin/post">添加</a>一篇吧</td>
+		</tr>
+		{%endif%}
+			</tbody>
+		</table>
+	{%if posts%}
+ 	{% end_pagination %}
+ 	{%endif%}
+</div>
+{%endblock%}

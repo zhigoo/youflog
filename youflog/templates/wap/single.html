@@ -1,0 +1,31 @@
+{%extends 'wap/base.html' %}
+{%block content%}
+<div class="waptitle">{{ entry.title}}</div>
+{{ entry.content|striptags}}
+<div class="pagenavi">
+	上一篇:{%if entry.prev%}<a href="/wap/single/{{entry.prev.id}}">{{ entry.prev.title}}</a>{%else%}没有了{%endif%}<br/>
+	下一篇:{%if entry.next%}<a href="/wap/single/{{entry.next.id}}">{{ entry.next.title}}</a>{%else%}没有了{%endif%}
+</div>
+<div class="waptitle">最新评论</div>
+
+<div class="waplist">
+{% if comments.object_list%}
+{% for comment in comments.object_list %}
+{{comment.author}} :"{{comment.content|striptags}}" [{{comment.date|date:"m-d H:i"}}]
+<br />
+{% endfor %}
+{%else%}
+还没有评论
+{%endif%}
+</div>
+
+<div class="pagenavi">
+	{% if comments.has_previous %}
+        <a href="?page={{ comments.previous_page_number }}">上一页</a>
+    {% endif %}
+     {% if comments.has_next %}
+        <a href="?page={{ comments.next_page_number }}">下一页</a>
+    {% endif %}
+</div>
+Back to <a href="/wap">{{ blog.title}}</a>
+{%endblock%}

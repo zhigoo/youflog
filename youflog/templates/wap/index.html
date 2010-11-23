@@ -1,0 +1,28 @@
+{% extends 'wap/base.html'%}
+{% block content %}
+{% load pagination %}
+
+<div class="waptitle">最新文章</div>
+<div class="waplist">
+{% begin_pagination entrys page %}
+	{% for entry in entrys %}
+	<a href="/wap/single/{{entry.id}}">{{ entry.title}}</a><br/>
+	{% endfor %}
+{% end_pagination %}
+
+</div>
+{%if categories%}
+<div class="waptitle">文章分类</div>
+<div>
+	{%for cate in categories%}
+	<a href="/wap/category/{{cate.id}}">{{cate.name}}</a>
+	{%endfor%}
+</div>
+{%endif%}
+<div class="waptitle">最新评论</div>
+<div class="waplist">
+{% for comment in comments %}
+{{comment.author}}:"{{comment.content|striptags}}" [{{comment.date|date:"m-d H:i"}}] <br />
+{% endfor %}
+</div>
+{% endblock %}

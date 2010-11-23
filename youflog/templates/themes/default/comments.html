@@ -1,0 +1,70 @@
+{% load comment pagination%}
+{% get_comment_form for object as commentform %}
+<script type="text/javascript" src="/themes/{{ blog.theme_name }}/static/js/comments.js"></script>
+<script type="text/javascript" src="/static/js/comment-reply.js"></script>
+
+{% get_threaded_comment_list for object %}
+ 
+	{% if entry.allow_comment %}
+	<div id="respond">
+	<form id="commentform" action="/postcomment" method="post" onsubmit="return post()">
+		<div class="body">
+			<div class="header">
+				<h3 class="title">
+					来了,就把评论留下
+				</h3>
+				<a style="display: none;" href="#respond" id="cancel-comment-reply-link" rel="nofollow">Cancel reply</a>
+				<div class="fixed"></div>
+			</div>
+			<div class="notice">
+				{% include "themes/default/smily.html" %}
+			</div>
+			<div class="text">
+				<textarea name="content" id=comment class="textarea" cols="64" rows="8" tabindex="4"></textarea>
+			</div>
+			<div class="info">
+
+				<div class="part">
+					<div id="author_info">
+						<div><label for="author" class="small">Name* </label></div>
+						<div>{{commentform.author}}</div>
+						<div><label for="email" class="small">E-Mail* (不公布)</label></div>
+						<div>{{commentform.email}}</div>
+						<div><label for="url" class="small">Website</label></div>
+						<div>{{commentform.url}}</div>
+					</div>
+				</div>
+				{{ commentform.content_type }}
+			    {{ commentform.object_pk }}
+			    {{ commentform.parent_id }}
+				<div class="part">
+					<input name="submit" type="submit" id="submit" class="button" tabindex="6" value="Submit"/>
+				</div>
+
+				<div class="feed">
+					<input type="checkbox" name="mail_notify" style="width: auto;margin-left:10px;" checked="checked"/>
+                    <label for="mail_notify">有回复时邮件通知我</label>
+				</div>
+			</div>
+
+			<div class="fixed"></div>
+			<script type="text/javascript"><!--
+google_ad_client = "pub-8325911329891044";
+/* 468x15, 创建于 10-11-15 */
+google_ad_slot = "6291447193";
+google_ad_width = 468;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+		</div>
+		
+	</form>
+	</div>
+	{%else%}
+	<div class="block">
+		为啥要把评论关掉呢？
+	</div>
+	{% endif %}

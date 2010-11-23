@@ -1,0 +1,39 @@
+{% extends "themes/google/base.html" %}
+{% load pagination %}
+{% block content %}
+<div id="content" class="narrowcolumn">
+	{% if entries %}
+	{% begin_pagination entries page %}
+		{% for entry in entries %}
+			<div class="post" id="post-{{entry.id}}">
+				<h2><a href="{{entry.link|escape}}" rel="bookmark" title="Permanent Link to {{entry.title}}">{{entry.title}}</a></h2>
+				<br/>
+				<div class="entry">
+					{{entry.content|safe}}
+				</div>
+
+				<p class="postmetadata">
+				<small>{{entry.date|date:"Y/m/d H:i"}}&nbsp;|&nbsp;
+				posted in:<a href="/category/{{entry.category.slug}}">{{entry.category.name}}</a>|&nbsp;&nbsp;
+				Tags: {% for tag in entry.get_tags %}
+						{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+						{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+						{% endif %}
+					{% endfor %} 
+					|&nbsp;&nbsp;Comments:
+					<a href="/{{entry.link|escape}}#comments">{{entry.comments.count}}</a>
+					</small></p>
+			</div>
+		{% endfor %}
+
+		{% end_pagination %}
+
+	{% else %}
+
+		<h2 class="center">Not Found</h2>
+		<p class="center">Sorry, but you are looking for something that isn't here.</p>
+	{% endif %}
+	</div>
+
+{% include "themes/google/sidebar.html" %}
+{% endblock %}

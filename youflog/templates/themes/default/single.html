@@ -1,0 +1,105 @@
+{% extends "themes/default/base.html" %}
+{% load utils %}
+{% block title %} {{entry.title|escape}} - {{blog.title|escape}} {% endblock %}
+
+{% block head_block %}
+
+{% if entry %}
+{%if entry.tags%}<meta name="Keywords" content="{{entry.tags|escape}}" />{%endif%}
+{%if entry.excerpt%} <meta name="Description" content="{{entry.excerpt|escape}}" />{%endif%}
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+{% if entry %}
+
+	<div class="post">
+		<h3 class="title">{{ entry.title|escape }}</h3>
+
+		<div class="content">
+			
+			{{ entry.content|safe}}
+			<div class="fixed"></div>
+		</div>
+
+
+		<div class="meta">
+			<div class="act">{{entry.comments.count}} 条评论</div>
+			<div class="info">
+				{{entry.date|date:"Y/m/d H:i"}}
+			</div>
+			<div class="act">
+				<a href="#respond">添加评论</a>
+			</div>
+			{% if entry.tags%}
+				<div class="tags">Tags: 
+					{% for tag in entry.get_tags %}
+						{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+						{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+						{% endif %}
+					{% endfor %}
+				</div>
+			{%endif%}
+			<div class="fixed"></div>
+		</div>
+	</div>
+
+	<div class="block">
+		<div class="content g">
+			<b>转载请注明：来自</b><a href="{{blog.baseurl}}" title="{{blog.title|escape}}">{{blog.title|escape}}</a>
+			<br/><b>本文地址：</b><a href="{{entry.fullurl|escape}}" title="{{ entry.title|escape }}">{{entry.fullurl|escape}}</a>
+		</div>
+	</div>
+
+	<div id="postnavi" class="block">
+		<div class="content g">
+			
+			<span class="prev">
+				{%if entry.prev%}<a href="/{{entry.prev.link}}">&laquo; {{entry.prev.title}}</a>
+				{%else%}
+				&laquo;没有了
+				{%endif%}
+			</span>
+			
+			
+			<span class="next">
+			{%if entry.next%}<a href="/{{entry.next.link}}">&raquo; {{entry.next.title}}</a>
+				{%else%}
+				&raquo;没有了
+				{%endif%}
+			</span>
+			
+			<div class="fixed"></div>
+		</div>
+	</div>
+
+	
+	<!-- related-posts start -->
+	
+	<div class="related-posts">
+		<h3 class="title">您还可以看看这些</h3>
+		<ul class="related_post">
+		{%for post in entry.relateposts%}
+			<li><a href="/{{post.get_absolute_url|escape}}">{{post.title|escape}} </a> - {{post.date|date:"Y/m/d"}} - 评论({{post.comments.count}})</li>
+		{%endfor%}
+		</ul>
+	</div>
+	
+	<!-- related-posts end -->
+	
+{% else %}
+
+	<div class="block">
+		<div class="content small r">
+			Sorry, no posts matched your criteria.
+		</div>
+	</div>
+
+{% endif %}
+
+{% var object = entry %}
+
+{% include "themes/default/comments.html" %}
+{% endblock %}

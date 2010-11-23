@@ -1,0 +1,22 @@
+{%load utils %}
+{% for comment in comments.object_list %}
+<li id="rc_item_" class="rc_item">
+	<div class="rc_avatar rc_left">
+		<img class="avatar avatar-32 photo" width="32" height="32" src="{%gravator comment.email%}" alt='{{comment.author}}'/>
+	</div>
+	<div class="rc_info">
+		<span class="author_name">
+			<a href="/{{comment.get_absolute_url}}" title="发表于：{{comment.object.title|escape}}">{{comment.author}}</a>
+		</span>
+	</div>
+	<div class="rc_excerpt">
+		{{comment.shortcontent|striptags}}...
+	</div>
+</li>
+{% endfor %}
+
+	<div class="content g" id='recentcomment_nav'>
+		{% if comments.has_previous %}<span class="prevPage"><a href="javascript:void(0);" onclick="return loadRecentComments({{ comments.previous_page_number}})" >&laquo; 上一页</a></span>{% endif %}
+		{% if comments.has_next %}<span class="nextPage"><a href="javascript:void(0);" onclick="return loadRecentComments({{ comments.next_page_number}})" >下一页 &raquo;</a></span>{% endif %}
+		<div class="fixed"></div>
+	</div>
