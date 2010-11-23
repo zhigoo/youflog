@@ -1,0 +1,47 @@
+{% load sidebar %}
+<link rel="stylesheet" href="/themes/default/static/recentcomments.css" type="text/css" media="screen" />
+	<div id="sidebar">
+		<ul>
+			<li><h2>最新文章</h2>
+				{% get_recent_posts %}
+			</li>
+			
+			<li><h2>热门文章</h2>
+				{% get_popular_posts %}
+			</li>
+			
+			<li><h2>随机文章</h2>
+				{% get_random_posts %}
+			</li>
+			
+			<li><h2>最新评论</h2>
+				<ul>
+				{%get_recent_comment%}
+				</ul>
+			</li>
+			
+			<li><h2>目录分类</h2>
+			{% get_categories %}
+			</li>
+			
+			<li><h2>文章归档</h2>
+				{%get_archives%}
+			</li>
+			
+			<li><h2>友情链接</h2>
+				{%get_links%}
+			</li>
+			
+			<li><h2>Meta</h2>
+			<ul>
+				{% if request.user.is_authenticated %}
+				<li><a href="/admin">管理</a></li>
+				{%else%}
+				<li><a href="/admin">登录</a></li>
+				{%endif%}
+			</ul>
+			</li>
+
+		</ul>
+	</div>
+

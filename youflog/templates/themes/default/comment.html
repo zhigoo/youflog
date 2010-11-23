@@ -1,0 +1,30 @@
+{% load utils %}
+<li id="comment-{{comment.id}}" class="comment">
+	<div class="header regularheader">
+		<img class="avatar avatar-24 photo" width="30" height="30" src="{% gravator comment.email %}"></img>
+		<div class="author with_avatar">
+			{%if comment.weburl %}
+				<a id="commentauthor-{{comment.id}}" title="{{comment.author}}" href="{{comment.weburl}}" rel="external nofollow" target="_blank">
+					{{comment.author}}
+				</a>
+			{% else %}
+				<span title="{{comment.author}}" id="commentauthor-{{comment.id}}">{{comment.author}}</span>
+			{%endif%}
+		</div>
+		
+		<div class="items">
+			<a class="comment-reply-link" onclick="return addComment.moveForm('comment-{{comment.id}}','{{comment.id}}','respond')" href="#respond" rel="nofollow">Reply</a>
+			|
+			<a onclick="quote('{{comment.id}}','{{comment.author}}')" href="javascript:void(0);">Quote</a>
+			
+		</div>
+		
+		<div class="date">
+			{{comment.date|date:"Y-m-d"}} @ {{comment.date|date:"H:i"}}
+		</div>
+		<div class="fixed"></div>
+	</div>
+	<div id="commentbody-{{comment.id}}" class="body">
+		<p>{{comment.content|safe}}</p>
+	</div>
+	<div class="fixed"></div>

@@ -1,0 +1,68 @@
+{%extends "admin/base.html"%}
+{%block content%}
+<div class="wrap">
+	<h2>评论选项</h2>
+	{%if messages%}
+	<div align="center" style="background-color: rgb(255, 251, 204);">
+		<p>
+		{% for message in messages %}
+		<strong>{{ message }}</strong> 
+		</p>
+		{%endfor%}
+	</div>
+	{%endif%}
+	<form id="settings" action="/admin/save_commentOption" method="post">
+		<table class="form-table">
+			<tbody>
+				<tr valign="top">
+					<th scope="row">
+						<label for="comments_per_page">每页评论数</label>
+					</th>
+					<td><input type="text" class="regular-text" value="{{comments_per_page}}" id="comments_per_page" name="comments_per_page"></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="comments_per_page">给我发送电子邮件</label>
+					</th>
+					<td>
+					<input type="checkbox" {%if comments_notify%}checked="checked"{%endif%} value="1" id="comments_notify" name="comments_notify">
+						有人发表评论时 
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label>启用Akismet</label>
+					</th>
+					<td>
+					<input type="checkbox" {%if enable_akismet %}checked="checked"{%endif%} class="regular-text code" id="akismet_enable" name="akismet_enable"/>
+					<input type="text" id="akismet_key" name="akismet_key" value="{{akismet_key}}"/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<h3>头像</h3>
+		<p>头像功能是一个在各个博客间一直跟随您的图像，在每个启用头像的站点上，它显示在您的名字旁边。在这里您可以启用您博客上的读者评论头像显示功能。</p>
+		<table class="form-table">
+			<tbody>
+			<tr valign="top">
+			<th scope="row">默认头像</th>
+			<td class="defaultavatarpicker"><fieldset><legend class="hidden">默认头像</legend>
+			对于那些没有自定义头像的用户，您可以显示一个通用头像或者根据他们的邮件地址产生一个头像。<br>
+				<label><input type="radio" {%ifequal gavatar "gravatar_default"%}checked="checked"{%endifequal%} value="gravatar_default" id="avatar_gravatar_default" name="gavatar"> 
+				<img width="32" height="32" class="avatar avatar-32 photo" src="/static/images/default.png" alt=""> Gravatar标志</label><br>
+				<label><input type="radio" {%ifequal gavatar "identicon"%}checked="checked"{%endifequal%} value="identicon" id="avatar_identicon" name="gavatar"> 
+				<img width="32" height="32" class="avatar avatar-32 photo" src="/static/images/identicon.png" alt=""> 抽象图形(自动产生)</label><br>
+				<label><input type="radio" {%ifequal gavatar "wavatar"%}checked="checked"{%endifequal%} value="wavatar" id="avatar_wavatar" name="gavatar"> 
+				<img width="32" height="32" class="avatar avatar-32 photo" src="/static/images/wavatar.png" alt=""> Wavatar(自动产生)</label><br>
+				<label><input type="radio" {%ifequal gavatar "monsterid"%}checked="checked"{%endifequal%} value="monsterid" id="avatar_monsterid" name="gavatar"> 
+				<img width="32" height="32" class="avatar avatar-32 photo" src="/static/images/monsterid.png" alt=""> 小怪物(自动产生)</label><br>
+			</fieldset></td>
+			</tr>
+			</tbody>
+		</table>
+		<p class="submit">
+			<input type="submit" value="保存更改" class="button-primary" name="Submit">
+		</p>
+	</form>
+</div>
+{%endblock%}

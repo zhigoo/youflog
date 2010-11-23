@@ -1,0 +1,57 @@
+
+{% extends "themes/default/base.html" %}
+{% load pagination %}
+{% block head_block %}
+{% endblock %}
+
+{% block content %}
+
+{% if entries %}
+{% begin_pagination entries page %}
+	{% for entry in entries %}
+	<div class="post">
+		<h3 class="title">
+			<a href="/{{ entry.get_absolute_url|escape }}" title="Permanent Link to {{entry.title|escape}}" rel="bookmark">
+			{%if entry.sticky%}<b>[置顶]</b>{%endif%}{{entry.title|escape}}
+			</a>
+		</h3>
+
+		<div class="content">
+			{{entry.excerpt_content|safe}}
+			<div class="fixed"></div>
+		</div>
+
+		<div class="meta">
+			
+			<div class="act">
+				<a href="/{{entry.get_absolute_url|escape}}#commentlist">{{entry.comments.in_public.count}} Comments</a>
+			</div>
+			<div class="info">
+				{{entry.date|date:"Y/m/d H:i"}}
+			</div>
+			
+				{%if entry.get_tags%}
+				<div class="tags">Tags: 
+					{% for tag in entry.get_tags %}
+						{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+						{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+						{% endif %}
+					{% endfor %}
+				</div>
+			 {%endif%}
+			<div class="fixed"></div>
+		</div>
+	</div>
+	{% endfor %}
+	{% end_pagination %}
+
+{% else %}
+	<div class="block">
+		<div class="content small r">
+			Sorry, no posts matched your criteria.
+		</div>
+	</div>
+
+{% endif %}
+
+{% endblock %}

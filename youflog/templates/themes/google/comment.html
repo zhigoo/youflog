@@ -1,0 +1,17 @@
+{%load utils%}
+<li class="alt" id="comment-{{comment.id}}">
+<img class="avatar avatar-24 photo" width="30" height="30" src="{% gravator comment.email %}" alt="{{comment.author}}"></img>
+<cite>
+{%if comment.weburl %}
+	<a id="commentauthor-{{comment.id}}" title="{{comment.author}}" href="{{comment.weburl}}" rel="external nofollow" target="_blank">
+		{{comment.author}}
+	</a>
+{% else %}
+	<span title="{{comment.author}}" id="commentauthor-{{comment.key.id}}">{{comment.author}}</span>
+{%endif%}
+</cite> Says: <small><a href="#commentform" onclick="addComment.moveForm('comment-{{comment.id}}','{{comment.id}}','respond')">Reply</a></small>
+	<br />
+	<small class="commentmetadata">
+	{{comment.date|date:"Y-m-d"}} @ {{comment.date|date:"H:i"}}
+	</small>
+	{{comment.content}}

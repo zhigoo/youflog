@@ -1,0 +1,48 @@
+{% extends "themes/google/base.html" %}
+{% load utils %}
+{% block title %} {{entry.title|escape}} - {{blog.title|escape}} {% endblock %}
+
+{% block content %}
+	<div id="content" class="narrowcolumn">
+
+	{% if entry %}
+
+		<div class="navigation">
+			{%if entry.prev%}		
+			<div class="alignleft">
+				<a href="/{{prev.link}}">&laquo;{{entry.prev.title}} </a>
+			</div>
+			{%endif%}
+			{%if entry.next%}
+			<div class="alignright">
+				<a href="/{{next.link}}">&raquo;{{entry.next.title}}</a>
+			</div>
+			{%endif%}
+		</div>
+
+		<div class="post" id="post-{{entry.id}}">
+			<h2>{{entry.title}}</h2>
+
+			<div class="entry">
+				{{entry.content|safe}}
+				
+				<p class="postmetadata">
+				<small>{{entry.date|date:"Y/m/d H:i"}}&nbsp;|&nbsp;
+				posted in:<a href="/category/{{entry.category.slug}}">{{entry.category.name}}</a>|&nbsp;&nbsp;
+				Tags: {% for tag in entry.get_tags %}
+						{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+						{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+						{% endif %}
+					{% endfor %} 
+					|&nbsp;&nbsp;Comments:
+					<a href="/{{entry.link|escape}}#comments">{{entry.comments.count}}</a>
+					</small></p>
+			</div>
+		</div>
+	{% var object = entry %}
+	{% include "themes/google/comments.html" %}
+{%endif%}
+
+	</div>
+{% include "themes/google/sidebar.html" %}
+{% endblock %}
