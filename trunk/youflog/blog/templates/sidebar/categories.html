@@ -1,9 +1,0 @@
-{% if categories %}
-<ul>
-	{%for cate in categories%}
-	<li class="cat-item">
-		<a href="/category/{{cate.slug}}">{{cate.name}}</a>({{cate.count}})
-	</li>
-	{%endfor%}
-</ul>
-{% endif %}
