@@ -110,7 +110,7 @@ $(document).ready(function() {
 						             	{%else%}
 						             	<span class="approve"><a title="获准这条评论" href="/admin/flag_spam_comment/{{comment.id}}?approve=1">获准</a></span>
 						             	{%endif%}
-						             	<span class="delete">| <a href="/admin/del_comment/{{comment.id}}">删除</a></span>
+						             	<span class="delete">| <a href="/admin/del_comment/{{comment.id}}?currpath={{request.path}}">删除</a></span>
 						             	<span class="edit">|<a href="/admin/edit_comment/{{comment.id}}"> 编辑评论</a></span>
 						             	<span class="reply">| 回复</span>
 									</p>

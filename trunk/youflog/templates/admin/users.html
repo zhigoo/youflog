@@ -1,0 +1,70 @@
+{% extends "admin/base.html" %}
+{% load pagination %}
+{% block content %}
+<div class="wrap">
+ 	<h2>用户管理</h2>
+ 		
+ 		<div class="clear"></div>
+ 		<table class="widefat">
+			<thead>
+				<tr>
+				<th scope="col" class="check-column">
+				<input type="checkbox" onclick="$('input[name=checks]').attr('checked',this.checked);"></th>
+				<th>用户名</th>
+				<th>EMAIL</th>
+				<th>激活状态</th>
+				<th>超级用户</th>
+				<th class="num">最后登录时间</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+				<th scope="col" class="check-column">
+				<input type="checkbox" onclick="$('input[name=checks]').attr('checked',this.checked);"></th>
+				<th>用户名</th>
+				<th>EMAIL</th>
+				<th>激活状态</th>
+				<th>超级用户</th>
+				<th class="num">最后登录时间</th>
+				</tr>
+			</tfoot>
+			<tbody>
+         {%if users%}
+         {% begin_pagination users page 12%}
+         {%for user in users%}
+		<tr valign="middle" id="post-{{entry.id}}">
+			<th scope="row" class="check-column">
+				<input type="checkbox" name="checks" value="{{entry.id}}">
+			</th>
+			<td> 
+              	<strong>
+              			{{user.username}}
+              	</strong>
+              	<div class="row-actions">
+	              	<span> <a href="/admin/editpost/{{entry.id}}?entrytype=post" title="Edit &quot;{{entry.title}}&quot;">编辑</a></span>
+	              	<span class="delete">| <a href="/admin/delpost?id={{entry.id}}">删除</a></span>
+	              	{%if entry.published%}
+	              	<span class="editor">| 
+              			<a target="_blank" href="/{{entry.get_absolute_url}}" title="{{entry.title}}">浏览</a>
+              		</span>
+              		{%endif%}
+              	</div>
+              </td>
+              <td>{{user.email}}</td>
+              <td>{{user.is_active}}</td>
+              <td>{{user.is_superuser}}</td>
+              <td class="num">{{user.last_login|date:"Y-m-d H:i:s"}}</td>
+		</tr>
+		{%endfor%}
+		{%else%}
+		<tr>
+			<td colspan="7" align="center" style="font-size: 16px;">还没有新文章,<a href="/admin/post">添加</a>一篇吧</td>
+		</tr>
+		{%endif%}
+			</tbody>
+		</table>
+ 	{%if users%}
+ 	{% end_pagination %}
+ 	{%endif%}
+</div>
+{%endblock%}

@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 # *_* encoding=utf-8*_*
-import os
+import os,logging
 import settings
+class Theme:
+    def __init__(self,name="default"):
+        self.name=name
+        self.dir=os.path.join(settings.HERE,'templates/themes',self.name)
+        logging.info("theme path: %s"%self.dir)
 
 class ThemeIterator:
     def __init__(self):
@@ -26,6 +31,6 @@ class ThemeIterator:
             self.cursor += 1
             p=os.path.join(self.theme_path,value)
             #判断是否是一个目录
-            if value!='.svn' and os.path.isdir(p):
+            if os.path.isdir(p):
                 self.list.append(value)
                 return value
