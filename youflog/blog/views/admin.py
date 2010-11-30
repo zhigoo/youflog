@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login ,logout as auth_logout
+from django.contrib.auth.models import User
 from datetime import datetime
 from blog.theme import ThemeIterator
 from blog.forms import SettingForm
@@ -301,19 +302,27 @@ def save_comment(request):
 @login_required
 def flag_comment_for_spam(request,id):
     approve=request.GET.get('approve',0)
+    currpath = request.GET.get('currpath')
     comment=get_object_or_404(Comment,id=id)
     if int(approve) == 0:
         comment.is_public=False
     else:
         comment.is_public=True
     comment.save()
-    return HttpResponseRedirect('/admin/comments')
+    if currpath:
+        return HttpResponseRedirect(currpath)
+    else:
+        return HttpResponseRedirect('/admin/comments')
     
 @login_required
 def delete_single_comment(request,id):
+    current_path = request.GET.get('currpath')
     comment=get_object_or_404(Comment,id=id)
     comment.delete()
-    return HttpResponseRedirect('/admin/comments')
+    if current_path:
+        return HttpResponseRedirect(current_path)
+    else:
+        return HttpResponseRedirect('/admin/comments')
 
 @login_required
 def edit_comment(request,id):
@@ -322,13 +331,17 @@ def edit_comment(request,id):
 
 @login_required
 def comment_delete(request):
+    current_path = request.POST.get('currpath')
     try:
         allchecks = request.POST.getlist("checks")
         for id in allchecks:
             c = Comment.objects.get(id=id)
             c.delete()
     finally:
-        return HttpResponseRedirect('/admin/comments')
+        if current_path:
+            return HttpResponseRedirect(current_path)
+        else:
+            return HttpResponseRedirect('/admin/comments')
 
 @login_required
 def categories(request):
@@ -554,3 +567,8 @@ def backup_db(request):
         response = HttpResponse(data,mimetype='application/octet-stream') 
         response['Content-Disposition'] = 'attachment; filename=youflog.sqlite'
         return response
+
+def users(request):
+    page = request.GET.get('page',1)
+    users = User.objects.all()
+    return render_response(request,'admin/users.html',locals())

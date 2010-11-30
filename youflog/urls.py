@@ -5,7 +5,7 @@ from django.conf import settings
 
 from django.contrib.sitemaps import views as sitemap_views
 from django.views.decorators.cache import cache_page
-from blog import feed_sitemap
+from blog import feed_sitemap,rpc
 
 sitemaps = {
     'posts': feed_sitemap.PostSitemap(),
@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^sitemap.xml$', cache_page(sitemap_views.sitemap, 60 * 60 * 6),{'sitemaps': sitemaps}),
     url(r'^feed$', cache_page(feed_sitemap.LatestEntryFeed(),60 * 60 * 6)),
     url(r'^feed/comments$',cache_page(feed_sitemap.LatestComments(),60 * 60 * 10)),
+    url(r'^rpc$',rpc.xmlrpc_handler),
     (r'',include('blog.views.admin_url')),
     (r'',include('blog.views.urls')),
 )

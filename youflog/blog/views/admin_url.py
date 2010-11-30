@@ -48,6 +48,8 @@ urlpatterns = patterns('',
     url(r'^admin/save_permalink',admin.save_permalink),
     url(r'^admin/backup_db$',admin.backup_db),
     
+    url(r'^admin/users$',admin.users),
+    
     #media
     url(r'^admin/media$',admin.media,name='show all media'),
     url(r'^admin/upload_media$',admin.upload_media),

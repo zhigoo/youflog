@@ -1,7 +1,6 @@
 from django.core.cache import cache
 from settings import CACHE_PREFIX
 
-
 get_cache_key= lambda key: "cache::%s::%s" % (CACHE_PREFIX, key)
 
 def get_cache(key):

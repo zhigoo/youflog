@@ -68,6 +68,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'blog.middleware.rpc.RpcMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -88,7 +89,6 @@ ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
    os.path.join(HERE,'templates'),
-   os.path.join(HERE,'templates/themes'),
 )
 
 INSTALLED_APPS = (
