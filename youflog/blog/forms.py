@@ -3,6 +3,7 @@ from django import forms
 from django.forms.util import ErrorDict
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import force_unicode
+from django.contrib.sites.models import Site
 from models import Comment
 from models import Blog
 
@@ -39,7 +40,6 @@ class CommentForm(forms.Form):
             author    = self.cleaned_data["author"],
             email   = self.cleaned_data["email"],
             weburl     = self.cleaned_data["url"],
-            #content      = self.cleaned_data["content"].replace('<script','&lt;script').replace('</script>','&lt;/script&gt;'),
             content=self.clean_comment(),
             date  = datetime.datetime.now(),
             mail_notify=self.cleaned_data["mail_notify"],
@@ -53,7 +53,9 @@ class CommentForm(forms.Form):
         return errors
     
     def clean_comment(self):
+        domain=Site.objects.get_current().domain
         content = self.cleaned_data["content"].replace('<script','&lt;script').replace('</script>','&lt;/script&gt;')
+        content=content.replace('^~',"<img src=http://%s/static/images/smilies/icon_"%(domain)).replace('~^','.gif />')
         return content
 
 class SettingForm(forms.Form):

@@ -48,9 +48,12 @@ def blogger_getUsersBlogs(appkey, username, password):
     return [{'url' : url, 'blogid' : '1','isAdmin':True, 'blogName' : blog.title,'xmlrpc':url+"/rpc"}]
 
 def blogger_deletePost(appkey,postid,username,password,publish):
-    post = Entry.objects.get(int(postid))
-    post.delete()
-    return True
+    try:
+        post = Entry.objects.get(id=int(postid))
+        post.delete()
+        return True
+    except:
+        return False
 
 def blogger_getRecentPosts(appkey,blogid,username,password,num=20):
     posts=Entry.objects.get_posts()
@@ -60,10 +63,25 @@ def metaWeblog_getPost(postid, username, password):
     post = Entry.objects.get(int(postid))
     return post_struct(post)
 
-def metaWeblog_newPost(blogid,struct,publish):
+def metaWeblog_newPost(blogid, username, password, struct, publish):
+    user = User.objects.get(username__exact=username)
+    if struct.has_key('title') and struct.has_key('description'):
+        post = Entry(title=struct['title'],content = struct['description'])
+        post.author=user
+        if struct.has_key('categories'):
+            catename = struct['categories'][0]
+            cate=Category.objects.get(name__exact=catename)
+            post.category=cate
+        else:
+            post.category_id=1
+        if struct.has_key('mt_keywords'):
+            post.tags=struct['mt_keywords']
+        if struct.has_key('wp_slug'):
+            post.slug=struct['wp_slug']
+        post.save(True)
     return ""
 
-def metaWeblog_editPost(postid, struct, publish):
+def metaWeblog_editPost(postid, username, password, struct, publish):
     return True
 
 def wp_getPages(blogid,num=20):
@@ -77,9 +95,7 @@ def mt_getCategoryList(blogid,username,password):
     categories =Category.objects.all()
     cates=[]
     for cate in categories:
-            cates.append({  'categoryId' : cate.id,
-                    'categoryName':cate.name
-                    })
+        cates.append({ 'categoryId' : cate.id,'categoryName':cate.name})
     return cates
 
 def metaWeblog_getCategories(blogid,username,password):
@@ -97,6 +113,16 @@ def metaWeblog_getCategories(blogid,username,password):
                         })
     return cates
 
+def mt_setPostCategories(postid,username,password,cates):
+    return 0
+    
+def mt_publishPost(postid,username,password):
+    try:
+        post = Entry.objects.get(int(postid))
+        post.save(True)
+        return post.id
+    except:
+        return 0
 class PlogXMLRPCDispatcher(SimpleXMLRPCDispatcher):
     def __init__(self, funcs):
         SimpleXMLRPCDispatcher.__init__(self, True, 'utf-8')
@@ -113,6 +139,8 @@ dispatcher = PlogXMLRPCDispatcher({
         'mt.getCategoryList':mt_getCategoryList,
         'wp.getPages':wp_getPages,
         'wp.getPageList':wp_getPageList,
+        'mt.setPostCategories':mt_setPostCategories,
+        'mt.publishPost':mt_publishPost,
         })
 
 def xmlrpc_handler(request):
