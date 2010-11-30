@@ -120,22 +120,8 @@ function post(){
 		alert('请输入正确的邮件地址！');
 	    return false;
 	}
-	
-	//SetCookie('author',author)
-	//SetCookie('email',email)
-	//SetCookie('url',url)
 }
 $(document).ready(function(){
-  	//从cookie载入数据到textfield中	
-	//author =getCookie('author')
-	//if(author) $("#author").val(author)
-	
-    //email = getCookie('email')
-  	//if(email) $('#email').val(email)
-  	
-  	//url = getCookie('url')
-    //if(url) $('#url').val(url)
-
     $('#commentform').keypress(function(e){
     	 if(e.ctrlKey && e.which == 13 || e.which == 10) { 
             $("#submit").click();
