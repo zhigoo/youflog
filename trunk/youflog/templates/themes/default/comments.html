@@ -32,6 +32,8 @@
 						<div>{{commentform.email}}</div>
 						<div><label for="url" class="small">Website</label></div>
 						<div>{{commentform.url}}</div>
+						<div><label for="safecode" class="small">验证码<img onclick="this.setAttribute('src','/image_code')" src="/image_code" alt="CheckCode"/> </label></div>
+						<div><input type="text" name="safecode"/></div>
 					</div>
 				</div>
 				{{ commentform.content_type }}

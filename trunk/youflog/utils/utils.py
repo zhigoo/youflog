@@ -55,4 +55,4 @@ def send_html_email(subject,msg,reveivers,**kwargs):
     sender=Blog.get().email
     mailmsg = EmailMessage(subject,msg,sender, [reveivers])
     mailmsg.content_subtype = 'html'
-    mailmsg.send(fail_silently=True)     
+    mailmsg.send(fail_silently=True)

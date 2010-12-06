@@ -1,6 +1,7 @@
 {%load utils%}
+<ul id="recent_comment">
 {% for comment in comments %}
-<li id="rc_item_" class="rc_item">
+<li id="rc_item" class="rc_item">
 	<div class="rc_avatar rc_left">
 		<img class="avatar avatar-32 photo" width="32" height="32" src="{% gravator comment.email %}" alt='{{comment.author}}'/>
 	</div>
@@ -10,7 +11,8 @@
 		</span>
 	</div>
 	<div class="rc_excerpt">
-		{{comment.shortcontent|striptags}}...
+		{{comment.content|safe}}
 	</div>
 </li>
 {% endfor %}
+</ul>

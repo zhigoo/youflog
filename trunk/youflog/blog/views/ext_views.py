@@ -6,7 +6,7 @@ from email.Utils import formatdate,parsedate_tz, mktime_tz
 import time,os,stat,re
 
 zipfile_cache={}
-MAX_AGE=600
+MAX_AGE=1200
 
 def SetCachingHeaders(response):
     response['Cache-Control'] = 'public, max-age=%d'%(MAX_AGE)
