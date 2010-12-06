@@ -45,6 +45,7 @@ MEDIA_ROOT = os.path.join(HERE, 'media').replace('\\','/')
 
 STATIC_ROOT = os.path.join(HERE, 'static').replace('\\','/')
 
+CAPTCHA_FONT=os.path.join(HERE,'static/Vera.ttf')
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"

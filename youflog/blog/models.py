@@ -11,7 +11,6 @@ from tagging.models import Tag,TaggedItem
 from blog.managers import EntryPublishManager
 from django.contrib.sitemaps import ping_google
 import blog.cache as cache
-from blog.theme import Theme
 import logging
 
 class Archive(models.Model):

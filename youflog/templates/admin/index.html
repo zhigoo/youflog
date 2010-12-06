@@ -103,7 +103,7 @@ $(document).ready(function() {
 									 {{comment.author}}
 									 {%endif%}
 									 </cite> 的评论 </h4>
-									<blockquote><p>{{comment.content}} </p></blockquote>
+									<blockquote><p>{{comment.content|safe}} </p></blockquote>
 									<p class="row-actions">
 										{% if comment.is_public%}
 						             	<span class="spam"><a title="标记这个评论为垃圾评论" href="/admin/flag_spam_comment/{{comment.id}}?approve=0">垃圾评论</a></span>

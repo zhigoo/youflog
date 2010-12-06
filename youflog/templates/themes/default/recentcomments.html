@@ -10,7 +10,7 @@
 		</span>
 	</div>
 	<div class="rc_excerpt">
-		{{comment.shortcontent|striptags}}...
+		{{comment.content|truncatewords_html:30|safe}}
 	</div>
 </li>
 {% endfor %}

@@ -20,6 +20,8 @@ from tagging.models import Tag, TaggedItem
 import blog.comments.signals as signals
 import blog.cache as cache
 from django.views.decorators.cache import cache_page
+import Image,ImageFont,ImageDraw,cStringIO,random
+from settings import CAPTCHA_FONT
 
 def get_comment_cookie_meta(request):
     author = ''
@@ -117,6 +119,10 @@ def post_comment(request, next = None):
     data = request.POST.copy()
     ctype = data.get("content_type")
     object_pk = data.get("object_pk")
+    checkcode = data.get('safecode') == request.session['safecode']
+    if not checkcode:
+        return CommentPostBadRequest("验证码可不要写错了!")
+        
     if ctype is None or object_pk is None:
         return CommentPostBadRequest("Missing content_type or object_pk field.")
     try:
@@ -169,3 +175,24 @@ def post_comment(request, next = None):
         pass
     
     return response
+
+def safecode(request):
+    gap = 5
+    start = 0
+    fontSize=15
+    code=[]
+    image = Image.new('RGB', (80, 20), (255, 255, 255))
+    font = ImageFont.truetype(CAPTCHA_FONT, fontSize)
+    draw = ImageDraw.Draw(image)
+    for i in range(0, 4):
+        x = start + fontSize * i + random.randint(0, gap) + gap * i
+        txt=str(random.randint(0,9))
+        code.append(txt)
+        draw.text((x,5), txt,font=font,fill=(random.randint(0, 255),
+           random.randint(0, 255),
+           random.randint(0, 255)))
+    del draw
+    request.session['safecode']=''.join(code)
+    buf = cStringIO.StringIO()
+    image.save(buf, 'gif') 
+    return HttpResponse(buf.getvalue(),'image/gif') 

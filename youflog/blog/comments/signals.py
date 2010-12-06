@@ -60,7 +60,7 @@ def on_comment_was_submit(sender,comment,*args,**kwargs):
                       emailtitle,old_c.email)
     else:
         comments_notify=OptionSet.get('comments_notify',1)
-        if int(comments_notify) == 1:
+        if int(comments_notify) == 1 and comment.is_public==True:
             emailtitle=u'文章'+comment.object.title+u'有了新的评论'
             sendmail('email/new_comment.txt',{'comment':comment,'domain':domain},emailtitle,blog.email)
 

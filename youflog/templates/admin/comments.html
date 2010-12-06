@@ -69,7 +69,7 @@
 	             	<div id="submited-on">
 	             		提交于 {{comment.date|date:"Y-m-d"}} @ {{comment.date|date:"H:i"}}
 	             	</div>
-	             <p>{{comment.content}}</p>
+	             <p>{{comment.content|safe}}</p>
 	             
 	             <div class="row-actions">
 	             	{% if comment.is_public%}

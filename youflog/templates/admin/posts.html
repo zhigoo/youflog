@@ -6,17 +6,12 @@
  	<form id="posts-filter" action="/admin/post_delete" method="post">
  		<ul class="subsubsub">
  			<li>
- 				<a href="/admin/allposts">
- 				全部<span class="count">({{all_count}})</span>
- 				</a>
- 				|
+ 				<a href="/admin/allposts">全部<span class="count">({{all_count}})</span></a>|
  			</li>
  			<li>
- 				<a href="/admin/pubposts">
- 				已发布<span class="count">({{publish_count}})</span>
- 				</a>|
+ 				<a href="/admin/pubposts">已发布<span class="count">({{publish_count}})</span></a>|
  			</li>
- 			<li><a href="/admin/unpubposts">未发布<span>({{unpubcount}})</span></a></li>
+ 			<li><a href="/admin/unpubposts">草稿<span>({{unpubcount}})</span></a></li>
  		</ul>
  		<p class="search-box hidden">
 			<label class="hidden" for="post-search-input">搜索文章:</label>
@@ -26,6 +21,19 @@
  		<div class="tablenav">
  			<div class="alignleft actions">
 			<input type="submit" class="button-secondary action" id="doaction" name="delete" value="批量删除">
+			<select name="m">
+				<option value="0" selected="selected">显示所有日期</option>
+				{%for archive in archives%}
+				<option value="{{archive.id}}">{{archive.year}}-{{archive.month}}</option>
+				{%endfor%}
+			</select>
+			<select name="cat" class="postform" id="cat">
+				<option value="0">查看全部分类目录</option>
+				{%for cate in categories%}
+				<option value="{{cate.id}}">{{cate.name}}</option>
+				{%endfor%}
+			</select>
+			<input type="submit" class="button-secondary" value="过滤" id="post-query-submit">
  			</div>
  		</div>
  		<div class="clear"></div>
