@@ -21,11 +21,19 @@
 			<h3>读者墙</h3>
 			{% get_reader_wall %}
 		</div>
-		<!-- recent posts -->
-		<div class="widget widget_pages">
-			<h3>最新文章</h3>
-			{% get_recent_posts %}
+		
+		
+		<div id="sidebar-tab">
+			<div id="tab-title">
+				<h3><span class="selected">最新评论</span><span>近期热评</span><span>随机文章</span></h3>
+			</div>	
+			<div id="tab-content">
+				<ul>{% get_recent_posts %}</ul>
+				<ul class="hide">{% get_popular_posts %}</ul>
+				<ul class="hide">{% get_random_posts %}</ul>
+			</div>
 		</div>
+		
 		<div class="widget">
 			<script type="text/javascript"><!--
 			google_ad_client = "ca-pub-8325911329891044";
@@ -37,15 +45,6 @@
 			<script type="text/javascript"
 			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 			</script>
-		</div>
-		<div class="widget">
-			<h3 class="widget-title">热门文章</h3>
-			{% get_popular_posts %}
-		</div>
-		
-		<div class="widget">
-			<h3 class="widget-title">随机文章</h3>
-			{% get_random_posts %}
 		</div>
 		
 		<!-- recent comments -->

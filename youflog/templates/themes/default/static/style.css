@@ -1162,3 +1162,10 @@ a.greedlink:hover {
 	padding-bottom: 8px;
 	width: 100px;
 }
+#sidebar-tab{border:1px solid #B0BEC7;margin-bottom:1.5em;overflow:hidden;margin-top:10px;background: none repeat scroll 0 0 #FFFFFF;}
+#tab-title h3{color:#225588;margin:1px;background: none repeat scroll 0 0 #E9EEF1;paddgin:5px 10px;text-decoration:none;}
+#tab-title .selected{color:#356aa0;border-bottom:0px;} /*标题被选中时的样式*/
+#tab-title span{padding:5px 10px;border-right:0px;margin:1px;cursor:pointer;text-decoration:none;}
+#tab-content .hide{display:none;}
+#tab-content ul{padding:5px 10px;overflow:hidden;}
+#tab-content ul li{padding:3px 5px;line-height:18px;border-bottom: 1px solid #DCE3E9;}
