@@ -94,4 +94,9 @@ $(document).ready(function(){
 	})
 
 	loadRecentComments(1);
+	
+	$('#tab-title span').click(function(){
+		$(this).addClass("selected").siblings().removeClass();
+		$("#tab-content > ul").slideUp('1500').eq($('#tab-title span').index(this)).slideDown('1500');
+	});
 })

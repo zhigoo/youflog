@@ -1,7 +1,7 @@
 {% if links %}
 <ul>
 	{%for link in links%}
-	<li>
+	<li style="background: url('http://www.google.com/s2/favicons?domain={{link.href}}') no-repeat scroll 0pt 0pt transparent; padding-left: 20px;">
 		<a href="{{link.href}}" target="_blank">
 			{{link.text}}
 		</a>
