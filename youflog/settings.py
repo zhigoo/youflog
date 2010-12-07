@@ -92,6 +92,8 @@ TEMPLATE_DIRS = (
    os.path.join(HERE,'templates'),
 )
 
+AUTH_PROFILE_MODULE='blog.UserProfile'
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # *_* encoding=utf-8*_*
 import blog.cache as cache
-from blog.models import Entry,Comment,Link,Category,OptionSet,Blog,Archive
+from blog.models import Entry,Comment,Link,Category,OptionSet,Blog,Archive,UserProfile
 from utils.utils import render_response
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
@@ -574,7 +574,42 @@ def backup_db(request):
         response['Content-Disposition'] = 'attachment; filename=youflog.sqlite'
         return response
 
+@login_required
 def users(request):
     page = request.GET.get('page',1)
     users = User.objects.all()
     return render_response(request,'admin/users.html',locals())
+
+@login_required
+def profile(request):
+    user=request.user
+    return render_response(request,'admin/profile.html',locals())
+
+@login_required
+@require_POST
+def saveprofile(request):
+    user_id=request.POST.get('user_id',1)
+    first_name=request.POST.get('first_name')
+    last_name=request.POST.get('last_name')
+    nickname=request.POST.get('nickname')
+    email=request.POST.get('email')
+    url=request.POST.get('url')
+    yim=request.POST.get('yim')
+    jabber=request.POST.get('jabber')
+    description=request.POST.get('description')
+    user = User.objects.get(id=user_id)
+    try:
+        profile=user.get_profile()
+    except:
+        profile=UserProfile(user=user)
+    user.first_name=first_name
+    user.last_name=last_name
+    user.email=email
+    profile.nickname=nickname
+    profile.website=url
+    profile.yim=yim
+    profile.jabber=jabber
+    profile.desc=description
+    profile.save()
+    user.save()
+    return render_response(request,'admin/profile.html',{'user':user})

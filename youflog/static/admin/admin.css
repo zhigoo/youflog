@@ -433,7 +433,6 @@ float:left;
 }
 p.submit {
 border-color:#DFDFDF;
-margin-left:4.6em;
 }
 #dashboard-widgets #dashboard_quick_press form p.submit #save-post {
 margin:0 1em 0 10px;
@@ -534,6 +533,16 @@ code{background: none repeat scroll 0 0 #EAEAEA;}
 .form-table th, .form-wrap label{font-weight: normal;}
 .setting-description{color:#666666;font-style: italic;}
 #settings #akismet_key{width:40%;}
+#profile-page .form-table input[type="text"] {
+    width: 300px;
+}
+#profile-page .form-table textarea {
+    margin-bottom: 6px;
+    width: 500px;
+}
+.button-primary, .submit .button-primary {
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
 /*
 -------pagination-----------
 */
@@ -561,4 +570,19 @@ code{background: none repeat scroll 0 0 #EAEAEA;}
 .opreat{visibility: hidden;}
 .picul li:HOVER .opreat{
 	visibility: visible;
+}
+#wp_editbtns {
+    display: none;
+    padding: 2px;
+    position: absolute;
+    z-index: 999998;
+}
+#wp_editimgbtn, #wp_delimgbtn{
+    background-color: #EEEEEE;
+    border-color: #999999;
+    -moz-border-radius: 3px 3px 3px 3px;
+    border-style: solid;
+    border-width: 1px;
+    margin: 2px;
+    padding: 2px;
 }
