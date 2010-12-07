@@ -49,6 +49,8 @@ urlpatterns = patterns('',
     url(r'^admin/backup_db$',admin.backup_db),
     
     url(r'^admin/users$',admin.users),
+    url(r'^admin/profile',admin.profile),
+    url(r'^admin/saveprofile',admin.saveprofile),
     
     #media
     url(r'^admin/media$',admin.media,name='show all media'),

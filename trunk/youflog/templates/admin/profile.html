@@ -1,0 +1,79 @@
+{%extends "admin/base.html"%}
+{%block content%}
+<div id="profile-page" class="wrap">
+	<h2>配置</h2>
+	
+	<form id="your-profile" method="post" action="/admin/saveprofile">
+		<h3>名称</h3>
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th><label for="user_login">用户名</label></th>
+				<td><input type="text" class="regular-text" disabled="disabled" value="{{user.username}}" id="user_login" name="user_login"> 您的用户名无法被更改。</td>
+			</tr>
+		
+		
+			<tr>
+				<th><label for="first_name">名</label></th>
+				<td><input type="text" class="regular-text" value="{{user.first_name}}" id="first_name" name="first_name"></td>
+			</tr>
+		
+			<tr>
+				<th><label for="last_name">姓</label></th>
+				<td><input type="text" class="regular-text" value="{{user.last_name}}" id="last_name" name="last_name"></td>
+			</tr>
+			
+			<tr>
+				<th><label for="nickname">昵称</label></th>
+				<td><input type="text" class="regular-text" value="{{user.get_profile.nickname}}" id="nickname" name="nickname"></td>
+			</tr>
+			</tbody>
+		</table>
+		<h3>联系信息</h3>
+		<table class="form-table">
+			<tbody><tr>
+				<th><label for="email">电子邮件</label></th>
+				<td><input type="text" class="regular-text" value="{{user.email}}" id="email" name="email"> 必需。</td>
+			</tr>
+			
+			<tr>
+				<th><label for="url">网站</label></th>
+				<td><input type="text" class="regular-text" value="{{user.get_profile.website}}" id="url" name="url"></td>
+			</tr>
+			
+			<tr>
+				<th><label for="yim">Yahoo IM</label></th>
+				<td><input type="text" class="regular-text" value="{{user.get_profile.yim}}" id="yim" name="yim"></td>
+			</tr>
+			
+			<tr>
+				<th><label for="jabber">Jabber / Google Talk</label></th>
+				<td><input type="text" class="regular-text" value="{{user.get_profile.jabber}}" id="jabber" name="jabber"></td>
+			</tr>
+			</tbody>
+		</table>
+		<h3>关于您自己</h3>
+		<table class="form-table">
+			<tbody><tr>
+				<th><label for="description">个人说明</label></th>
+				<td><textarea cols="30" rows="5" id="description" name="description">{{user.get_profile.desc}}</textarea><br>共享您的一些信息。这个可能会被公开。</td>
+			</tr>
+			
+			<tr>
+				<th><label for="pass1">新密码</label></th>
+				<td><input type="password" autocomplete="off" value="" size="16" id="pass1" name="pass1"> 如果您想修改您的密码请输入一个新密码，否则请留空。<br>
+					<input type="password" autocomplete="off" value="" size="16" id="pass2" name="pass2"> 再输入一遍新密码。<br>
+						<div id="pass-strength-result">强度</div>
+					<p>提示：您的密码最好至少包含7个字符。为了保证密码强度，使用大小写字母，数字和符号，例如! " ? $ % ^ &amp; )。</p>
+					</td>
+			</tr>
+			</tbody>
+		</table>
+		<p class="submit">
+			<input type="hidden" value="{{user.id}}" id="user_id" name="user_id">
+			<input type="submit" name="submit" value="更新配置" class="button-primary">
+		</p>
+	</form>
+	
+</div>
+{%endblock%}

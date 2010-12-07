@@ -35,7 +35,7 @@ $(function(){
 					<div id="header-info">
 						<div id="user-info">
 							<p>
-								<a title="Edit your profile" href="/admin/settings">dengmin</a> |
+								<a title="Edit your profile" href="/admin/profile">{{request.user.username}}</a> |
 								<a title="退出" href="{%url logout%}">退出</a>
 							</p>
 						</div>

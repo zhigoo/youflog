@@ -11,7 +11,6 @@ from tagging.models import Tag,TaggedItem
 from blog.managers import EntryPublishManager
 from django.contrib.sitemaps import ping_google
 import blog.cache as cache
-import logging
 
 class Archive(models.Model):
     monthyear = models.CharField(max_length=20)
@@ -270,3 +269,11 @@ class OptionSet(models.Model):
     @classmethod
     def deloption(cls,k):
         return OptionSet.objects.get(key=k).delete()
+    
+class UserProfile(models.Model):
+    user = models.ForeignKey(User, unique=True, verbose_name='')
+    nickname=models.CharField(max_length=30,blank=True, null=True)
+    website=models.URLField(blank=True, null=True)
+    yim=models.CharField(max_length=50, blank=True, null=True)
+    jabber=models.CharField(max_length=50, blank=True, null=True)
+    desc=models.TextField(default='',null=True, blank=True)
