@@ -3,6 +3,8 @@
 import blog.cache as cache
 from blog.models import Entry,Comment,Link,Category,OptionSet,Blog,Archive,UserProfile
 from utils.utils import render_response
+from django.contrib.contenttypes.models import ContentType
+from django.utils.encoding import force_unicode
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -19,6 +21,9 @@ from settings import MEDIA_ROOT
 from os.path import isdir, dirname
 from tagging.models import Tag
 from settings import DATABASE_ENGINE,DATABASE_NAME
+from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
+import blog.comments.signals as signals
 import logging
 
 #login process
@@ -350,6 +355,36 @@ def comment_delete(request):
         else:
             return HttpResponseRedirect('/admin/comments')
 
+@login_required
+def reply_comment(request):
+    data = request.POST.copy()
+    ctype = data.get("content_type")
+    object_pk = data.get("object_pk")
+    path=data.get('path')
+    user=request.user
+    try:
+        model = models.get_model(*ctype.split(".", 1))
+        target = model._default_manager.get(pk=object_pk)
+    except (TypeError,AttributeError,ObjectDoesNotExist):
+        logging.info('object not exits')
+    comment = Comment(content_type = ContentType.objects.get_for_model(target),
+            object_pk    = force_unicode(target._get_pk_val()),
+            author=user.username,
+            email=user.email,
+            weburl=user.get_profile().website,
+            content=data.get('comment'),
+            date  = datetime.now(),
+            mail_notify=True,
+            is_public    = True,
+            parent_id    = data.get('parent_id'),
+            )
+    comment.save()
+    signals.comment_was_submit.send(
+        sender  = comment.__class__,
+        comment = comment                             
+    )
+    return HttpResponseRedirect(path)
+    
 @login_required
 def categories(request):
     page=request.GET.get('page',1)

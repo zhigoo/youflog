@@ -586,3 +586,6 @@ code{background: none repeat scroll 0 0 #EAEAEA;}
     margin: 2px;
     padding: 2px;
 }
+#respond textarea{
+	width:100%;
+}

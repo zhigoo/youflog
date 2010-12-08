@@ -1,6 +1,7 @@
 {% extends "admin/base.html" %}
 {% load pagination utils%}
 {% block content %}
+<script type="text/javascript" src="/static/admin/reply.js"></script>
 <div class="wrap">
  	<h2>编辑评论</h2>
  	<form id="posts-filter" action="/admin/comment_delete" method="post">
@@ -45,7 +46,7 @@
          {%if comments%}
          	{% begin_pagination comments page 15%}
 	         {%for comment in comments%}
-			 <tr valign="middle" id="link-{{comment.id}}">
+			 <tr valign="middle" id="comment-{{comment.id}}">
 				<th scope="row" class="check-column">
 					<input type="checkbox" name="checks" value="{{comment.id}}">
 				</th>
@@ -79,7 +80,7 @@
 	             	{%endif%}
 	             	<span class="delete">| <a href="/admin/del_comment/{{comment.id}}?currpath={{request.path}}">删除</a></span>
 	             	<span class="edit">|<a href="/admin/edit_comment/{{comment.id}}"> 编辑评论</a></span>
-	             	<span class="reply">| 回复</span>
+	             	<span class="reply">| <a href="#comment-{{comment.id}}">回复</a></span>
 	             </div>
 	             
 	             </td>
@@ -91,10 +92,10 @@
 		 	<td colspan="4" align="center" style="font-size: 15px;">暂时还没有评论信息</td>
 		 </tr>	
 		{%endif%}
-
 			</tbody>
 		</table>
  	</form>
+ 	
  	{%if comments%}
  	 <!-- pagenavi start -->
  	 	{% end_pagination %}

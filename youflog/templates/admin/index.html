@@ -2,6 +2,7 @@
 {%load utils %}
 {% block content %}
 <script type="text/javascript" src="/static/js/jquery.form.utf8.js"></script>
+<script type="text/javascript" src="/static/admin/reply.js"></script>
 <script type="text/javascript">
 $(document).ready(function() { 
     $('#quick_post').ajaxForm({
@@ -112,13 +113,27 @@ $(document).ready(function() {
 						             	{%endif%}
 						             	<span class="delete">| <a href="/admin/del_comment/{{comment.id}}?currpath={{request.path}}">删除</a></span>
 						             	<span class="edit">|<a href="/admin/edit_comment/{{comment.id}}"> 编辑评论</a></span>
-						             	<span class="reply">| 回复</span>
+						             	<span class="reply">| <a href="#comment-{{comment.id}}" onclick="return replyComment.showForm('comment-{{comment.id}}','{{comment.id}}','respond','{{comment.object.id}}')">回复</a></span>
 									</p>
 								</div>
 								{%endfor%}
 							</div>
 							<p class="textright"><a class="button" href="/admin/comments">查看全部</a></p>
 						</div>
+					</div>
+					<div id="respond" class="hidden">
+					<form action="/admin/replycomment" method="post">
+						<input type="hidden" id="id_content_type" value="blog.entry" name="content_type"/>
+						<input type="hidden" id="id_object_pk" value="0" name="object_pk"/>
+						<input type="hidden" id="id_parent_id" value="0" name="parent_id"/>
+						<input type="hidden" name="path" value="{{request.path}}"/>
+						<textarea rows="6" cols="50" name="comment"></textarea>
+						<p class="submit">
+						<input type="button" name="cancal" id="cancel-comment-reply" class="button" value="取消">
+						<input type="submit" name="reply" id="reply" class="button-primary alignright" value="回复">
+							<br class="clear">
+						</p>
+					</form>
 					</div>
  				</div>
  			</div>
