@@ -5,7 +5,7 @@
 电子邮件： {{comment.email}}<br/>
 URL： {{comment.weburl}}<br/>
 评论：<br/>
-{{comment.content}}
+{{comment.content|safe}}
 
 <p/>
 点击回复 {{domain}}/{{comment.get_absolute_url}}

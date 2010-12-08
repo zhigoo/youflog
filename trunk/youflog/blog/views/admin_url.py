@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     url(r'^admin/del_comment/(?P<id>\d+)$',admin.delete_single_comment),
     url(r'^admin/edit_comment/(?P<id>\d+)$',admin.edit_comment),
     url(r'^admin/save_comment$',admin.save_comment),
+    url(r'^admin/replycomment$',admin.reply_comment,name="reply comment"),
     
     #category
     url(r'^admin/categories',admin.categories,name='show all categories'),
