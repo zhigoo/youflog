@@ -20,7 +20,7 @@
 					</div>
 					<div id="misc-publishing-actions">
 						<div id="comment-status-radio" class="misc-pub-section">
-							<label class="approved"><input type="radio" name="comment_status" value="{% if comment.is_public%}1{%else%}spam{%endif%}" {% if comment.is_public%}checked="checked"{%endif%}>获准</label><br>
+							<label class="approved"><input type="radio" name="comment_status" value="1" {% if comment.is_public%}checked="checked"{%endif%}>获准</label><br>
 							<label class="spam"><input type="radio" value="spam" name="comment_status" {% if not comment.is_public%}checked="checked"{%endif%}>垃圾评论</label>
 						</div>
 					</div>

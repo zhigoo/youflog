@@ -301,8 +301,9 @@ def save_comment(request):
     comment.email=request.POST.get('email')
     comment.weburl=request.POST.get('url')
     comment.content=request.POST.get('content')
-    comment.is_public=True and comment_status==1
+    comment.is_public=True and (comment_status=='1' or comment_status ==1)
     comment.save()
+    
     return HttpResponseRedirect('/admin/comments')
     
 @login_required
