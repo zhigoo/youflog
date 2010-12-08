@@ -188,9 +188,7 @@ def safecode(request):
         x = start + fontSize * i + random.randint(0, gap) + gap * i
         txt=str(random.randint(0,9))
         code.append(txt)
-        draw.text((x,5), txt,font=font,fill=(random.randint(0, 255),
-           random.randint(0, 255),
-           random.randint(0, 255)))
+        draw.text((x,5), txt,font=font,fill=(100,211, 90))
     del draw
     request.session['safecode']=''.join(code)
     buf = cStringIO.StringIO()
