@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.views.decorators.http import require_POST
-from blog.models import Blog,Entry,Comment,Category
+from blog.models import Blog,Entry,Comment,Category,OptionSet
 from utils.utils import paginator,urldecode,render,loadTempalte
 from django.utils import simplejson
 from blog.forms import CommentForm
@@ -177,20 +177,28 @@ def post_comment(request, next = None):
     return response
 
 def safecode(request):
-    gap = 5
-    start = 0
     fontSize=15
-    code=[]
     image = Image.new('RGB', (80, 20), (255, 255, 255))
     font = ImageFont.truetype(CAPTCHA_FONT, fontSize)
     draw = ImageDraw.Draw(image)
-    for i in range(0, 4):
-        x = start + fontSize * i + random.randint(0, gap) + gap * i
-        txt=str(random.randint(0,9))
-        code.append(txt)
-        draw.text((x,5), txt,font=font,fill=(100,211, 90))
-    del draw
-    request.session['safecode']=''.join(code)
+    tp=OptionSet.get('safecode_type', 1);
+    if tp == str(1):
+        code=[]
+        gap = 5
+        start = 0
+        for i in range(0, 4):
+            x = start + fontSize * i + random.randint(0, gap) + gap * i
+            txt=str(random.randint(0,9))
+            code.append(txt)
+            draw.text((x,5), txt,font=font,fill=(100,211, 90))
+        del draw
+        request.session['safecode']=''.join(code)
+    else:
+        first=random.randint(0,9)
+        second=random.randint(0,9)
+        draw.text((0,5), str(first)+'+'+str(second),font=font,fill=(100,211, 90))
+        del draw
+        request.session['safecode']=str(first+second)
     buf = cStringIO.StringIO()
     image.save(buf, 'gif') 
-    return HttpResponse(buf.getvalue(),'image/gif') 
+    return HttpResponse(buf.getvalue(),'image/gif')
