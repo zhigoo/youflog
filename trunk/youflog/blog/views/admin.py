@@ -553,6 +553,7 @@ def setting_comment(request):
     comments_notify=OptionSet.get('comments_notify',1)
     enable_akismet=int(OptionSet.get('akismet_enable',0))
     akismet_key=OptionSet.get('akismet_key')
+    safecode_type=OptionSet.get('safecode_type',1)
     return render_response(request,'admin/comment_setting.html',locals())
 
 @login_required
@@ -564,7 +565,7 @@ def save_commentOption(request):
     comments_notify=request.POST.get('comments_notify',0)
     akismet_enable=request.POST.get('akismet_enable')
     akismet_key=request.POST.get('akismet_key')
-    
+    safecode=request.POST.get('safecode_type')
     if akismet_enable:
         OptionSet.set('akismet_enable',1)
     else:
@@ -574,6 +575,7 @@ def save_commentOption(request):
     OptionSet.set('gavatar', gavatar)
     OptionSet.set('comments_per_page',comments_per_page)
     OptionSet.set('comments_notify',comments_notify)
+    OptionSet.set('safecode_type',safecode)
     return HttpResponseRedirect('/admin/comment_setting')
 
 @login_required

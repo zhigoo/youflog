@@ -38,6 +38,15 @@
 					<input type="text" id="akismet_key" name="akismet_key" value="{{akismet_key}}"/>
 					</td>
 				</tr>
+				<tr>
+					<th>
+						<label>验证码</label>
+					</th>
+					<td>
+					随机数<input type="radio" {%ifequal safecode_type "1"%}checked="true"{%endifequal%} value="1" id="safecode_type" name="safecode_type"/>
+					算数<input type="radio" id="safecode_type" name="safecode_type" value="2" {%ifequal safecode_type "2"%}checked="true"{%endifequal%}/>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 		<h3>头像</h3>
