@@ -14,7 +14,7 @@ body {
 #container {
 	margin: 0 auto;
 	padding-bottom: 10px;
-	width: 1024px;
+	width: 960px;
 }
 
 small,.small {
@@ -433,7 +433,7 @@ a.greedlink:hover {
 }
 
 #main {
-	width: 760px;
+	width: 696px;
 	float: left;
 	overflow: hidden;
 }

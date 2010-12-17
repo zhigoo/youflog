@@ -1,0 +1,39 @@
+{% load comment pagination%}
+{% get_comment_form for object as commentform %}
+<script type="text/javascript" src="/static/js/comment-reply.js"></script>
+<h3 id="comments">{{entry.comments.in_public.count}} Responses to “{{entry.title|escape}}”</h3>
+{% get_threaded_comment_list for object %}
+
+
+{% if entry.allow_comment %}
+<div id="respond" style="padding: 10px 0px;">
+	<h3>Leave a Reply</h3>
+	<div class="cancel-comment-reply">
+	<small><a style="display: none;" href="#respond" id="cancel-comment-reply-link" rel="nofollow">Click Here to Cancel reply</a></small>
+	</div>
+	<form id="commentform" action="/postcomment" method="post" >
+		<p>
+			{{commentform.author}}
+			<label for="author"><small>Name (required)</small></label>
+		</p>
+		<p>
+			{{commentform.email}}
+			<label for="email"> <small>Mail (will not be published)</small></label>
+		</p>
+		<p>
+		{{commentform.url}}<label for="url"><small>Website</small></label>
+		</p>
+		<p><input type="text" name="safecode"/><label><small>验证码<img onclick="this.setAttribute('src','/image_code')" src="/image_code" alt="CheckCode"/></small></label></p>
+		<p>{% include "smily.html" %}</small>
+		<p><textarea tabindex="4" rows="10" cols="100%" id="comment" name="content"></textarea></p>
+		<p>
+		<input type="submit" value="Submit" tabindex="5" id="submit" name="submit">
+		{{ commentform.content_type }}
+		{{ commentform.object_pk }}
+		{{ commentform.parent_id }}
+		</p>
+	</form>
+</div>	
+{%else%}
+	<span>Comment closed!</span>
+{%endif%}

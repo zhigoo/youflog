@@ -1,0 +1,78 @@
+{%load sidebar%}
+<div class="span-8 last">
+    <div id="subscriptions">
+        <a href="/feed"><img src="/themes/{{blog.theme_name}}/images/rss.png" alt="Subscribe to RSS Feed" title="Subscribe to RSS Feed" /></a>		
+        <a title="Follow me on Twitter!" href="http://twitter.com/"><img alt="Follow me on Twitter!" title="Follow me on Twitter!" src="/themes/{{blog.theme_name}}/images/twitter.png"></a>
+    </div>
+	<div id="sidebar">
+        <ul>
+            <li id="search">
+				{% include "themes/moderstyle/searchform.html" %}
+			</li>
+        </ul>
+        
+ 			<div class="addthis_toolbox">   
+ 			    <div class="custom_images">
+		            <a class="addthis_button_twitter"><img src="/themes/{{blog.theme_name}}/images/socialicons/twitter.png" width="32" height="32" alt="Twitter" /></a>
+		            <a class="addthis_button_delicious"><img src="/themes/{{blog.theme_name}}/images/socialicons/delicious.png" width="32" height="32" alt="Delicious" /></a>
+		            <a class="addthis_button_facebook"><img src="/themes/{{blog.theme_name}}/images/socialicons/facebook.png" width="32" height="32" alt="Facebook" /></a>
+		            <a class="addthis_button_digg"><img src="/themes/{{blog.theme_name}}/images/socialicons/digg.png" width="32" height="32" alt="Digg" /></a>
+		            <a class="addthis_button_stumbleupon"><img src="/themes/{{blog.theme_name}}/images/socialicons/stumbleupon.png" width="32" height="32" alt="Stumbleupon" /></a>
+		            <a class="addthis_button_favorites"><img src="/themes/{{blog.theme_name}}/images/socialicons/favorites.png" width="32" height="32" alt="Favorites" /></a>
+		            <a class="addthis_button_more"><img src="/themes/{{blog.theme_name}}/images/socialicons/more.png" width="32" height="32" alt="More" /></a>
+ 			    </div>
+ 			    <div class="atclear"></div>
+ 			</div>
+    			
+	
+			<div style="text-align: center; margin-top: 5px;">
+				<a target="_new" href="http://{{site.domain}}">
+					<img title="" alt="" src="/themes/{{blog.theme_name}}/images/125bnr.gif" class="banner125">
+				</a>
+				<a target="_new" href="http://{{site.domain}}">
+					<img title="" alt="" src="/themes/{{blog.theme_name}}/images/125bnr.gif" class="banner125">
+				</a>
+			</div>
+        
+		<ul>
+				<li><h2>Recent Posts</h2>
+			     <ul>
+					{% get_recent_posts %}
+                </ul>
+				</li>
+				<li>
+					<script type="text/javascript"><!--
+					google_ad_client = "ca-pub-8325911329891044";
+					google_ad_slot = "7005241998";
+					google_ad_width = 300;
+					google_ad_height = 250;
+					//-->
+					</script>
+					<script type="text/javascript"
+					src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+					</script>
+				</li>
+				<li><h2>Archives</h2>
+					<ul>
+					{%get_archives%}
+					</ul>
+				</li>
+				
+				<li class="linkcat" id="linkcat-2"><h2>Blogroll</h2>
+					<ul class="xoxo blogroll">
+						{%get_links%}
+					</ul>
+				</li>
+                
+				<li><h2>Meta</h2>
+					<ul>
+						{% if request.user.is_authenticated %}
+						<li><a href="/admin">管理</a></li>
+						{%else%}
+						<li><a href="/admin">登录</a></li>
+						{%endif%}
+					</ul>
+				</li>
+		</ul>
+	</div>
+</div>

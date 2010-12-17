@@ -1,0 +1,25 @@
+{% load utils %}
+<li id="comment-{{comment.id}}" class="comment even thread-even depth-1">
+	<div class="comment-body" id="div-comment-4">
+	<div class="comment-author vcard">
+	<img width="40" height="40" class="avatar avatar-40 photo" src="{% gravator comment.email %}" alt="">		
+		<cite class="fn">
+		{%if comment.weburl %}
+			<a class="url" rel="external nofollow" href="{{comment.weburl}}">{{comment.author}}</a>
+		{%else%}
+		<span title="{{comment.author}}" id="commentauthor-{{comment.id}}">{{comment.author}}</span>
+		{%endif%}
+		</cite> 
+		<span class="says">says:</span>		
+	</div>
+
+	<div class="comment-meta commentmetadata">
+		{{comment.date|date:"Y-m-d"}} at {{comment.date|date:"H:i"}}
+	</div>
+	
+	<p>{{comment.content|safe|linebreaksbr}}</p>
+<div class="reply">
+			<a onclick="return addComment.moveForm('comment-{{comment.id}}','{{comment.id}}','respond')" 
+				href="#respond" class="comment-reply-link" rel="nofollow">Reply</a>
+		</div>
+</div>
