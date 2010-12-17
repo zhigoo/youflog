@@ -1,7 +1,6 @@
 small,
 .small,
 #footer,
-#header .content #tagline,
 #header .meta,
 .post .meta,
 #searchbox .operation,
@@ -28,6 +27,9 @@ small,
 .commentlist .items,
 #cancel-comment-reply-link {
 	font-size:12px;
+}
+#header .content #tagline{
+	font-size:14px;
 }
 .w3c {
 	font-size:12px;

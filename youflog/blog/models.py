@@ -118,11 +118,11 @@ class Entry(models.Model):
     
     def __get_excerpt_content(self,more='Read More...'):
         if self.excerpt:
-            return self.excerpt+' <a href="/%s">%s</a>'%(self.link,more)
+            return self.excerpt+' <a class="readmore" href="/%s">%s</a>'%(self.link,more)
         else:
             spl=self.content.split('<!--more-->')
             if len(spl) > 1:
-                return spl[0]+u' <a href="/%s">%s</a>'%(self.link,more)
+                return spl[0]+u' <a class="readmore" href="/%s">%s</a>'%(self.link,more)
             else:
                 return spl[0]
     

@@ -1,0 +1,36 @@
+{% extends "themes/moderstyle/base.html" %}
+{% load utils %}
+{% block title %} {{entry.title|escape}} - {{blog.title|escape}} {% endblock %}
+
+{% block head_block %}
+
+{% if entry %}
+{%if entry.tags%}<meta name="Keywords" content="{{entry.tags|escape}}" />{%endif%}
+{%if entry.excerpt%} <meta name="Description" content="{{entry.excerpt|escape}}" />{%endif%}
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+<div class="post" id="post-{{entry.id}}">
+<h2 class="title">{{entry.title|escape}}</h2>
+<div class="entry">
+{{entry.content|safe}}
+	<script type="text/javascript"><!--
+		google_ad_client = "pub-8325911329891044";
+		/* 468x15, 创建于 10-11-15 */
+		google_ad_slot = "6291447193";
+		google_ad_width = 468;
+		google_ad_height = 15;
+		//-->
+		</script>
+		<script type="text/javascript"
+		src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+		</script>
+</div>
+</div>
+{% var object = entry %}
+
+{% include "themes/moderstyle/comments.html" %}
+{% endblock %}

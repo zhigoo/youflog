@@ -1,0 +1,35 @@
+{% extends "themes/moderstyle/base.html" %}
+{% load pagination %}
+
+{% block content %}
+
+{% if entries %}
+{% begin_pagination entries page %}
+	{%for post in entries%}
+	<div id="post-{{post.id}}" class="post">
+		<h2 class="title">
+			<a href="/{{ post.get_absolute_url|escape }}" title="Permanent Link to {{post.title|escape}}" rel="bookmark">
+			{%if post.sticky%}<b>[置顶]</b>{%endif%}{{post.title|escape}}
+			</a>
+		</h2>
+		
+		<div class="postdate">
+           <span>{{post.date|date:"Y/m/d H:i"}}></span> 
+           <span><a href="/{{postget_absolute_url|escape}}#comments" title="Comments on {{post.title}}">{{post.comments.in_public.count}} Comments</a></span>
+       </div>
+       
+       <div class="entry">
+       	{{post.excerpt_content|safe}}
+       </div>
+       
+	</div>
+	{%endfor%}
+	<div class="navigation">
+		{% end_pagination %}
+	</div>
+
+{%else%}
+	<h2 class="center">Not Found</h2>
+	<p class="center">Sorry, but you are looking for something that isn't here.</p>
+{%endif%}
+{%endblock%}

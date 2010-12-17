@@ -1,0 +1,82 @@
+{% extends "themes/moderstyle/base.html" %}
+{% load utils %}
+{% block title %} {{entry.title|escape}} - {{blog.title|escape}} {% endblock %}
+
+{% block head_block %}
+
+{% if entry %}
+{%if entry.tags%}<meta name="Keywords" content="{{entry.tags|escape}}" />{%endif%}
+{%if entry.excerpt%} <meta name="Description" content="{{entry.excerpt|escape}}" />{%endif%}
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+<div class="post" id="post-{{entry.id}}">
+	<h2 class="title">{{ entry.title|escape }}</h2>
+	<div class="postdate">
+        <span>{{entry.date|date:"Y/m/d H:i"}}</span> 
+        <span><a href="/{{entry.get_absolute_url|escape}}#comments" title="Comments on {{entry.title}}">{{entry.comments.in_public.count}} Comments</a></span>
+    </div>
+    
+    <div class="entry">
+    <p style="text-align:center;">
+				<script type="text/javascript"><!--
+				google_ad_client = "pub-8325911329891044";
+				/* 468x60, 创建于 10-11-20 */
+				google_ad_slot = "8955502630";
+				google_ad_width = 468;
+				google_ad_height = 60;
+				//-->
+				</script>
+				<script type="text/javascript"
+				src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+				</script>
+			</p>
+    	{{ entry.content|safe}}
+    	
+    	<script type="text/javascript"><!--
+		google_ad_client = "pub-8325911329891044";
+		/* 468x15, 创建于 10-11-15 */
+		google_ad_slot = "6291447193";
+		google_ad_width = 468;
+		google_ad_height = 15;
+		//-->
+		</script>
+		<script type="text/javascript"
+		src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+		</script>
+    </div>
+    
+    <div class="postmeta">
+    	Posted in <a href="/category/{{entry.category.slug}}">{{entry.category.name}}</a> {% if entry.tags%}| Tags: 
+		{% for tag in entry.get_tags %}
+			{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+			{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+			{% endif %}
+		{% endfor %}
+		{%endif%}
+    </div>
+    
+    <div class="navigation clearfix">
+		<div class="alignleft">
+		{%if entry.prev%}<a href="/{{entry.prev.link}}">&laquo; {{entry.prev.title}}</a>
+				{%else%}
+				&laquo;没有了
+				{%endif%}</div>
+		<div class="alignright">
+			{%if entry.next%}<a href="/{{entry.next.link}}">&raquo; {{entry.next.title}}</a>
+			{%else%}
+			&raquo;没有了
+			{%endif%}
+		</div>
+	</div>
+    <b>转载请注明：来自</b><a href="http://{{site.domain}}" title="{{blog.title|escape}}">{{blog.title|escape}}</a>
+	<br/><b>本文地址：</b><a href="{{entry.fullurl|escape}}" title="{{ entry.title|escape }}">{{entry.fullurl|escape}}</a>
+</div>
+
+{% var object = entry %}
+
+{% include "themes/moderstyle/comments.html" %}
+
+{% endblock %}
