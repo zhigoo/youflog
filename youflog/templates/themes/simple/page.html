@@ -1,0 +1,29 @@
+{% extends "themes/simple/base.html" %}
+{% load utils %}
+{% block head_block %}
+
+{% if entry %}
+{%if entry.tags%}<meta name="Keywords" content="{{entry.tags|escape}}" />{%endif%}
+{%if entry.excerpt%} <meta name="Description" content="{{entry.excerpt|escape}}" />{%endif%}
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+{% if entry %}
+
+		<article class="post">
+			<h2>{{entry.title|escape}}</h2>
+			<div class="entry">
+				{{entry.content|safe}}
+			</div>
+		</article>
+
+		{% var object = entry %}
+
+		{% include "themes/simple/comments.html" %}
+
+	{%endif%}
+
+{%endblock%}
