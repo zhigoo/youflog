@@ -1,0 +1,67 @@
+{% load sidebar %}
+    <aside>
+
+      <div id="sidebar1">
+				<div class="section">
+					<h3>Categories</h3>
+					{% get_categories %}
+				</div><!-- .section -->
+				<div class="section">
+					<h3>Recent Post</h3>
+					{% get_recent_posts %}
+				</div><!-- .section -->
+				<div class="section">
+					<h3>Recent Comments</h3>
+					{%get_recent_comment%}
+				</div>
+				{%comment%}
+				<div class="section">
+					<h3>Tags</h3>
+			      	<div id="tagCloud">
+								{% get_tag_cloud %}
+			      	</div>
+				</div><!-- .section -->
+				{%endcomment%}
+				<div class="section">
+					<h3>Meta</h3>
+					<ul>
+						{% if request.user.is_authenticated %}
+						<li><a href="/admin">管理</a></li>
+						{%else%}
+						<li><a href="/admin">登录</a></li>
+						{%endif%}
+					</ul>
+					</ul>
+				</div><!-- .section -->
+
+
+			</div><!-- end #l-sidebar -->
+
+
+			<div id="sidebar2">
+
+				<div class="section">
+					<h3>RSS</h3>
+					<ul>
+						<li><a href="/feed">RSS Blog</a></li>
+						<li><a href="/feed/comments">RSS Comments</a></li>
+					</ul>
+				</div><!-- .section -->
+
+				<div class="section">
+					<h3>Archive</h3>
+					<ul>
+						{%get_archives%}
+					</ul>
+				</div><!-- .section -->
+
+				<div class="section">
+					<h3>Blogroll</h3>
+					<ul>
+						{%get_links%}
+					</ul>
+				</div><!-- .section -->
+
+			</div><!-- end #r-sidebar -->
+
+		</aside>

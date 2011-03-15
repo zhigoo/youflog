@@ -1,0 +1,55 @@
+{% extends "themes/simple/base.html" %}
+{% load utils %}
+{% block head_block %}
+
+{% if entry %}
+{%if entry.tags%}<meta name="Keywords" content="{{entry.tags|escape}}" />{%endif%}
+{%if entry.excerpt%} <meta name="Description" content="{{entry.excerpt|escape}}" />{%endif%}
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+		{% if entry %}
+		<article class="post">
+			<h2><a href="/{{ entry.get_absolute_url|escape }}" rel="bookmark">{{ entry.title|escape }}</a></h2>
+			<div class="pmeta">{{entry.date|date:"Y-m-d"}} <span>&middot;</span> Posted in <a href="/category/{{entry.category.slug}}">{{entry.category.name}}</a></div>
+			<div class="entry">
+			  {{ entry.content|safe}}
+			</div>
+			
+			<div class="prev_next">
+				<span class="prev">
+					{%if entry.prev%}<a href="/{{entry.prev.link}}">&laquo; {{entry.prev.title}}</a>
+					{%else%}
+					&laquo;没有了
+					{%endif%}
+				</span>
+				
+				<span class="next">
+				{%if entry.next%}<a href="/{{entry.next.link}}">&raquo; {{entry.next.title}}</a>
+					{%else%}
+					&raquo;没有了
+					{%endif%}
+				</span>
+		</div>
+			
+			<div class="ptags">Tags: {% for tag in entry.get_tags %}
+						{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+						{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+						{% endif %}
+					{% endfor %} </div>
+		</article>
+
+		{% var object = entry %}
+
+		{% include "themes/simple/comments.html" %}
+
+		{%else%}
+
+		<h2>Not Found</h2>
+		<p>Sorry, but you are looking for something that isn't here.</p>
+
+	{%endif%}
+	
+{%endblock%}
