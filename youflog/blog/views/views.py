@@ -202,3 +202,9 @@ def safecode(request):
     buf = cStringIO.StringIO()
     image.save(buf, 'gif') 
     return HttpResponse(buf.getvalue(),'image/gif')
+
+def calendar(request,year,month,day):
+    print year,month,day
+    page=request.GET.get('page',1)
+    posts=Entry.objects.get_post_by_day(year,month,day)
+    return render(request,'archives.html',{'entries':posts,'page':page,'year':year,'month':month})
