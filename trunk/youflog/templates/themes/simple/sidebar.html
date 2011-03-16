@@ -2,6 +2,9 @@
     <aside>
 
       <div id="sidebar1">
+      			<div class="section">
+					{%month_cal%}
+				</div>
 				<div class="section">
 					<h3>Categories</h3>
 					{% get_categories %}
@@ -14,11 +17,12 @@
 					<h3>Recent Comments</h3>
 					{%get_recent_comment%}
 				</div>
+				
 				{%comment%}
 				<div class="section">
 					<h3>Tags</h3>
 			      	<div id="tagCloud">
-								{% get_tag_cloud %}
+						{% get_tag_cloud %}
 			      	</div>
 				</div><!-- .section -->
 				{%endcomment%}

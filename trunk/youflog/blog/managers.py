@@ -17,6 +17,11 @@ class EntryPublishManager(models.Manager):
         return super(EntryPublishManager, self).get_query_set().\
             filter(published=True,entrytype='post',\
             date__year=int(year),date__month=int(month))
+    
+    def get_post_by_day(self,year,month,day):
+        return super(EntryPublishManager, self).get_query_set().\
+            filter(published=True,entrytype='post',\
+            date__year=int(year),date__month=int(month),date__day=int(day))
 
 class CommentManager(models.Manager):
 
