@@ -3,7 +3,13 @@
 	<div class="commentdiv">
 		<div class="comment-author vcard">
 			<img width="32" height="32" class="avatar avatar-32 photo" src="{% gravator comment.email %}" alt="">
-			<cite class="fn">{{comment.author}}:</cite>
+			<cite class="fn">
+			{%if comment.weburl %}
+			<a class="url" rel="external nofollow" href="{{comment.weburl}}" target="_blank">{{comment.author}}:</a>
+			{% else %}
+			{{comment.author}}:
+			{%endif%}
+			</cite>
 			<div class="comment-meta commentmetadata"><a href="#comment-{{comment.id}}" title="">{{comment.date|date:"Y-m-d"}} @ {{comment.date|date:"H:i"}}</a> </div>
 			</div>
 		<div class="ctext">
