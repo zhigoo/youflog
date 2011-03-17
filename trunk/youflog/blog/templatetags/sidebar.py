@@ -49,7 +49,7 @@ def get_categories(context):
 def get_links(context):
     links=cache.get_cache('sidebar:links')
     if not links:
-        links=Link.objects.all()[:25]
+        links=Link.objects.all()
         cache.set_cache('sidebar:links',links,60*60)
     return {'links':links}
 
