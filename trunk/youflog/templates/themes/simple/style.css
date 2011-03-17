@@ -563,6 +563,10 @@ aside h3 {
   width: 100%;
 	margin: 0 0 12px;
 }
+#wp-calendar a {
+	color:#FF0242;
+}
+
 #wp-calendar td {
   text-align: center;
 }

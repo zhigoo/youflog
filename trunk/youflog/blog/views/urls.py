@@ -17,8 +17,8 @@ urlpatterns = patterns('',
     url(r'^archive/(?P<id>\d+).html$',views.singlePostByID,name="single post"), #文章的详细页面
     url(r'^postcomment$',views.post_comment,name="post_comment"), #发表评论
     url(r'^recentComments',views.recentComments,name="recentComments"),  #通过ajax的方式获取最新的几条评论信息
-    url(r'^archives/(?P<year>\d{4})/(?P<month>\d{1,2})$', views.archives),
-    url(r'^calendar/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})',views.calendar),
+    url(r'^archives/(?P<year>\d{4})/(?P<month>\d{1,2})$', views.archives,name='entry_by_month'),
+    url(r'^calendar/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})',views.calendar,name='entry_by_calendar'),
     url(r'^image_code',views.safecode,name='captcha_image'),
     (r'^(.*)$', views.singlePost),
    

@@ -6,7 +6,8 @@ from tagging.models import Tag, TaggedItem
 from django.db.models import Count
 from django.db import connection
 
-from datetime import date, timedelta
+from datetime import date, timedelta,datetime
+from calendar import LocaleHTMLCalendar
 
 from blog.models import Entry,Comment,Category,Link,Archive,Blog
 import blog.cache as cache
@@ -99,47 +100,13 @@ def get_menus(context):
     current = 'current' in context and context['current']
     return {'menus':pages,'current': current}
 
-def get_last_day_of_month(year, month):
-    if (month == 12):
-        year += 1
-        month = 1
-    else:
-        month += 1
-    return date(year, month, 1) - timedelta(1)
-
-@register.inclusion_tag('sidebar/calendar.html')
-def month_cal(year=date.today().year, month=date.today().month):
-    event_list = Entry.objects.filter(date__year=year, date__month=month)
-
-    first_day_of_month = date(year, month, 1)
-    last_day_of_month = get_last_day_of_month(year, month)
-    first_day_of_calendar = first_day_of_month - timedelta(first_day_of_month.weekday())
-    last_day_of_calendar = last_day_of_month + timedelta(7 - last_day_of_month.weekday())
-
-    month_cal = []
-    week = []
-    week_headers = []
-
-    i = 0
-    day = first_day_of_calendar
-    while day <= last_day_of_calendar:
-        if i < 7:
-            week_headers.append(day)
-        cal_day = {}
-        cal_day['day'] = day
-        cal_day['event'] = False
-        for event in event_list:
-            if day >= event.date.date() and day <= event.date.date():
-                cal_day['event'] = True
-        if day.month == month:
-            cal_day['in_month'] = True
-        else:
-            cal_day['in_month'] = False  
-        week.append(cal_day)
-        if day.weekday() == 6:
-            month_cal.append(week)
-            week = []
-        i += 1
-        day += timedelta(1)
-
-    return {'calendar': month_cal, 'headers': week_headers}
+@register.inclusion_tag('sidebar/calendar.html',takes_context=True)
+def get_calendar(context,year=date.today().year, month=date.today().month):
+    print context.get('month')
+    try:
+        from blog.templatetags.youflogCalendar import YouflogCalendar
+    except ImportError:
+        return {'calendar': '<p class="notice">Calendar is unavailable for Python<2.5.</p>'}
+    
+    calendar = YouflogCalendar()
+    return {'calendar':calendar.formatmonth(year, month)}
