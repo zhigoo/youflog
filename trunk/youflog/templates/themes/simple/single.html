@@ -1,5 +1,6 @@
 {% extends "themes/simple/base.html" %}
 {% load utils %}
+{% block title %} {{entry.title|escape}} - {{blog.title|escape}} {% endblock %}
 {% block head_block %}
 
 {% if entry %}
