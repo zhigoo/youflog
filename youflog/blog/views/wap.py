@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # *_* encoding=utf-8*_*
 
-from blog.models import Entry,Comment,Category
+from blog.models import Entry,Comment,Category,Blog
 from utils.utils import paginator,render_response
 
 def index(request):
@@ -9,7 +9,7 @@ def index(request):
     page = int(page)
     entrys = Entry.objects.get_posts()
     categories=Category.objects.all()
-    comments=Comment.objects.in_public()[:8]
+    comments=Comment.objects.in_public().exclude(email=Blog.get().email)[:8]
     return render_response(request,'wap/index.html',locals())
 
 def single(request,id=None):
@@ -17,7 +17,7 @@ def single(request,id=None):
     page=request.GET.get('page',1)
     page=int(page)
     entry=Entry.objects.get(id=id)
-    comments=entry.comments.in_public()
+    comments=entry.comments.in_public().exclude(email=Blog.get().email)
     comments = paginator(comments,10,page)
     return render_response(request,'wap/single.html',{'entry':entry,'comments':comments})
 
