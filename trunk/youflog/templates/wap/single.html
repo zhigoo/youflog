@@ -1,7 +1,7 @@
 {%extends 'wap/base.html' %}
 {%block content%}
 <div class="waptitle">{{ entry.title}}</div>
-{{ entry.content|striptags}}
+{{ entry.content|safe}}
 <div class="pagenavi">
 	上一篇:{%if entry.prev%}<a href="/wap/single/{{entry.prev.id}}">{{ entry.prev.title}}</a>{%else%}没有了{%endif%}<br/>
 	下一篇:{%if entry.next%}<a href="/wap/single/{{entry.next.id}}">{{ entry.next.title}}</a>{%else%}没有了{%endif%}
