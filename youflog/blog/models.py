@@ -11,22 +11,6 @@ from tagging.models import Tag,TaggedItem
 from blog.managers import EntryPublishManager
 from django.contrib.sitemaps import ping_google
 import blog.cache as cache
-
-class Archive(models.Model):
-    monthyear = models.CharField(max_length=20)
-    year = models.CharField(max_length=8)
-    month = models.CharField(max_length=4)
-    entrycount = models.IntegerField(default=1)
-    date = models.DateTimeField(auto_now_add=True)
-    
-    class META:
-        ordering=('date',)
-    
-    def __unicode__(self):
-        return self.monthyear
-    
-    def get_absolute_url(self):
-        return '/archives/%s/%s'%(self.year,self.month)
     
 class Blog(models.Model):
     author = models.CharField('admin',default='admin',max_length=20)
@@ -196,12 +180,7 @@ class Entry(models.Model):
         
         self.published=pub
         super(Entry,self).save()
-        #以前发布过了且点击了取消发布 archive数量减1
-        if old_pub and not pub: 
-            self.update_archive(-1)
-        #以前没有发布且点击了发布按钮 archive数量加1
-        if not old_pub and pub:
-            self.update_archive(1)
+       
         cache.delete_cache('index_posts')
         cache.delete_cache('sidebar:categories')
         cache.delete_cache('sidebar:archives')
@@ -209,34 +188,10 @@ class Entry(models.Model):
             ping_google(sitemap_url='sitemap.xml')
     
     def delete(self):
-        '''删除文章'''
-        if self.published:
-            #更新archinve
-            self.update_archive(-1)
         #删除该文章下的所有评论
         self.comments.all().delete()
         super(Entry,self).delete()
 
-    def update_archive(self,cnt=1):
-        my = self.date.strftime('%B %Y')
-        sy = self.date.strftime('%Y')
-        sm = self.date.strftime('%m')
-
-        if self.entrytype == 'post':
-            try:
-                archive = Archive.objects.get(monthyear=my)
-                if not archive:
-                    archive = Archive(monthyear=my,year=sy,month=sm,entrycount=1)
-                    self.monthyear = my
-                    archive.save()
-                else:
-                    archive.entrycount += cnt
-                    if archive.entrycount <= 0:
-                        archive.entrycount = 0
-                    archive.save()
-            except:
-                archive = Archive(monthyear=my,year=sy,month=sm,entrycount=1)
-                archive.save()
     
 class Link(models.Model):
     href=models.URLField()

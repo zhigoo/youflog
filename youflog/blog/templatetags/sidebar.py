@@ -9,7 +9,7 @@ from django.db import connection
 from datetime import date, timedelta,datetime
 from calendar import LocaleHTMLCalendar
 
-from blog.models import Entry,Comment,Category,Link,Archive,Blog
+from blog.models import Entry,Comment,Category,Link,Blog
 import blog.cache as cache
 from settings import DATABASE_ENGINE
 register = Library()
@@ -57,7 +57,7 @@ def get_links(context):
 def get_archives(context):
     archives=cache.get_cache('sidebar:archives')
     if not archives:
-        archives=Archive.objects.all().order_by('-date')[:12]
+        archives = Entry.objects.dates('date','month')
         cache.set_cache('sidebar:archives',archives,60*20)
     return {'archives':archives}
 
