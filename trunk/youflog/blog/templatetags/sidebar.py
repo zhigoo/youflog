@@ -57,7 +57,7 @@ def get_links(context):
 def get_archives(context):
     archives=cache.get_cache('sidebar:archives')
     if not archives:
-        archives = Entry.objects.dates('date','month')
+        archives = Entry.objects.dates('date','month','DESC')
         cache.set_cache('sidebar:archives',archives,60*20)
     return {'archives':archives}
 
