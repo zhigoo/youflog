@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # *_* encoding=utf-8*_*
 import blog.cache as cache
-from blog.models import Entry,Comment,Link,Category,OptionSet,Blog,Archive,UserProfile
+from blog.models import Entry,Comment,Link,Category,OptionSet,Blog,UserProfile
 from utils.utils import render_response
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import force_unicode
@@ -98,7 +98,7 @@ def all_posts(request):
     publish_posts=Entry.objects.get_posts()
     unpubcount=all_posts.count()-publish_posts.count()
     categories = Category.objects.all()
-    archives=Archive.objects.all().order_by('-date')
+    archives=Entry.objects.dates('date','month')
     return render_response(request,"admin/posts.html",{'entrys':all_posts,\
                                    'publish_count':publish_posts.count(),'unpubcount':unpubcount,
                                    'all_count':all_posts.count(),'page':page,'categories':categories,'archives':archives})
@@ -109,7 +109,7 @@ def all_pub_posts(request):
     publish_posts=Entry.objects.get_posts()
     unpubcount=all_posts.count()-publish_posts.count()
     categories = Category.objects.all()
-    archives=Archive.objects.all().order_by('-date')
+    archives=Entry.objects.dates('date','month')
     return render_response(request,"admin/posts.html",{'entrys':publish_posts,\
                                    'publish_count':publish_posts.count(),'unpubcount':unpubcount,
                                    'all_count':all_posts.count(),'page':page,'categories':categories,'archives':archives})
@@ -121,7 +121,7 @@ def unpub_posts(request):
     unpub_posts=Entry.objects.all().filter(entrytype='post',published=False).order_by('-date')
     unpubcount=all_posts.count()-publish_posts.count()
     categories = Category.objects.all()
-    archives=Archive.objects.all().order_by('-date')
+    archives=Entry.objects.dates('date','month')
     return render_response(request,"admin/posts.html",{'entrys':unpub_posts,\
                                    'publish_count':publish_posts.count(),'unpubcount':unpubcount,
                                    'all_count':all_posts.count(),'page':page,'categories':categories,'archives':archives})
