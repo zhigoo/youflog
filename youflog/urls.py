@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^feed$', cache_page(feed_sitemap.LatestEntryFeed(),60 * 60 * 6)),
     url(r'^feed/comments$',cache_page(feed_sitemap.LatestComments(),60 * 60 * 10)),
     url(r'^rpc$',rpc.xmlrpc_handler),
+    url(r'^xmlrpc/$', 'django_xmlrpc.views.handle_xmlrpc', name='xmlrpc'),
     (r'',include('blog.views.admin_url')),
     (r'',include('blog.views.urls')),
 )

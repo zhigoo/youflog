@@ -513,6 +513,8 @@ def save_setting(request):
         domain = request.POST.get('domain','')
         if domain.startswith('http://'):
             domain=domain[7:]
+        if domain.endswith('/'):
+            domain=domain[:-1]
         try:    
             blog.theme_name=theme
             blog.save()
