@@ -2,7 +2,7 @@
 
 import logging
 from urlparse import urlsplit
-from urllib2 import urlopen, HTTPError, URLError
+import urllib2
 
 from BeautifulSoup import BeautifulSoup
 
@@ -38,16 +38,15 @@ def create_ping_func(**kwargs):
     """
 
     def ping_func(source, target):
-        log = logging.getLogger('pingback')
-        log.debug('received pingback from %r to %r' % (source, target))
+        logging.info('received pingback from %r to %r' % (source, target))
         domain = Site.objects.get_current().domain
-
+        
         # fetch the source request, then check if it really pings the target.
         try:
             doc = urlopen(source)
         except (HTTPError, URLError):
             raise PingbackError(PingbackError.SOURCE_DOES_NOT_EXIST)
-
+           
         # does the source refer to the target?
         soup = BeautifulSoup(doc.read())
         mylink = soup.find('a', href=target)

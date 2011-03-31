@@ -86,10 +86,10 @@ class Entry(models.Model):
         ordering= ['-id']
     
     def get_absolute_url(self):
-        if self.link:
-            return self.link
-        else:
-            return '/archive/%s.html'%(str(self.id))
+        #if self.link:
+        #    return self.link
+        #else:
+            return 'archive/%s.html'%(str(self.id))
     
     def shortcontent(self,len=200):
         return self.content[:len]
@@ -178,7 +178,7 @@ class Entry(models.Model):
         if pub: 
             super(Entry,self).save()
             self.__update_link()
-        
+            
         self.published=pub
         super(Entry,self).save()
        
@@ -238,4 +238,4 @@ from pingback.client import ping_external_links
 
 signals.post_save.connect(
         ping_external_links(content_attr='content', url_attr='get_absolute_url'),
-        sender=Entry, weak=False)
+        sender=Entry, weak=False,dispatch_uid='blog.models')
