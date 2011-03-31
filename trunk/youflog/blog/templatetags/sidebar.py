@@ -8,7 +8,7 @@ from django.db import connection
 
 from datetime import date, timedelta,datetime
 from calendar import LocaleHTMLCalendar
-
+from pingback.models import Pingback
 from blog.models import Entry,Comment,Category,Link,Blog
 import blog.cache as cache
 from settings import DATABASE_ENGINE
@@ -110,3 +110,8 @@ def get_calendar(context,year=date.today().year, month=date.today().month):
     
     calendar = YouflogCalendar()
     return {'calendar':calendar.formatmonth(year, month)}
+
+@register.inclusion_tag('sidebar/pingbacks.html', takes_context = True)
+def get_recent_pingbacks(context):
+    pingbacks = Pingback.objects.all().order_by('-date')[:15]
+    return {'pingbacks': pingbacks}
