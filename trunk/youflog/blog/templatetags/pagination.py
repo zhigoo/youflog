@@ -1,3 +1,4 @@
+
 from django import template
 from django.core.paginator import Paginator, EmptyPage
 
@@ -58,6 +59,19 @@ def begin_pagination(parser, token):
     
 @register.inclusion_tag('pagination.html', takes_context = True)
 def end_pagination(context):
+    if 'pagi_path' in context:
+        pagi_path = context['pagi_path']
+    else:
+        pagi_path = ''
+    return {
+            'pagi_page': context['pagi_page'],
+            'pagi_current': context['pagi_current'],
+            'pagi_range': context['pagi_range'],
+            'pagi_path': pagi_path,
+            }
+    
+@register.inclusion_tag('pagination_search.html', takes_context = True)
+def end_pagination_search(context):
     if 'pagi_path' in context:
         pagi_path = context['pagi_path']
     else:

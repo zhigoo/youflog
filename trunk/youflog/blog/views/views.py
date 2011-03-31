@@ -208,6 +208,20 @@ def calendar(request,year,month,day):
     posts=Entry.objects.get_post_by_day(year,month,day)
     return render(request,'archives.html',{'entries':posts,'page':page,'year':year,'month':month})
 
+from django.db.models import Q
+def search(request):
+    page=request.GET.get('page',1)
+    query = escape(request.GET.get('s', ''))
+    qd = request.GET.copy()
+    if 'page' in qd:
+        qd.pop('page')
+    posts=None
+    if query:
+        qset = (
+            Q(title__icontains=query)
+        )
+        posts = Entry.objects.filter(qset, published=True,entrytype='post').distinct().order_by('-date')
+    return render(request,'search.html',{'entries':posts,'page':page,'query':query,'pagi_path': qd.urlencode()})
 
 from datetime import time, date, datetime
 from time import strptime
