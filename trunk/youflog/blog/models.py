@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # *_* encoding=utf-8*_*
 from django.db import models
+from django.db.models import signals
 from django.contrib.contenttypes import generic
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
@@ -184,8 +185,8 @@ class Entry(models.Model):
         cache.delete_cache('index_posts')
         cache.delete_cache('sidebar:categories')
         cache.delete_cache('sidebar:archives')
-        if pub:
-            ping_google(sitemap_url='sitemap.xml')
+        #if pub:
+        #    ping_google(sitemap_url='sitemap.xml')
     
     def delete(self):
         #删除该文章下的所有评论
@@ -232,3 +233,9 @@ class UserProfile(models.Model):
     yim=models.CharField(max_length=50, blank=True, null=True)
     jabber=models.CharField(max_length=50, blank=True, null=True)
     desc=models.TextField(default='',null=True, blank=True)
+
+from pingback.client import ping_external_links
+
+signals.post_save.connect(
+        ping_external_links(content_attr='content', url_attr='get_absolute_url'),
+        sender=Entry, weak=False)

@@ -207,3 +207,31 @@ def calendar(request,year,month,day):
     page=request.GET.get('page',1)
     posts=Entry.objects.get_post_by_day(year,month,day)
     return render(request,'archives.html',{'entries':posts,'page':page,'year':year,'month':month})
+
+
+from datetime import time, date, datetime
+from time import strptime
+
+from pingback import create_ping_func
+from django_xmlrpc import xmlrpcdispatcher
+
+# create simple function which returns Post object and accepts
+# exactly same arguments as 'details' view.
+def pingback_post_handler(slug, **kwargs):
+    return Entry.objects.get(link=slug)
+
+def pingback_page_handler(page, **kwargs):
+    return Entry.objects.get(slug=page)
+
+# define association between view name and our handler
+ping_details = {
+    'single_post': pingback_post_handler,
+    'static_pages': pingback_page_handler,
+}
+
+# create xml rpc method, which will process all
+# ping requests
+ping_func = create_ping_func(**ping_details)
+
+# register this method in the dispatcher
+xmlrpcdispatcher.register_function(ping_func, 'pingback.ping')

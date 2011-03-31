@@ -27,7 +27,7 @@ TIME_ZONE = 'Asia/Shanghai'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-cn'
 
 SITE_ID = 1
 
@@ -76,6 +76,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfResponseMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'pingback.middleware.PingbackMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -105,6 +106,13 @@ INSTALLED_APPS = (
     'blog.comments',
     'blog.photo',
     'tagging',
+    'django_xmlrpc',
+    'pingback',
+)
+
+DIRECTORY_URLS = (
+    'http://ping.blogs.yandex.ru/RPC2',
+    'http://rpc.technorati.com/rpc/ping',
 )
 
 EMAIL_USE_TLS = True
