@@ -102,7 +102,6 @@ def get_menus(context):
 
 @register.inclusion_tag('sidebar/calendar.html',takes_context=True)
 def get_calendar(context,year=date.today().year, month=date.today().month):
-    print context.get('month')
     try:
         from blog.templatetags.youflogCalendar import YouflogCalendar
     except ImportError:

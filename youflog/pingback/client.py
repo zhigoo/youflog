@@ -22,7 +22,7 @@ class PingBackThread(threading.Thread):
         self.instance = instance
         self.url = url
         self.links = links
-
+        logging.info(url)
     def run(self):
         ctype = ContentType.objects.get_for_model(self.instance)
         socket.setdefaulttimeout(10)

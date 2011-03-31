@@ -223,29 +223,16 @@ def search(request):
         posts = Entry.objects.filter(qset, published=True,entrytype='post').distinct().order_by('-date')
     return render(request,'search.html',{'entries':posts,'page':page,'query':query,'pagi_path': qd.urlencode()})
 
-from datetime import time, date, datetime
-from time import strptime
-
 from pingback import create_ping_func
 from django_xmlrpc import xmlrpcdispatcher
 
-# create simple function which returns Post object and accepts
-# exactly same arguments as 'details' view.
 def pingback_post_handler(slug, **kwargs):
     return Entry.objects.get(link=slug)
 
-def pingback_page_handler(page, **kwargs):
-    return Entry.objects.get(slug=page)
-
-# define association between view name and our handler
 ping_details = {
     'single_post': pingback_post_handler,
-    'static_pages': pingback_page_handler,
 }
 
-# create xml rpc method, which will process all
-# ping requests
 ping_func = create_ping_func(**ping_details)
 
-# register this method in the dispatcher
 xmlrpcdispatcher.register_function(ping_func, 'pingback.ping')
