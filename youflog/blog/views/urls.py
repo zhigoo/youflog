@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^archives/(?P<year>\d{4})/(?P<month>\d{1,2})$', views.archives,name='entry_by_month'),
     url(r'^calendar/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})',views.calendar,name='entry_by_calendar'),
     url(r'^image_code',views.safecode,name='captcha_image'),
+    url(r'^search/$', views.search,name='search'),
     (r'^(.*)$', views.singlePost),
    
 )
