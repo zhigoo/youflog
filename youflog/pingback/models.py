@@ -67,21 +67,3 @@ class PingbackClient(models.Model):
     # workaround for admin
     def admin_object(self):
         return self.object
-
-
-class DirectoryPing(models.Model):
-    url = models.URLField()
-    date = models.DateTimeField(default=datetime.now)
-    success = models.BooleanField(default=False)
-
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
-    object = generic.GenericForeignKey('content_type', 'object_id')
-
-    objects = PingbackClientManager()
-
-    class Meta:
-        ordering = ('-date', )
-
-    def __unicode__(self):
-        return u'%s to %s' % (self.object, self.url)
