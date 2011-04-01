@@ -26,13 +26,13 @@ class PingBackThread(threading.Thread):
     def run(self):
         ctype = ContentType.objects.get_for_model(self.instance)
         socket.setdefaulttimeout(10)
+        logging.info('start ping %s'%self.url)
+        logging.info(self.links)
         for link in self.links:
-            try:
-                PingbackClient.objects.get(url=link, content_type=ctype,
-                                           object_id=self.instance.id)
-            except PingbackClient.DoesNotExist:
+            pings = PingbackClient.objects.filter(url=link, content_type=ctype,
+                                       object_id=self.instance.id)
+            if pings.count() <= 0:
                 pingback = PingbackClient(object=self.instance, url=link)
-                
                 try:
                     f = urlopen(link)
                     server_url = f.info().get('X-Pingback', '') or \
@@ -48,6 +48,7 @@ class PingBackThread(threading.Thread):
                 except (IOError, ValueError, Fault), e:
                     pass
                 pingback.save()
+                
         socket.setdefaulttimeout(None)
 
 
