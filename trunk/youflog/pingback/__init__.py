@@ -2,7 +2,7 @@
 
 import logging
 from urlparse import urlsplit
-import urllib2
+from urllib2 import urlopen ,HTTPError, URLError
 
 from BeautifulSoup import BeautifulSoup
 
@@ -13,16 +13,102 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import get_resolver, get_callable
 from django.utils.html import strip_tags
 from django.utils.encoding import force_unicode, smart_str
-
+import threading
 from pingback.models import Pingback
 from pingback.exceptions import PingbackError
-from pingback.client import ping_external_links, ping_directories
+from pingback.client import ping_external_links
 
 VERSION = (0, 1, 3)
 __version__ = '.'.join(map(str, VERSION))
-__all__ = ['Pingback', 'ping_external_links', 'ping_directories',
+__all__ = ['Pingback', 'ping_external_links', 
            'create_ping_func', '__version__']
 
+
+class ReceivePingThread(threading.Thread):
+    def __init__(self,source,target,kwargs):
+        threading.Thread.__init__(self)
+        self.source = source
+        self.target = target
+        self.kwargs = kwargs
+        print self.target
+    
+    def run(self):
+        logging.info('received pingback from %r to %r' % (self.source, self.target))
+        domain = Site.objects.get_current().domain
+        
+        # fetch the source request, then check if it really pings the target.
+        try:
+            doc = urlopen(self.source)
+        except (HTTPError, URLError):
+            raise PingbackError(PingbackError.SOURCE_DOES_NOT_EXIST)
+           
+        # does the source refer to the target?
+        soup = BeautifulSoup(doc.read())
+        
+        mylink = soup.find('a', href=self.target)
+        
+        if not mylink:
+            raise PingbackError(PingbackError.SOURCE_DOES_NOT_LINK)
+
+        # grab the title of the pingback source
+        title = soup.find('title')
+        if title:
+            title = strip_tags(unicode(title))
+        else:
+            title = 'Unknown title'
+        
+        # extract the text around the incoming link
+        content = unicode(mylink.findParent())
+        
+        i = content.index(unicode(mylink))
+        content = strip_tags(content)
+        max_length = getattr(settings, 'PINGBACK_RESPONSE_LENGTH', 200)
+        if len(content) > max_length:
+            start = i - max_length/2
+            if start < 0:
+                start = 0
+            end = i + len(unicode(mylink)) + max_length/2
+            if end > len(content):
+                end = len(content)
+            content = content[start:end]
+        
+        scheme, server, path, query, fragment = urlsplit(self.target)
+        
+        # check if the target is valid target
+        if not (server == domain or server.split(':')[0] == domain):
+            return PingbackError.TARGET_IS_NOT_PINGABLE
+        
+        resolver = get_resolver(None)
+        try:
+            func, a, kw = resolver.resolve(path)
+        except urlresolvers.Resolver404:
+            raise PingbackError(PingbackError.TARGET_DOES_NOT_EXIST)
+
+        url_signatures = resolver.reverse_dict.getlist(func)
+        
+        # stupid workaround because django returns tuple instead of RegexURLPattern
+        #registered = False
+        for name in self.kwargs:
+           pass
+        #    if resolver.reverse_dict[name] in url_signatures:
+        #        registered = True
+        #        break
+        #if not registered:
+        #    raise PingbackError(PingbackError.TARGET_IS_NOT_PINGABLE)
+
+        object_resolver = self.kwargs[name]
+        
+        obj = object_resolver(*a, **kw)
+        content_type = ContentType.objects.get_for_model(obj)
+        try:
+            Pingback.objects.get(url=self.source, content_type=content_type, object_id=obj.id)
+            raise PingbackError(PingbackError.PINGBACK_ALREADY_REGISTERED)
+        except Pingback.DoesNotExist:
+            pass
+
+        pb = Pingback(object=obj, url=self.source, content=content.encode('utf-8'), title=title.encode('utf-8'), approved=True)
+        pb.save()
+    
 
 def create_ping_func(**kwargs):
     """
@@ -38,76 +124,8 @@ def create_ping_func(**kwargs):
     """
 
     def ping_func(source, target):
-        logging.info('received pingback from %r to %r' % (source, target))
-        domain = Site.objects.get_current().domain
-        
-        # fetch the source request, then check if it really pings the target.
-        try:
-            doc = urlopen(source)
-        except (HTTPError, URLError):
-            raise PingbackError(PingbackError.SOURCE_DOES_NOT_EXIST)
-           
-        # does the source refer to the target?
-        soup = BeautifulSoup(doc.read())
-        mylink = soup.find('a', href=target)
-        if not mylink:
-            raise PingbackError(PingbackError.SOURCE_DOES_NOT_LINK)
-
-        # grab the title of the pingback source
-        title = soup.find('title')
-        if title:
-            title = strip_tags(unicode(title))
-        else:
-            title = 'Unknown title'
-
-        # extract the text around the incoming link
-        content = unicode(mylink.findParent())
-        i = content.index(unicode(mylink))
-        content = strip_tags(content)
-        max_length = getattr(settings, 'PINGBACK_RESPONSE_LENGTH', 200)
-        if len(content) > max_length:
-            start = i - max_length/2
-            if start < 0:
-                start = 0
-            end = i + len(unicode(mylink)) + max_length/2
-            if end > len(content):
-                end = len(content)
-            content = content[start:end]
-
-        scheme, server, path, query, fragment = urlsplit(target)
-
-        # check if the target is valid target
-        if not (server == domain or server.split(':')[0] == domain):
-            return PingbackError.TARGET_IS_NOT_PINGABLE
-
-        resolver = get_resolver(None)
-
-        try:
-            func, a, kw = resolver.resolve(path)
-        except urlresolvers.Resolver404:
-            raise PingbackError(PingbackError.TARGET_DOES_NOT_EXIST)
-
-        url_signatures = resolver.reverse_dict.getlist(func)
-        # stupid workaround because django returns tuple instead of RegexURLPattern
-        registered = False
-        for name in kwargs:
-            if resolver.reverse_dict[name] in url_signatures:
-                registered = True
-                break
-        if not registered:
-            raise PingbackError(PingbackError.TARGET_IS_NOT_PINGABLE)
-
-        object_resolver = kwargs[name]
-        obj = object_resolver(*a, **kw)
-
-        content_type = ContentType.objects.get_for_model(obj)
-        try:
-            Pingback.objects.get(url=source, content_type=content_type, object_id=obj.id)
-            raise PingbackError(PingbackError.PINGBACK_ALREADY_REGISTERED)
-        except Pingback.DoesNotExist:
-            pass
-
-        pb = Pingback(object=obj, url=source, content=content.encode('utf-8'), title=title.encode('utf-8'), approved=True)
-        pb.save()
+        print 'receive ping back'
+        rpt = ReceivePingThread(source=source,target=target,kwargs=kwargs)
+        rpt.start()
         return 'pingback from %s to %s saved' % (source, target)
     return ping_func

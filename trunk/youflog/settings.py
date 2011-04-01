@@ -110,11 +110,6 @@ INSTALLED_APPS = (
     'pingback',
 )
 
-DIRECTORY_URLS = (
-    'http://ping.blogs.yandex.ru/RPC2',
-    'http://rpc.technorati.com/rpc/ping',
-)
-
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'minhao123@gmail.com'

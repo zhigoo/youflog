@@ -174,9 +174,7 @@ class Entry(models.Model):
             self.date=datetime.now()
         else:
             self.date=datetime.strptime(str(self.date)[0:19],"%Y-%m-%d %H:%M:%S")
-        old_pub=self.published
         if pub: 
-            super(Entry,self).save()
             self.__update_link()
             
         self.published=pub
@@ -185,8 +183,6 @@ class Entry(models.Model):
         cache.delete_cache('index_posts')
         cache.delete_cache('sidebar:categories')
         cache.delete_cache('sidebar:archives')
-        #if pub:
-        #    ping_google(sitemap_url='sitemap.xml')
     
     def delete(self):
         #删除该文章下的所有评论
