@@ -75,12 +75,11 @@ class ReceivePingThread(threading.Thread):
         scheme, server, path, query, fragment = urlsplit(self.target)
         
         # check if the target is valid target
-        if not (server == domain or server.split(':')[0] == domain):
-            return PingbackError.TARGET_IS_NOT_PINGABLE
+        #if not (server == domain or server.split(':')[0] == domain):
+        #    return PingbackError.TARGET_IS_NOT_PINGABLE
         
         resolver = get_resolver(None)
         try:
-            logging.info(resolver.resolve(path))
             func, a, kw = resolver.resolve(path)
         except urlresolvers.Resolver404:
             raise PingbackError(PingbackError.TARGET_DOES_NOT_EXIST)
@@ -100,13 +99,13 @@ class ReceivePingThread(threading.Thread):
         obj = object_resolver(*a, **kw)
         content_type = ContentType.objects.get_for_model(obj)
         try:
-            Pingback.objects.get(url=self.source, content_type=content_type, object_id=obj.id)
-            raise PingbackError(PingbackError.PINGBACK_ALREADY_REGISTERED)
+            pings = Pingback.objects.filter(url=self.source, content_type=content_type, object_id=obj.id)
+            if pings.count() <=0 :
+                pb = Pingback(object=obj, url=self.source, content=content.encode('utf-8'), title=title.encode('utf-8'), approved=True)
+                pb.save()
+            else: raise PingbackError(PingbackError.PINGBACK_ALREADY_REGISTERED)
         except Pingback.DoesNotExist:
             pass
-
-        pb = Pingback(object=obj, url=self.source, content=content.encode('utf-8'), title=title.encode('utf-8'), approved=True)
-        pb.save()
     
 
 def create_ping_func(**kwargs):
