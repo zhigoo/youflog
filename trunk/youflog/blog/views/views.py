@@ -226,12 +226,17 @@ def search(request):
 from pingback import create_ping_func
 from django_xmlrpc import xmlrpcdispatcher
 
-def pingback_post_handler(slug, **kwargs):
+def pingback_post_handler_slug(slug, **kwargs):
     return Entry.objects.get(link=slug)
 
+def pingback_post_handler_id(id, **kwargs):
+    return Entry.objects.get(id=id)
+
 ping_details = {
-    'single_post': pingback_post_handler,
+    'single_post': pingback_post_handler_slug,
+    'single_post_by_id':pingback_post_handler_id,
 }
+
 
 ping_func = create_ping_func(**ping_details)
 
