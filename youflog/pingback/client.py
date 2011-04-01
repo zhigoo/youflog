@@ -35,7 +35,6 @@ class PingBackThread(threading.Thread):
                 
                 try:
                     f = urlopen(link)
-                    logging.info(link)
                     server_url = f.info().get('X-Pingback', '') or \
                                      search_link(f.read(512 * 1024))
                     if server_url:
@@ -103,7 +102,8 @@ def ping_external_links(content_attr=None,
             return path_e != path_i
 
         soup = BeautifulSoup(content)
-        links = [a['href'] for a in soup('a')]
+        links = [a['href'] for a in soup.findAll('a')
+                 if a.has_key('href') and is_external(a['href'], url)]
         pbt = PingBackThread(instance=instance, url=url, links=links)
         pbt.start()
     return execute_links_ping

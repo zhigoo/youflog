@@ -80,6 +80,7 @@ class ReceivePingThread(threading.Thread):
         
         resolver = get_resolver(None)
         try:
+            logging.info(resolver.resolve(path))
             func, a, kw = resolver.resolve(path)
         except urlresolvers.Resolver404:
             raise PingbackError(PingbackError.TARGET_DOES_NOT_EXIST)
@@ -87,17 +88,15 @@ class ReceivePingThread(threading.Thread):
         url_signatures = resolver.reverse_dict.getlist(func)
         
         # stupid workaround because django returns tuple instead of RegexURLPattern
-        #registered = False
+        registered = False
         for name in self.kwargs:
-           pass
-        #    if resolver.reverse_dict[name] in url_signatures:
-        #        registered = True
-        #        break
-        #if not registered:
-        #    raise PingbackError(PingbackError.TARGET_IS_NOT_PINGABLE)
+            if resolver.reverse_dict[name] in url_signatures:
+                registered = True
+                break
+        if not registered:
+            raise PingbackError(PingbackError.TARGET_IS_NOT_PINGABLE)
 
         object_resolver = self.kwargs[name]
-        
         obj = object_resolver(*a, **kw)
         content_type = ContentType.objects.get_for_model(obj)
         try:
@@ -124,7 +123,6 @@ def create_ping_func(**kwargs):
     """
 
     def ping_func(source, target):
-        print 'receive ping back'
         rpt = ReceivePingThread(source=source,target=target,kwargs=kwargs)
         rpt.start()
         return 'pingback from %s to %s saved' % (source, target)

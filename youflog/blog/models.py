@@ -86,9 +86,9 @@ class Entry(models.Model):
         ordering= ['-id']
     
     def get_absolute_url(self):
-        #if self.link:
-        #    return self.link
-        #else:
+        if self.slug:
+            return self.link
+        else:
             return 'archive/%s.html'%(str(self.id))
     
     def shortcontent(self,len=200):
