@@ -34,11 +34,11 @@ class PingBackThread(threading.Thread):
         
     def run(self):
         ctype = ContentType.objects.get_for_model(self.instance)
-        socket.setdefaulttimeout(10)
+        
         for link in self.links:
-            pings = PingbackClient.objects.filter(url=link, content_type=ctype,
-                                       object_id=self.instance.id)
-            if pings.count() <= 0:
+            try:
+                PingbackClient.objects.get(url=link, content_type=ctype,object_id=self.instance.id)
+            except Exception, e:
                 pingback = PingbackClient(object=self.instance, url=link)
                 try:
                     f = urlopen(link)
@@ -48,16 +48,14 @@ class PingBackThread(threading.Thread):
                         server = ServerProxy(server_url)
                         try:
                             result = server.pingback.ping(self.url, link)
-                            logging.info(result)
                         except Exception, e:
+                            logging.info(e)
                             pingback.success = False
                         else:
                             pingback.success = True
+                            pingback.save()
                 except (IOError, ValueError, Fault), e:
                     pass
-                pingback.save()
-                
-        socket.setdefaulttimeout(None)
 
 def ping_external_links(content_attr=None,instance=None,
                         url_attr='get_absolute_url'):
