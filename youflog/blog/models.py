@@ -11,21 +11,12 @@ from django.contrib.auth.models import User
 
 from tagging.fields import TagField
 from tagging.models import Tag,TaggedItem
-
 from blog.comments.models import Comment
-from pingback.ping import ping_external_links
+
 from blog.managers import EntryPublishManager,PingbackManager,PingbackClientManager
 import blog.cache as cache
 
 import logging
-
-
-send_pingback=Signal(providing_args=["instance"])
-
-def on_send_pingback(sender,instance,*args,**kwargs):
-    ping_external_links(content_attr='content', url_attr='get_absolute_url',instance=instance)
-
-send_pingback.connect(on_send_pingback)
 
 class Blog(models.Model):
     author = models.CharField('admin',default='admin',max_length=20)
@@ -246,3 +237,10 @@ class UserProfile(models.Model):
     yim=models.CharField(max_length=50, blank=True, null=True)
     jabber=models.CharField(max_length=50, blank=True, null=True)
     desc=models.TextField(default='',null=True, blank=True)
+
+from pingback.ping import ping_external_links
+send_pingback=Signal(providing_args=["instance"])
+def on_send_pingback(sender,instance,*args,**kwargs):
+    ping_external_links(content_attr='content', url_attr='get_absolute_url',instance=instance)
+
+send_pingback.connect(on_send_pingback)
