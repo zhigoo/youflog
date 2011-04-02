@@ -48,10 +48,11 @@ class PingBackThread(threading.Thread):
                         server = ServerProxy(server_url)
                         try:
                             result = server.pingback.ping(self.url, link)
+                            logging.info(result)
                         except Exception, e:
                             pingback.success = False
                         else:
-                            pingback.success = False
+                            pingback.success = True
                 except (IOError, ValueError, Fault), e:
                     pass
                 pingback.save()
