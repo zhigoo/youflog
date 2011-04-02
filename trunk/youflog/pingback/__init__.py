@@ -29,7 +29,7 @@ def handler_pingback(source,target):
         logging.info('open url %s' %source)
         doc = urlopen(source)
     except Exception ,e:
-        loggign.info(e)
+        logging.info(e)
         raise Fault(16, 'The source URL does not exist.%s'%source)
     soup = BeautifulSoup(doc.read())
     
