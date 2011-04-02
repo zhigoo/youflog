@@ -198,7 +198,8 @@ class Entry(models.Model):
         cache.delete_cache('sidebar:categories')
         cache.delete_cache('sidebar:archives')
         
-        send_pingback.send(sender=self.__class__,instance=self)
+        if self.published:
+            send_pingback.send(sender=self.__class__,instance=self)
     
     def delete(self):
         #删除该文章下的所有评论
