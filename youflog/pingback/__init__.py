@@ -28,7 +28,7 @@ def handler_pingback(source,target):
     try:
         doc = urlopen(source)
     except Exception ,e:
-        raise Fault(16, 'The source URL does not exist.%s'%self.source)
+        raise Fault(16, 'The source URL does not exist.%s'%source)
     soup = BeautifulSoup(doc.read())
     
     mylink = soup.find('a', href=target)
