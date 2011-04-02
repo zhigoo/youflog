@@ -26,14 +26,17 @@ __all__ = ['Pingback', 'ping_external_links',
 def handler_pingback(source,target):
     logging.info('receive pingback from %s to %s'%(source,target))
     try:
+        logging.info('open url %s' %source)
         doc = urlopen(source)
     except Exception ,e:
+        loggign.info(e)
         raise Fault(16, 'The source URL does not exist.%s'%source)
     soup = BeautifulSoup(doc.read())
     
     mylink = soup.find('a', href=target)
     if not mylink:
-        raise Fault(17, 'The post does not exist URL [%s]'%target)
+        raise Fault(17, 'The post does not include URL [%s]'%target)
+    
     title = soup.find('title')
     if title:
         title = strip_tags(unicode(title))
@@ -41,6 +44,7 @@ def handler_pingback(source,target):
         title = 'Unknown title'
     
     content = unicode(mylink.findParent())
+    logging.info(content)
     i = content.index(unicode(mylink))
     content = strip_tags(content)
     if len(content) > 200:
