@@ -6,6 +6,10 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from blog.models import Blog,Entry,Category
 from django.http import HttpResponse
+try:
+    from django.views.decorators.csrf import csrf_exempt
+except ImportError:
+    from django.contrib.csrf.middleware import csrf_exempt
 import logging
 
 def post_struct(entry):
@@ -115,7 +119,7 @@ def metaWeblog_getCategories(blogid,username,password):
 
 def mt_setPostCategories(postid,username,password,cates):
     return 0
-    
+ 
 def mt_publishPost(postid,username,password):
     try:
         post = Entry.objects.get(int(postid))
@@ -123,6 +127,11 @@ def mt_publishPost(postid,username,password):
         return post.id
     except:
         return 0
+
+from pingback import handler_pingback
+def ping(source,target):
+    return handler_pingback(source,target)
+    
 class PlogXMLRPCDispatcher(SimpleXMLRPCDispatcher):
     def __init__(self, funcs):
         SimpleXMLRPCDispatcher.__init__(self, True, 'utf-8')
@@ -141,8 +150,10 @@ dispatcher = PlogXMLRPCDispatcher({
         'wp.getPageList':wp_getPageList,
         'mt.setPostCategories':mt_setPostCategories,
         'mt.publishPost':mt_publishPost,
+        'pingback.ping':ping
         })
 
+@csrf_exempt
 def xmlrpc_handler(request):
     if request.method == 'POST':
         return HttpResponse(dispatcher._marshaled_dispatch(request.raw_post_data))

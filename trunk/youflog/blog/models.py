@@ -1,18 +1,32 @@
 #!/usr/bin/env python
 # *_* encoding=utf-8*_*
+from datetime import datetime
+
 from django.db import models
 from django.db.models import signals
+from django.dispatch import Signal
 from django.contrib.contenttypes import generic
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
+
 from tagging.fields import TagField
-from datetime import datetime
-from blog.comments.models import Comment
 from tagging.models import Tag,TaggedItem
-from blog.managers import EntryPublishManager
-from django.contrib.sitemaps import ping_google
+
+from blog.comments.models import Comment
+from pingback.ping import ping_external_links
+from blog.managers import EntryPublishManager,PingbackManager,PingbackClientManager
 import blog.cache as cache
-    
+
+import logging
+
+
+send_pingback=Signal(providing_args=["instance"])
+
+def on_send_pingback(sender,instance,*args,**kwargs):
+    ping_external_links(content_attr='content', url_attr='get_absolute_url',instance=instance)
+
+send_pingback.connect(on_send_pingback)
+
 class Blog(models.Model):
     author = models.CharField('admin',default='admin',max_length=20)
     email=models.EmailField(default='admin@iyouf.info')
@@ -183,6 +197,8 @@ class Entry(models.Model):
         cache.delete_cache('index_posts')
         cache.delete_cache('sidebar:categories')
         cache.delete_cache('sidebar:archives')
+        
+        send_pingback.send(sender=self.__class__,instance=self)
     
     def delete(self):
         #删除该文章下的所有评论
@@ -229,9 +245,3 @@ class UserProfile(models.Model):
     yim=models.CharField(max_length=50, blank=True, null=True)
     jabber=models.CharField(max_length=50, blank=True, null=True)
     desc=models.TextField(default='',null=True, blank=True)
-
-from pingback.client import ping_external_links
-
-signals.post_save.connect(
-        ping_external_links(content_attr='content', url_attr='get_absolute_url'),
-        sender=Entry, weak=False,dispatch_uid='blog.models')

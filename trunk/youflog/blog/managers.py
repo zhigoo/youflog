@@ -46,3 +46,18 @@ class CommentManager(models.Manager):
         if isinstance(model, models.Model):
             qs = qs.filter(object_pk=force_unicode(model._get_pk_val()), is_public = True)
         return qs
+
+class PingbackManager(models.Manager):
+    def pingbacks_for_object(self, obj):
+        content_type = ContentType.objects.get_for_model(obj)
+        return self.filter(content_type=content_type, object_id=obj.pk)
+
+    def count_for_object(self, obj):
+        content_type = ContentType.objects.get_for_model(obj)
+        return self.filter(content_type=content_type, object_id=obj.pk).count()
+
+
+class PingbackClientManager(models.Manager):
+    def count_for_link(self, obj, link):
+        ctype = ContentType.objects.get_for_model(obj)
+        return self.filter(content_type=ctype, object_id=obj.pk, url=link).count()

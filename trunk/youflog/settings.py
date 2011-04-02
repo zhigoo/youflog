@@ -76,7 +76,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfResponseMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'pingback.middleware.PingbackMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -106,7 +105,6 @@ INSTALLED_APPS = (
     'blog.comments',
     'blog.photo',
     'tagging',
-    'django_xmlrpc',
     'pingback',
 )
 

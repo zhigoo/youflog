@@ -12,9 +12,9 @@ def init_data(**kwargs):
     default_cate=Category(name=u'未分类',slug='default',desc=u'未分类')
     default_cate.save()
     
-    entry=Entry(title='Hello World!',content='Hello World, welcome to use youflog! thank you!',tags='youflog')
+    entry=Entry(title='Hello World!',content='<b>Hello World, welcome to use youflog! thank you!</a>',tags='youflog')
     entry.allow_comment=True
-    entry.slug=''
+    entry.slug='hello-world'
     entry.category=default_cate
     entry.author_id=1
     entry.save(True)
