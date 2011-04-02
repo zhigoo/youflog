@@ -48,6 +48,7 @@ class PingBackThread(threading.Thread):
                         server = ServerProxy(server_url)
                         try:
                             result = server.pingback.ping(self.url, link)
+                            logging.info('ping result: %s' %result)
                         except Exception, e:
                             logging.info(e)
                             pingback.success = False
