@@ -10,7 +10,6 @@ Tags: red, brown, white, black, silver, three-columns, right-sidebar, fixed-widt
 Released under the <a href="http://www.opensource.org/licenses/gpl-license.php">GPL</a>.
 .
 */
-
 * {margin: 0; padding: 0}
 header, nav, section, article, aside, footer {display: block}
 body {
@@ -327,6 +326,13 @@ div.pagetitle {
 	text-shadow: 1px 1px 0 #FFF;
   text-align: center;
 	background: #F4F4F4;
+}
+
+.pingback {
+    border-top: 1px solid #FFFFFF;
+    list-style: none outside none;
+    margin: 0 0 1px;
+    padding: 5 0 0 5px;
 }
 
 .commentlist {

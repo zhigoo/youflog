@@ -3,10 +3,10 @@
 {% get_pingback_count for object as pingback_count %}
 {% if pingbacks %}
 	<h3>{{ pingback_count }} Pingbacks</h3>
-	<div class="b-pingback">
+	<div class="pingback">
 	{% for pingback in pingbacks %}
 			<li class="b-meta">
-			{{ pingback.date|date:"M d, Y" }}: <a name="pingback-{{ pingback.id }}" href="{{ pingback.url }}" class="b-permlink">{{ pingback.title }}</a>
+			{{ pingback.date|date:"Y-m-d" }}: <a name="pingback-{{ pingback.id }}" href="{{ pingback.url }}" class="b-permlink">{{ pingback.title }}</a>
 			</li>
 	{% endfor %}
 	</div>
