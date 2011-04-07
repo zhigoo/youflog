@@ -103,7 +103,6 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'blog',
     'blog.comments',
-    'blog.photo',
     'tagging',
     'pingback',
 )

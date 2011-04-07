@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     #sitemap and feed
     url(r'^sitemap.xml$', cache_page(sitemap_views.sitemap, 60 * 60 * 6),{'sitemaps': sitemaps}),
     url(r'^feed$', cache_page(feed_sitemap.LatestEntryFeed(),60 * 60 * 6)),
+    url(r'^atom$',cache_page(feed_sitemap.AtomLatestEntries(),60 * 60 * 6)),
     url(r'^feed/comments$',cache_page(feed_sitemap.LatestComments(),60 * 60 * 10)),
     url(r'^rpc',rpc.xmlrpc_handler,name='xmlrpc'),
     (r'',include('blog.views.admin_url')),

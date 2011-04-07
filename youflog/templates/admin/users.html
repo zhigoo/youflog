@@ -36,7 +36,7 @@
          {%for user in users%}
 		<tr valign="middle" id="post-{{entry.id}}">
 			<th scope="row" class="check-column">
-				<input type="checkbox" name="checks" value="{{entry.id}}">
+				<input type="checkbox" name="checks" value="{{user.id}}">
 			</th>
 			<td> 
 				<img width="32" height="32" class="avatar avatar-32 photo" src="{% gravator user.email %}" alt="" style="float:left;margin-top:3px;margin-right:10px;">
@@ -44,7 +44,7 @@
              			<a href="#">{{user.username}}</a>
              	</strong>
              	<div class="row-actions">
-              	<span> <a href="/admin/editpost/{{entry.id}}?entrytype=post" title="Edit &quot;{{entry.title}}&quot;">编辑</a></span>
+              	<span> <a href="/admin/profile?uid={{user.id}}" title="Edit &quot;{{entry.title}}&quot;">编辑</a></span>
               	<span class="delete">| <a href="/admin/delpost?id={{entry.id}}">删除</a></span>
              	</div>
          </td>
