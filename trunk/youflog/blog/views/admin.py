@@ -622,7 +622,11 @@ def users(request):
 
 @login_required
 def profile(request):
-    user=request.user
+    uid=request.GET.get('uid')
+    if uid is None:
+        user=request.user
+    else:
+        user = User.objects.get(id=uid)
     return render_response(request,'admin/profile.html',locals())
 
 @login_required
@@ -637,6 +641,8 @@ def saveprofile(request):
     yim=request.POST.get('yim')
     jabber=request.POST.get('jabber')
     description=request.POST.get('description')
+    pass1 = request.POST.get('pass1')
+    pass2 = request.POST.get('pass2')
     user = User.objects.get(id=user_id)
     try:
         profile=user.get_profile()

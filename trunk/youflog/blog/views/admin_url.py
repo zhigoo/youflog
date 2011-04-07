@@ -2,7 +2,6 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 from blog.views import admin
-from blog.photo import views as photo
 
 urlpatterns = patterns('',
     url(r'^admin$',admin.index,name="admin_index"), # 后台管理页面
@@ -55,11 +54,6 @@ urlpatterns = patterns('',
     
     #media
     url(r'^admin/media$',admin.media,name='show all media'),
-    url(r'^admin/upload_media$',admin.upload_media),
-    url(r'^admin/albums$',photo.albums,name=''),
-    url(r'^admin/save_album',photo.add_album),
-    url(r'^admin/album_detail',photo.detail),
-    url(r'^admin/upload_photo',photo.upload),
     
     #login logout
     url(r'^accounts/login', admin.login,name="login"), #登录

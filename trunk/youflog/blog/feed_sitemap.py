@@ -1,6 +1,7 @@
 from django.contrib.syndication.views import Feed
 from django.contrib.sitemaps import Sitemap
 from django.contrib.sites.models import Site
+from django.utils.feedgenerator import Atom1Feed
 from blog.models import Blog,Entry,Comment
 
 g_blog = Blog.get()
@@ -47,7 +48,10 @@ class LatestComments(Feed):
     def item_link(self,item):
         return item.get_absolute_url()
     
-    
+class AtomLatestEntries(LatestEntryFeed):
+    feed_type = Atom1Feed
+    subtitle = LatestEntryFeed.description
+
 class PostSitemap(Sitemap):
     changefreq = "daily"
     priority = 0.9
