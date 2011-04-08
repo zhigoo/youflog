@@ -11,7 +11,9 @@ class LatestEntryFeed(Feed):
     title = g_blog.title
     description = g_blog.subtitle
     link = domain
-
+    
+    description_template = 'feed/post_content.html'
+    
     def items(self):
         return Entry.objects.get_posts().order_by('-date')[:10]
 
@@ -20,12 +22,8 @@ class LatestEntryFeed(Feed):
     
     def item_pubdate(self, item):
         return item.date
-
-    def item_description(self, item):
-        return item.content
     
     def item_link(self,item):
-        #return domain+'/'+item.link
         return "/%s" %(item.get_absolute_url())
     
 class LatestComments(Feed):
