@@ -6,36 +6,39 @@ from tagging.models import Tag, TaggedItem
 from django.db.models import Count
 from django.db import connection
 
+from random import sample
 from datetime import date, timedelta,datetime
 from calendar import LocaleHTMLCalendar
 from pingback.models import Pingback
 from blog.models import Entry,Comment,Category,Link,Blog
 import blog.cache as cache
-from settings import DATABASE_ENGINE
 register = Library()
 
 @register.inclusion_tag('sidebar/recent_posts.html', takes_context = True)
-def get_recent_posts(context):
-    posts=Entry.objects.get_posts()[:8]
-    return {'recentposts':posts}
+def get_recent_posts(context,number=5):
+    posts=Entry.objects.get_posts()
+    if number > len(posts):
+        number = len(posts)
+    return {'recentposts':posts[:number]}
 
 @register.inclusion_tag('sidebar/hot_posts.html', takes_context = True)
-def get_popular_posts(context):
-    posts=Entry.objects.get_posts().order_by('-readtimes')[:8]
-    return {'hotposts':posts}
+def get_popular_posts(context,number=5):
+    posts=Entry.objects.get_posts().order_by('-readtimes')
+    if number > len(posts):
+        number = len(posts)
+    return {'hotposts':posts[:number]}
 
 @register.inclusion_tag('sidebar/random_posts.html', takes_context = True)
-def get_random_posts(context):
-    if DATABASE_ENGINE == 'sqlite3' :
-        entrys = Entry.objects.raw("select * from blog_entry where published=1 and entrytype='post' order by random() limit 8")
-    elif DATABASE_ENGINE == 'mysql':
-        entrys = Entry.objects.raw("select * from blog_entry where published=1 and entrytype='post' order by rand() limit 8")
-    return {'randomposts':entrys}
+def get_random_posts(context,number=5):
+    entries = Entry.objects.get_posts()
+    if number > len(entries):
+        number = len(entries)
+    return {'randomposts':sample(entries,number)}
 
 @register.inclusion_tag('sidebar/recent_comments.html', takes_context = True)
-def get_recent_comment(context):
-    comments=Comment.objects.in_public().exclude(email=Blog.get().email)[:10]
-    return {'comments':comments}
+def get_recent_comment(context,number=10):
+    comments=Comment.objects.in_public().exclude(email=Blog.get().email)
+    return {'comments':comments[:number]}
 
 @register.inclusion_tag('sidebar/categories.html', takes_context = True)
 def get_categories(context):

@@ -20,7 +20,7 @@ from blog.forms import SettingForm
 from settings import MEDIA_ROOT
 from os.path import isdir, dirname
 from tagging.models import Tag
-from settings import DATABASE_ENGINE,DATABASE_NAME
+from settings import DATABASES
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 import blog.comments.signals as signals
@@ -606,8 +606,11 @@ def format_permalink(request):
     pass
 
 def backup_db(request):
-    if DATABASE_ENGINE == 'sqlite3':
-        f = open(DATABASE_NAME, "rb")
+    defaultdb = DATABASES.get('default')
+    engine = defaultdb.get('ENGINE')
+    dbname = defaultdb.get('NAME')
+    if engine == 'django.db.backends.sqlite3':
+        f = open(dbname, "rb")
         data = f.read()
         f.close()
         response = HttpResponse(data,mimetype='application/octet-stream') 
