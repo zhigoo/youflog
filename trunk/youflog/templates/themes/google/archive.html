@@ -1,0 +1,54 @@
+{% extends "themes/google/base.html" %}
+{%load pagination%}
+
+{% block content %}
+	<div id="content" class="narrowcolumn">
+
+		{%if archtype == 'calendar'%}
+		<h2 class="pagetitle">Archive for the {{year}}-{{month}}-{{day}} </h2>
+		{%endif%}
+		{%if archtype == 'category'%}
+			<h2 class="pagetitle">Archive for the {{category.name|escape}}  </h2>
+		{%endif%}
+		{%if archtype == 'archive'%}
+			<h2 class="pagetitle">Archive for the {{year}}-{{month}}  </h2>
+		{%endif%}
+		{%if archtype == 'tag'%}
+			<h2 class="pagetitle">Archive for the {{tag|escape}} </h2>
+		{%endif%}
+		{% if entries %}
+		{%begin_pagination entries page%}
+		{% for entry in entries %}
+		<div class="post">
+				<h2 id="post-{{entry.id}}"><a href="/{{entry.get_absolute_url}}" rel="bookmark" title="Permanent Link to {{entry.title}}">{{entry.title}}</a></h2>
+				<br/>
+				<div class="entry">
+					{{entry.content|safe}}
+				</div>
+					<p class="postmetadata">
+					<small>{{entry.date|date:"Y/m/d H:i"}}&nbsp;|&nbsp;
+					posted in:<a href="/category/{{entry.category.slug}}">{{entry.category.name}}</a>|&nbsp;&nbsp;
+					Tags: {% for tag in entry.get_tags %}
+							{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+							{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+							{% endif %}
+						{% endfor %} 
+						|&nbsp;&nbsp;Comments:
+						<a href="/{{entry.link|escape}}#comments">{{entry.comments.count}}</a>
+						</small>
+					</p>
+			</div>
+
+		{%endfor%}
+
+		{%if entries%}
+			{%end_pagination%}
+		{%endif%}
+	{%else%}
+		<h2 class="center">Not Found</h2>
+	{%endif%}
+
+	</div>
+
+{% include "themes/google/sidebar.html" %}
+{% endblock %}

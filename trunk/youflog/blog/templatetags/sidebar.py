@@ -77,11 +77,11 @@ def get_tag_cloud(context):
     return {'tags':result}
 
 @register.inclusion_tag('readwall.html', takes_context = True)
-def get_reader_wall(context):
+def get_reader_wall(context,number=10):
     comments=cache.get_cache('sidebar:readerwall')
     if not comments:
         admin_email=Blog.get().email
-        sql="select count(email) as count,author,email,weburl from comments_comment where is_public=1 and email !='%s' group by email order by count desc limit 12"%(admin_email)
+        sql="select count(email) as count,author,email,weburl from comments_comment where is_public=1 and email !='%s' group by email order by count desc limit %d"%(admin_email,number)
         cursor = connection.cursor()
         cursor.execute(sql)
         rows=cursor.fetchall()

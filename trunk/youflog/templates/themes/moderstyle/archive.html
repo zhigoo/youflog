@@ -1,0 +1,56 @@
+{% extends "themes/moderstyle/base.html" %}
+{%load pagination %}
+
+{% block content %}
+{%if archtype == 'calendar'%}
+<h2 class="pagetitle">Archive for the {{year}}-{{month}}-{{day}} </h2>
+{%endif%}
+{%if archtype == 'category'%}
+	<h2 class="pagetitle">Archive for the {{category.name|escape}}  </h2>
+{%endif%}
+{%if archtype == 'archive'%}
+	<h2 class="pagetitle">Archive for the {{year}}-{{month}}  </h2>
+{%endif%}
+{%if archtype == 'tag'%}
+	<h2 class="pagetitle">Archive for the {{tag|escape}} </h2>
+{%endif%}
+
+{% if entries %}
+{% begin_pagination entries page %}
+	{%for post in entries%}
+	<div id="post-{{post.id}}" class="post">
+		<h2 class="title">
+			<a href="/{{ post.get_absolute_url|escape }}" title="Permanent Link to {{post.title|escape}}" rel="bookmark">
+			{%if post.sticky%}<b>[置顶]</b>{%endif%}{{post.title|escape}}
+			</a>
+		</h2>
+		
+		<div class="postdate">
+           <span>{{post.date|date:"Y/m/d H:i"}}></span> 
+           <span><a href="/{{postget_absolute_url|escape}}#comments" title="Comments on {{post.title}}">{{post.comments.in_public.count}} Comments</a></span>
+       </div>
+       
+       <div class="entry">
+       	{{post.excerpt_content|safe}}
+       </div>
+       
+        <div class="postmeta">
+    	Posted in {{post.category.name}} {% if post.tags%}| Tags: 
+		{% for tag in post.get_tags %}
+			{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+			{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+			{% endif %}
+		{% endfor %}
+		{%endif%}
+    </div>
+	</div>
+	{%endfor%}
+	<div class="navigation">
+		{% end_pagination %}
+	</div>
+
+{%else%}
+	<h2 class="center">Not Found</h2>
+	<p class="center">Sorry, but you are looking for something that isn't here.</p>
+{%endif%}
+{% endblock %}
