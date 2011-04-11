@@ -1,0 +1,63 @@
+{% extends "themes/default/base.html" %}
+{%load pagination %}
+
+{% block content %}
+
+	<div class="post">
+		{%if archtype == 'calendar'%}
+		<h3 class="title">Archive for the {{year}}-{{month}}-{{day}} </h3>
+		{%endif%}
+		{%if archtype == 'category'%}
+			<h3 class="title">Archive for the {{category.name|escape}} </h3>
+		{%endif%}
+		{%if archtype == 'archive'%}
+			<h3 class="title">Archive for the {{year}}-{{month}}</h3>
+		{%endif%}
+		{%if archtype == 'tag'%}
+			<h3 class="title">Archive for the {{tag|escape}} </h3>
+		{%endif%}
+	
+		<div class="content">
+			<ul id="archive">
+				{% if entries %}
+				{%begin_pagination entries page %}
+					{% for entry in entries %}
+						<li class="archive-post">
+							<h3><a href="/{{ entry.link|escape }}" rel="bookmark">{{entry.title|escape}}</a></h3>
+							<div class="excerpt">
+								{{entry.excerpt_content|safe}}
+							</div>
+							<div class="small">
+								<a href="/{{entry.get_absolute_url|escape}}#comments">{{entry.comments.count}} 条评论</a>
+							</div>
+							<div class="small">
+								{{entry.date|date:"Y/m/d H:i"}}| posted in: {{entry.category.name}}
+							</div>
+							<div class="small">Tags:
+								{% for tag in entry.get_tags %}
+									{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+									{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+									{% endif %}
+								{% endfor %}
+							</div>
+						</li>
+					{% endfor %}
+
+				{%else%}
+					<li class="archive-post">
+						<div class="small">
+							Sorry, no posts matched your criteria.
+						</div>
+					</li>
+
+				{%endif%}
+			</ul>
+		</div>
+
+		
+	</div>
+
+	{%if entries%}
+	{%end_pagination%}
+	{%endif%}
+{% endblock %}

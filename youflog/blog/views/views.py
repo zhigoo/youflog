@@ -84,7 +84,7 @@ def tag(request,tag):
         page=request.GET.get('page',1)
         tag = get_object_or_404(Tag, name =tag)
         entries=TaggedItem.objects.get_by_model(Entry, tag).order_by('-date')
-        response=render(request,'tag.html',{'entries':entries,'tag':tag,'page':page,'pagi_path': request.path})
+        response=render(request,'archive.html',{'archtype':'tag','entries':entries,'tag':tag,'page':page,'pagi_path': request.path})
         return response
     else:
         return HttpResponseRedirect('404.html')
@@ -96,7 +96,7 @@ def category(request,name):
             cat = Category.objects.get(slug=name)
             page=request.GET.get('page',1)
             entries=Entry.objects.get_posts().filter(category=cat)
-            return render(request,'category.html',{'entries':entries,'category':cat,'page':page})
+            return render(request,'archive.html',{'archtype':'category','entries':entries,'category':cat,'page':page})
     except:
         return HttpResponseRedirect('404.html')
 
@@ -104,7 +104,12 @@ def category(request,name):
 def archives(request,year,month):
     page=request.GET.get('page',1)
     posts=Entry.objects.get_post_by_date(year,month)
-    return render(request,'archives.html',{'entries':posts,'page':page,'year':year,'month':month})
+    return render(request,'archive.html',{'archtype':'archive','entries':posts,'page':page,'year':year,'month':month})
+
+def calendar(request,year,month,day):
+    page=request.GET.get('page',1)
+    posts=Entry.objects.get_post_by_day(year,month,day)
+    return render(request,'archive.html',{'archtype':'calendar','entries':posts,'page':page,'year':year,'month':month,'day':day})
 
 class CommentPostBadRequest(http.HttpResponseBadRequest):
    
@@ -202,11 +207,6 @@ def safecode(request):
     buf = cStringIO.StringIO()
     image.save(buf, 'gif') 
     return HttpResponse(buf.getvalue(),'image/gif')
-
-def calendar(request,year,month,day):
-    page=request.GET.get('page',1)
-    posts=Entry.objects.get_post_by_day(year,month,day)
-    return render(request,'archives.html',{'entries':posts,'page':page,'year':year,'month':month})
 
 from django.db.models import Q
 def search(request):

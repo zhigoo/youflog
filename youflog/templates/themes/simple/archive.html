@@ -1,0 +1,46 @@
+{% extends "themes/simple/base.html" %}
+{%load pagination %}
+
+{% block content %}
+
+	{% if entries %}
+	{%begin_pagination entries page %}
+	{%if archtype == 'calendar'%}
+		<div class="pagetitle">Archive for the {{year}}-{{month}}-{{day}} </div>
+	{%endif%}
+	{%if archtype == 'category'%}
+		<div class="pagetitle">Archive for the {{category.name|escape}} </div>
+	{%endif%}
+	{%if archtype == 'archive'%}
+		<div class="pagetitle">Archive for the {{year}}-{{month}} </div>
+	{%endif%}
+	{%if archtype == 'tag'%}
+		<div class="pagetitle">Archive for the {{tag|escape}} </div>
+	{%endif%}
+	
+		{% for entry in entries %}
+		<article class="post">
+			<h2><a href="/{{ entry.link|escape }}" rel="bookmark">{{entry.title|escape}}</a></h2>
+			<div class="pmeta">{{entry.date|date:"Y/m/d H:i"}} <span>&middot;</span> Posted in {{entry.category.name}}</div>
+			<div class="entry">
+				<p>{{entry.excerpt_content|safe}}</p>
+			</div>
+			<div class="ptags"><span class="comments"><a href="/{{entry.get_absolute_url|escape}}#comments">{{entry.comments.count}} Comments</a></span> 
+			Tags:
+				{% for tag in entry.get_tags %}
+					{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
+					{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
+					{% endif %}
+				{% endfor %}</div>
+		</article>
+	{%endfor%}
+	{%end_pagination%}
+
+	{%else%}
+
+		<h2>Not Found</h2>
+		<p>Sorry, but you are looking for something that isn't here.</p>
+
+	{%endif%}
+
+{%endblock%}
