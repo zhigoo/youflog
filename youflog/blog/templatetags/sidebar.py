@@ -104,14 +104,36 @@ def get_menus(context):
     return {'menus':pages,'current': current}
 
 @register.inclusion_tag('sidebar/calendar.html',takes_context=True)
-def get_calendar(context,year=date.today().year, month=date.today().month):
+def get_calendar(context,year=None, month=None):
+    if not year or not month:
+        if context.get('year'):
+            year = int(context.get('year'))
+        if context.get('month'):
+            month = int(context.get('month'))
+        if not year or not month:
+            date_month = datetime.today()
+            year, month = date_month.timetuple()[:2]
     try:
         from blog.templatetags.youflogCalendar import YouflogCalendar
     except ImportError:
         return {'calendar': '<p class="notice">Calendar is unavailable for Python<2.5.</p>'}
     
     calendar = YouflogCalendar()
-    return {'calendar':calendar.formatmonth(year, month)}
+    
+    current_month = datetime(year, month, 1)
+    dates = list(Entry.objects.dates('date', 'month'))
+    
+    if not current_month in dates:
+        dates.append(current_month)
+        dates.sort()
+    index = dates.index(current_month)
+
+    previous_month = index > 0 and dates[index - 1] or None
+    next_month = index != len(dates) - 1 and dates[index + 1] or None
+    
+    return {'next_month': next_month,
+            'previous_month': previous_month,
+            'calendar':calendar.formatmonth(year, month)}
 
 @register.inclusion_tag('sidebar/pingbacks.html', takes_context = True)
 def get_recent_pingbacks(context):
