@@ -34,29 +34,12 @@
 				{%endcomment%}
 				<div class="section">
 					<h3>Meta</h3>
-					<ul>
-						{% if request.user.is_authenticated %}
-						<li><a href="/admin">管理</a></li>
-						{%else%}
-						<li><a href="/admin">登录</a></li>
-						{%endif%}
-					</ul>
-					</ul>
+					{%get_meta_widget%}
 				</div><!-- .section -->
-
-
 			</div><!-- end #l-sidebar -->
-
 
 			<div id="sidebar2">
 
-				<div class="section">
-					<h3>RSS</h3>
-					<ul>
-						<li><a href="/feed">RSS Blog</a></li>
-						<li><a href="/feed/comments">RSS Comments</a></li>
-					</ul>
-				</div><!-- .section -->
 				<div class="section">
 					<h3>Categories</h3>
 					{% get_categories %}

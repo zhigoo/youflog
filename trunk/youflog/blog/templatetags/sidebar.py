@@ -139,3 +139,7 @@ def get_calendar(context,year=None, month=None):
 def get_recent_pingbacks(context):
     pingbacks = Pingback.objects.all().order_by('-date')[:15]
     return {'pingbacks': pingbacks}
+
+@register.inclusion_tag('sidebar/meta.html', takes_context = True)
+def get_meta_widget(context):
+    return {'user':context.get('request').user}
