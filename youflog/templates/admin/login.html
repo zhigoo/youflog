@@ -9,12 +9,12 @@
 
 <div id="login">
 {% if messages %}
-	<p class="message">
+	<div id="login_error">
     {% for message in messages %}
    {{ message }}
     {% endfor %}
 	<br>
-	</p>
+	</div>
 {% endif %}
 <form method="post" action="" id="loginform" name="loginform">
 	<p>

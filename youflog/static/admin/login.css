@@ -38,6 +38,7 @@ form .forgetmenot { font-weight: normal; float: left; margin-bottom: 0; }
 	cursor: pointer;
 	text-decoration: none;
 	margin-top: -3px;
+	border-color: #298CBA !important;
 	text-shadow: rgba(0,0,0,0.3) 0 -1px 0;
 }
 
@@ -92,7 +93,10 @@ h1 a {
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 }
-
+.error, #login #login_error {
+    background-color: #FFEBE8;
+    border-color: #CC0000;
+}
 #nav { margin: 0 0 0 8px; padding: 16px; }
 .login #nav a {
 color:#21759B !important;

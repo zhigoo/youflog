@@ -30,7 +30,7 @@ import logging
 def _login(request,username,password):
     ret=False
     if not username or not password:
-        messages.add_message(request, messages.INFO, 'username or password is null')
+        messages.add_message(request, messages.INFO, '错误：用户名或密码不能为空.')
         return ret
     user=authenticate(username=username,password=password)
     if user:
@@ -38,13 +38,14 @@ def _login(request,username,password):
             auth_login(request,user)
             ret=True
         else:
-            messages.add_message(request, messages.INFO, 'user is no active')
+            messages.add_message(request, messages.INFO, '错误：用户没有激活')
     else:
-        messages.add_message(request, messages.INFO, 'username or password wrong!')
+        messages.add_message(request, messages.INFO, '错误：用户名或密码错误!')
     return ret
 
 def logout(request):
     auth_logout(request)
+    messages.add_message(request, messages.INFO, '您已退出.')
     return HttpResponseRedirect('/accounts/login')
 
 def login(request):
