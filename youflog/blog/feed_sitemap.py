@@ -4,12 +4,11 @@ from django.contrib.sites.models import Site
 from django.utils.feedgenerator import Atom1Feed
 from blog.models import Blog,Entry,Comment
 
-g_blog = Blog.get()
 domain = Site.objects.get_current().domain
 
 class LatestEntryFeed(Feed):
-    title = g_blog.title
-    description = g_blog.subtitle
+    title = Blog.get().title
+    description = Blog.get().subtitle
     link = domain
     
     description_template = 'feed/post_content.html'
@@ -27,8 +26,8 @@ class LatestEntryFeed(Feed):
         return "/%s" %(item.get_absolute_url())
     
 class LatestComments(Feed):
-    title = g_blog.title
-    description = g_blog.subtitle
+    title = Blog.get().title
+    description = Blog.get().subtitle
     link = domain
     
     def items(self):

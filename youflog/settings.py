@@ -5,6 +5,7 @@ import os.path
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 HERE = os.path.dirname(os.path.abspath(__file__))
+YOUFLOG_VERSION = 0.4
 ADMINS = (
      #('youflog', 'xxxx@gmail.com'),
 )
@@ -69,7 +70,8 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'blog.middleware.rpc.RpcMiddleware',
+    'blog.middleware.youflog.RpcMiddleware',
+    'blog.middleware.youflog.VersionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
