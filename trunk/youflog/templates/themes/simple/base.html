@@ -27,12 +27,25 @@
 				</li>
 				{% get_menus %}
 			</ul>
-			
+			{%comment%}
 			<form method="get" id="search" action="/search/">
 			<input type="text" name="s" value="Search Keywords" onblur="if(this.value=='') this.value='Search Keywords';" onfocus="if(this.value=='Search Keywords') this.value='';" id="s" />
 			<input type="submit" value="Search" id="searchsubmit" />
 			</form>
-			
+			{%endcomment%}
+			<div id="ads" style="float:right;">
+			<script type="text/javascript"><!--
+			google_ad_client = "pub-8325911329891044";
+			/* 468x60, 创建于 10-11-20 */
+			google_ad_slot = "8955502630";
+			google_ad_width = 468;
+			google_ad_height = 60;
+			//-->
+			</script>
+			<script type="text/javascript"
+			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			</script>
+			</div>
 		</nav>
 		
 	</header>

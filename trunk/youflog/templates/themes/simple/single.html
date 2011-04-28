@@ -16,7 +16,7 @@
 			<h2><a href="/{{ entry.get_absolute_url|escape }}" rel="bookmark">{{ entry.title|escape }}</a></h2>
 			<div class="pmeta">{{entry.date|date:"Y-m-d"}} <span>&middot;</span> Posted in <a href="/category/{{entry.category.slug}}">{{entry.category.name}}</a></div>
 			<div class="entry">
-			  {{ entry.content|safe}}
+			  {{ entry.content|safe|wordwrap:68}}
 			</div>
 			
 			<div class="prev_next">
