@@ -9,7 +9,7 @@
 				<div class="form-wrap">
 				<h3>添加链接</h3>
 				<div id="ajax-response"></div>
-				<form name="addcat"  method="post" action="/admin/link/add">
+				<form name="addcat"  method="post" action="/admin/link/add">{% csrf_token %}
 				<input type="hidden" name="type" value="add">
 				<div class="form-field form-required">
 					<label for="text">链接名称</label>

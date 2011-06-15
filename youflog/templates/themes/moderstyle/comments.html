@@ -12,6 +12,7 @@
 	<small><a style="display: none;" href="#respond" id="cancel-comment-reply-link" rel="nofollow">Click Here to Cancel reply</a></small>
 	</div>
 	<form id="commentform" action="/postcomment" method="post" >
+	{% csrf_token %}
 		<p>
 			{{commentform.author}}
 			<label for="author"><small>Name (required)</small></label>

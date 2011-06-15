@@ -27,7 +27,7 @@ $(document).ready(function() {
  						  
  						</div>
  						<p class="textright"></p>
- 						<form method="post" action="/admin/quick_post" id="quick_post">
+ 						<form method="post" action="/admin/quick_post" id="quick_post">{% csrf_token %}
  							<h4 id="quick-post-title"><label for="title">标题</label></h4>
  							<div class="input-text-wrap">
 								<input type="text" value="" autocomplete="off" tabindex="1" id="title" name="title">
@@ -122,7 +122,7 @@ $(document).ready(function() {
 						</div>
 					</div>
 					<div id="respond" class="hidden">
-					<form action="/admin/replycomment" method="post">
+					<form action="/admin/replycomment" method="post">{% csrf_token %}
 						<input type="hidden" id="id_content_type" value="blog.entry" name="content_type"/>
 						<input type="hidden" id="id_object_pk" value="0" name="object_pk"/>
 						<input type="hidden" id="id_parent_id" value="0" name="parent_id"/>

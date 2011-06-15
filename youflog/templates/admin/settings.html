@@ -11,7 +11,7 @@
 		{%endfor%}
 	</div>
 	{%endif%}
-	<form id="settings" action="/admin/settings/save" method="post">
+	<form id="settings" action="/admin/settings/save" method="post">{% csrf_token %}
 		<table class="form-table">
 			<tbody>
 				<tr valign="top">

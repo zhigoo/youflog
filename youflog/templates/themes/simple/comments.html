@@ -17,6 +17,7 @@
 		<small><a rel="nofollow" id="cancel-comment-reply-link" href="#respond" style="display:none;">点击这里取消回复</a></small>
 	</div>
 <form action="/postcomment" method="post" id="commentform">
+{% csrf_token %}
 	<p>{{commentform.author}}
 	<label for="author">Name <b style='color:red'>*</b></label></p>
 	

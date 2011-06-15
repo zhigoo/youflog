@@ -5,7 +5,7 @@
 	<div id="col-container">
 		<div id="col-right">
 		<div class="col-wrap">
-		<form id="posts-filter" action="/admin/tag/delete" method="post">
+		<form id="posts-filter" action="/admin/tag/delete" method="post">{% csrf_token %}
 		<div class="clear"></div>
 		<table class="widefat tag fixed" cellspacing="0">
 			<thead>

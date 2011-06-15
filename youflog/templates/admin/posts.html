@@ -3,7 +3,7 @@
 {% block content %}
 <div class="wrap">
  	<h2>编辑文章</h2>
- 	<form id="posts-filter" action="/admin/post_delete" method="post">
+ 	<form id="posts-filter" action="/admin/post_delete" method="post">{% csrf_token %}
  		<ul class="subsubsub">
  			<li>
  				<a href="/admin/allposts">全部<span class="count">({{all_count}})</span></a>|

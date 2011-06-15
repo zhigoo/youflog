@@ -3,7 +3,7 @@
 {% block content %}
 <div class="wrap">
  	<h2>编辑页面</h2>
- 	<form id="posts-filter" action="/admin/post_delete" method="post">
+ 	<form id="posts-filter" action="/admin/post_delete" method="post">{% csrf_token %}
  		<ul class="subsubsub">
  			<li>
  				<a href="?post_status=all">

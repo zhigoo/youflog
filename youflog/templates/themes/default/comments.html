@@ -8,6 +8,7 @@
 	{% if entry.allow_comment %}
 	<div id="respond">
 	<form id="commentform" action="/postcomment" method="post" onsubmit="return post()">
+	{% csrf_token %}
 		<div class="body">
 			<div class="header">
 				<h3 class="title">
