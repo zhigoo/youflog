@@ -3,7 +3,7 @@
 {% block content %}
 <div class="wrap">
  	<h2>编辑评论</h2>
- 	<form method="post" action="/admin/save_comment">
+ 	<form method="post" action="/admin/save_comment">{% csrf_token %}
  	<input type="hidden" name="id" value="{{comment.id}}"/>
  	<div class="metabox-holder">
  		<div class="inner-sidebar" id="side-info-column">

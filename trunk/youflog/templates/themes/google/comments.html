@@ -11,6 +11,7 @@
 <small><a rel="nofollow" id="cancel-comment-reply-link" href="#respond" style="display:none;">Click here to cancel reply.</a></small>
 </div>
 <form action="/postcomment" method="post" id="commentform" onsubmit="return post()">
+{% csrf_token %}
 	{{ commentform.content_type }}
     {{ commentform.object_pk }}
     {{ commentform.parent_id }}

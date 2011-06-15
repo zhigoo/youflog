@@ -3,7 +3,7 @@
 <div id="profile-page" class="wrap">
 	<h2>配置</h2>
 	
-	<form id="your-profile" method="post" action="/admin/saveprofile">
+	<form id="your-profile" method="post" action="/admin/saveprofile">{% csrf_token %}
 		<h3>名称</h3>
 		<table class="form-table">
 			<tbody>

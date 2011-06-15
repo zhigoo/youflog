@@ -13,7 +13,7 @@
 		</p>
 	</div>
 	{%endif%}
-	<form action="/admin/submit_post" method="post">
+	<form action="/admin/submit_post" method="post">{% csrf_token %}
 		<input type="hidden" name="action" value="{{action}}"/>
 		<input type="hidden" name="postid" value="{{entry.id}}"/>
 		<input type="hidden" value="{{entry.published}}" name="published" />

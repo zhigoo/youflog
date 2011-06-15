@@ -9,7 +9,7 @@
 				<div class="form-wrap">
 				<h3>添加分类目录</h3>
 				<div id="ajax-response"></div>
-				<form name="addcat"  method="post" action="/admin/category/add">
+				<form name="addcat"  method="post" action="/admin/category/add">{% csrf_token %}
 				<input type="hidden" name="type" value="edit">
 				<input type="hidden" name="id" value="{{cat.id}}">
 				<div class="form-field form-required">

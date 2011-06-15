@@ -18,7 +18,7 @@
 				<div class="form-wrap">
 				<h3>添加分类目录</h3>
 				<div id="ajax-response"></div>
-				<form name="addcat"  method="post" action="/admin/category/add">
+				<form name="addcat"  method="post" action="/admin/category/add">{% csrf_token %}
 				<input type="hidden" name="type" value="add">
 				<div class="form-field form-required">
 					<label for="name">分类目录名</label>

@@ -17,6 +17,7 @@
 	</div>
 {% endif %}
 <form method="post" action="" id="loginform" name="loginform">
+{% csrf_token %}
 	<p>
 		<label>用户名<br>
 		<input type="text" tabindex="10" size="20" value="" class="input" id="user_login" name="user"></label>

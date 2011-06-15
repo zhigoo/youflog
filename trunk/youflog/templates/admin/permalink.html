@@ -12,7 +12,7 @@
 		</div>
 		{%endif%}
 		
-	<form method="post" action="/admin/save_permalink">
+	<form method="post" action="/admin/save_permalink">{% csrf_token %}
 		<p>Youflog 允许您更改默认的链接形式，以此提高 <abbr title="Universal Resource Locator">URL</abbr>s 的可读性和对搜索引擎的友好程度。
 		<a href="http://codex.wordpress.org/Using_Permalinks">参考</a>。</p>
 		<h3>常规设置</h3>
