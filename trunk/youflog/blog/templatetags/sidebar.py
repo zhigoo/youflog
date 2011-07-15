@@ -1,4 +1,5 @@
-#from django.core.cache import cache
+#!/usr/bin/env python
+# *_* encoding=utf-8*_*
 from django.template import Library
 from django import template
 from django.shortcuts import get_object_or_404
@@ -16,24 +17,33 @@ register = Library()
 
 @register.inclusion_tag('sidebar/recent_posts.html', takes_context = True)
 def get_recent_posts(context,number=5):
-    posts=Entry.objects.get_posts()
-    if number > len(posts):
-        number = len(posts)
+    posts = cache.get_cache('recent_posts')
+    if not posts:
+        posts=Entry.objects.get_posts()
+        cache.set_cache('recent_posts',posts)
+        if number > len(posts):
+            number = len(posts)
     return {'recentposts':posts[:number]}
 
 @register.inclusion_tag('sidebar/hot_posts.html', takes_context = True)
 def get_popular_posts(context,number=5):
-    posts=Entry.objects.get_posts().order_by('-readtimes')
-    if number > len(posts):
-        number = len(posts)
+    posts = cache.get_cache('popular_posts')
+    if not posts:
+        posts=Entry.objects.get_posts().order_by('-readtimes')
+        cache.set_cache('popular_posts',posts)
+        if number > len(posts):
+            number = len(posts)
     return {'hotposts':posts[:number]}
 
 @register.inclusion_tag('sidebar/random_posts.html', takes_context = True)
 def get_random_posts(context,number=5):
-    entries = Entry.objects.get_posts()
-    if number > len(entries):
-        number = len(entries)
-    return {'randomposts':sample(entries,number)}
+    posts = cache.get_cache('random_posts')
+    if not posts:
+        posts = Entry.objects.get_posts()
+        cache.set_cache('random_posts',posts)
+        if number > len(posts):
+            number = len(posts)
+    return {'randomposts':sample(posts,number)}
 
 @register.inclusion_tag('sidebar/recent_comments.html', takes_context = True)
 def get_recent_comment(context,number=10):
@@ -137,7 +147,10 @@ def get_calendar(context,year=None, month=None):
 
 @register.inclusion_tag('sidebar/pingbacks.html', takes_context = True)
 def get_recent_pingbacks(context):
-    pingbacks = Pingback.objects.all().order_by('-date')[:15]
+    pingbacks = cache.get_cache('recent_pingback')
+    if not pingbacks:
+        pingbacks = Pingback.objects.all().order_by('-date')[:15]
+        cache.set_cache('recent_pingback',pingbacks)
     return {'pingbacks': pingbacks}
 
 @register.inclusion_tag('sidebar/meta.html', takes_context = True)
