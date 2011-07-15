@@ -72,7 +72,9 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'blog.middleware.youflog.RpcMiddleware',
     'blog.middleware.youflog.VersionMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.csrf.CsrfResponseMiddleware',
@@ -109,6 +111,19 @@ INSTALLED_APPS = (
     'tagging',
     'pingback',
 )
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': '127.0.0.1:11211',
+        'TIMEOUT':500,
+        'OPTIONS':{
+            'binary':1,
+            'tcp_nodelay':True,
+            'ketama':True
+        },
+    }
+}
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
