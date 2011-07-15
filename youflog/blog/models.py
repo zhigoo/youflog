@@ -186,6 +186,8 @@ class Entry(models.Model):
         super(Entry,self).save()
        
         cache.delete_cache('index_posts')
+        cache.delete_cache('recent_posts')
+        cache.delete_cache('random_posts')
         cache.delete_cache('sidebar:categories')
         cache.delete_cache('sidebar:archives')
         

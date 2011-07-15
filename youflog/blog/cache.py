@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# *_* encoding=utf-8*_*
 from django.core.cache import cache
 from settings import CACHE_PREFIX
 
