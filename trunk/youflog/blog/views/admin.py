@@ -14,6 +14,7 @@ from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login ,logout as auth_logout
 from django.contrib.auth.models import User
+from django.utils import simplejson
 from datetime import datetime
 from blog.theme import ThemeIterator
 from blog.forms import SettingForm
@@ -24,6 +25,10 @@ from settings import DATABASES
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 import blog.comments.signals as signals
+try:
+    from django.views.decorators.csrf import csrf_exempt
+except ImportError:
+    from django.contrib.csrf.middleware import csrf_exempt
 import logging
 
 #login process
@@ -311,31 +316,35 @@ def save_comment(request):
     comment.save()
     
     return HttpResponseRedirect('/admin/comments')
-    
+
+@csrf_exempt
 @login_required
 def flag_comment_for_spam(request,id):
     approve=request.GET.get('approve',0)
-    currpath = request.GET.get('currpath')
-    comment=get_object_or_404(Comment,id=id)
-    if int(approve) == 0:
-        comment.is_public=False
-    else:
-        comment.is_public=True
-    comment.save()
-    if currpath:
-        return HttpResponseRedirect(currpath)
-    else:
-        return HttpResponseRedirect('/admin/comments')
-    
+    try:
+        comment=get_object_or_404(Comment,id=id)
+        if int(approve) == 0:
+            comment.is_public=False
+        else:
+            comment.is_public=True
+        comment.save()
+        json = simplejson.dumps((True))
+    except:
+        json = simplejson.dumps((False,'error'))
+    return HttpResponse(json)
+  
+@csrf_exempt  
 @login_required
 def delete_single_comment(request,id):
-    current_path = request.GET.get('currpath')
-    comment=get_object_or_404(Comment,id=id)
-    comment.delete()
-    if current_path:
-        return HttpResponseRedirect(current_path)
-    else:
-        return HttpResponseRedirect('/admin/comments')
+    try:
+        comment=get_object_or_404(Comment,id=id)
+        comment.delete()
+        msg="delete success"
+        json = simplejson.dumps((True,msg))
+    except:
+        msg="comment not exitst!"
+        json = simplejson.dumps((False,msg))
+    return HttpResponse(json)
 
 @login_required
 def edit_comment(request,id):

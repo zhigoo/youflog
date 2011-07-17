@@ -2,6 +2,7 @@
 {% load pagination utils%}
 {% block content %}
 <script type="text/javascript" src="/static/admin/reply.js"></script>
+<script type="text/javascript" src="/static/admin/admin.js"></script>
 <div class="wrap">
  	<h2>编辑评论</h2>
  	<form id="posts-filter" action="/admin/comment_delete" method="post">{% csrf_token %}
@@ -42,7 +43,7 @@
 				<th>评论</th>
 				<th>文章</th>
 			</tfoot>
-			<tbody>
+			<tbody id="comment_table">
          {%if comments%}
          	{% begin_pagination comments page 15%}
 	         {%for comment in comments%}
@@ -74,13 +75,13 @@
 	             
 	             <div class="row-actions">
 	             	{% if comment.is_public%}
-	             	<span class="spam"><a title="标记这个评论为垃圾评论" href="/admin/flag_spam_comment/{{comment.id}}?approve=0&currpath={{request.path}}">垃圾评论</a></span>
+	             	<span class="spam"><a title="标记这个评论为垃圾评论" href="#" onclick="admin.comment_flag_spam({{comment.id}},0)">垃圾评论</a></span>
 	             	{%else%}
-	             	<span class="approve"><a title="获准这条评论" href="/admin/flag_spam_comment/{{comment.id}}?approve=1&currpath={{request.path}}">获准</a></span>
+	             	<span class="approve"><a title="获准这条评论" href="#" onclick="admin.comment_flag_spam({{comment.id}},1)">获准</a></span>
 	             	{%endif%}
-	             	<span class="delete">| <a href="/admin/del_comment/{{comment.id}}?currpath={{request.path}}">删除</a></span>
+	             	<span class="delete">| <a href="#" onclick="admin.del_comment({{comment.id}})">删除</a></span>
 	             	<span class="edit">|<a href="/admin/edit_comment/{{comment.id}}"> 编辑评论</a></span>
-	             	<span class="reply">| <a href="#comment-{{comment.id}}">回复</a></span>
+	             	<!-- <span class="reply">| <a href="#comment-{{comment.id}}" >回复</a></span> -->
 	             </div>
 	             
 	             </td>

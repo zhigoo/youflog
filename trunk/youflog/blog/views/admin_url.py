@@ -23,7 +23,7 @@ urlpatterns = patterns('',
     url(r'^admin/spam_comment',admin.spam_comment,name='spam comment'),
     url(r'^admin/comment_delete',admin.comment_delete,name="delete comment"), #批量删除评论信息
     url(r'^admin/flag_spam_comment/(?P<id>\d+)$',admin.flag_comment_for_spam),
-    url(r'^admin/del_comment/(?P<id>\d+)$',admin.delete_single_comment),
+    url(r'^admin/del_comment/(?P<id>\d+)',admin.delete_single_comment,name="del_single_comment"),
     url(r'^admin/edit_comment/(?P<id>\d+)$',admin.edit_comment),
     url(r'^admin/save_comment$',admin.save_comment),
     url(r'^admin/replycomment$',admin.reply_comment,name="reply comment"),
