@@ -259,6 +259,18 @@ section {
 .entry {
   text-align: justify;
 }
+.tags a{
+	background: none repeat scroll 0 0 #56C750;
+	color:#FFFFFF;
+	border-radius:4px 4px 4px 4px;
+	padding:2px 5px;
+	margin-bottom:5px;
+	text-decoration:none;
+}
+.tags a:hover{
+	background: none repeat scroll 0 0 green;
+	color:#FFFFFF;
+}
 #content .entry h2,
 #content .entry h3,
 #content .entry h4,
