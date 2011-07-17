@@ -14,12 +14,12 @@
 				<p>{{entry.excerpt_content|safe}}</p>
 			</div>
 			<div class="ptags">
-			<span class="comments"><a href="/{{entry.link|escape}}#comments">{{entry.comments.count}} Comments</a></span> 
-			Tags: {% for tag in entry.get_tags %}
-						{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
-						{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
-						{% endif %}
-					{% endfor %} 
+				<span class="comments"><a href="/{{entry.link|escape}}#comments">{{entry.comments.count}} Comments</a></span> 
+				<div class="tags">
+					Tags: {% for tag in entry.get_tags %}
+							<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>
+						{% endfor %}
+				</div>
 			</div>
 		</article>
 	{%endfor%}

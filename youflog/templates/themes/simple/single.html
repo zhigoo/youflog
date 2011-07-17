@@ -49,10 +49,8 @@
 				</span>
 		</div>
 			
-			<div class="ptags">Tags: {% for tag in entry.get_tags %}
-						{% if forloop.last %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>. 
-						{% else %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>, 
-						{% endif %}
+			<div class="tags">Tags: {% for tag in entry.get_tags %}
+						<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>
 					{% endfor %} </div>
 		</article>
 
