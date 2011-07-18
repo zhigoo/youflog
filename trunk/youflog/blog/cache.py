@@ -13,3 +13,6 @@ def set_cache(key,value,timeout=600):
     
 def delete_cache(key):
     cache.delete(get_cache_key(key))
+    
+def clear():
+    cache.clear()

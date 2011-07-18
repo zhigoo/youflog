@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 # *_* encoding=utf-8*_*
-import blog.cache as cache
-from blog.models import Entry,Comment,Link,Category,OptionSet,Blog,UserProfile
-from utils.utils import render_response
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import force_unicode
 from django.http import HttpResponseRedirect
@@ -16,15 +13,17 @@ from django.contrib.auth import authenticate, login as auth_login ,logout as aut
 from django.contrib.auth.models import User
 from django.utils import simplejson
 from datetime import datetime
-from blog.theme import ThemeIterator
-from blog.forms import SettingForm
-from settings import MEDIA_ROOT
+from settings import STATIC_ROOT,MEDIA_ROOT,DATABASES
 from os.path import isdir, dirname
 from tagging.models import Tag
-from settings import DATABASES
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 import blog.comments.signals as signals
+import blog.cache as cache
+from blog.models import Entry,Comment,Link,Category,OptionSet,Blog,UserProfile
+from blog.theme import ThemeIterator
+from blog.forms import SettingForm
+from utils.utils import render_response
 try:
     from django.views.decorators.csrf import csrf_exempt
 except ImportError:
@@ -257,12 +256,17 @@ def submit_post(request):
         
     return render_response(request,"admin/post.html",ctx)
 
+@csrf_exempt
 @login_required
 def delpost(request):
-    id=request.GET.get('id')
-    entry=get_object_or_404(Entry,id=id)
-    entry.delete()
-    return HttpResponseRedirect('/admin/allposts') 
+    id=request.POST.get('id')
+    try:
+        entry=get_object_or_404(Entry,id=id)
+        entry.delete()
+        json = simplejson.dumps((True,"post delete success"))
+    except:
+        json = simplejson.dumps((False,"post can not found"))
+    return HttpResponse(json) 
 
 @login_required
 def addPage(request):
@@ -672,3 +676,14 @@ def saveprofile(request):
     profile.save()
     user.save()
     return render_response(request,'admin/profile.html',{'user':user})
+
+@login_required
+def clearCache(request):
+    cache.clear()
+    import os
+    avator_path=STATIC_ROOT+"/avator/"
+    paths = os.listdir(avator_path)
+    for path in paths:
+        filePath = os.path.join( avator_path, path)
+        os.remove(filePath)
+    return HttpResponseRedirect("/admin/media")

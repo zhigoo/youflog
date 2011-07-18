@@ -1,6 +1,7 @@
 {% extends "admin/base.html" %}
 {% load pagination %}
 {% block content %}
+<script type="text/javascript" src="/static/admin/admin.js"></script>
 <div class="wrap">
  	<h2>编辑文章</h2>
  	<form id="posts-filter" action="/admin/post_delete" method="post">{% csrf_token %}
@@ -82,7 +83,7 @@
               	</strong>
               	<div class="row-actions">
 	              	<span> <a href="/admin/editpost/{{entry.id}}?entrytype=post" title="Edit &quot;{{entry.title}}&quot;">编辑</a></span>
-	              	<span class="delete">| <a href="/admin/delpost?id={{entry.id}}">删除</a></span>
+	              	<span class="delete">| <a href="#" onclick="admin.del_post({{entry.id}})">删除</a></span>
 	              	{%if entry.published%}
 	              	<span class="editor">| 
               			<a target="_blank" href="/{{entry.get_absolute_url}}" title="{{entry.title}}">浏览</a>
