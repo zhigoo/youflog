@@ -54,6 +54,7 @@ urlpatterns = patterns('',
     
     #media
     url(r'^admin/media$',admin.media,name='show all media'),
+    url(r'^admin/clearcache',admin.clearCache,name='clear_cache'),
     
     #login logout
     url(r'^accounts/login', admin.login,name="login"), #登录
