@@ -685,5 +685,6 @@ def clearCache(request):
     paths = os.listdir(avator_path)
     for path in paths:
         filePath = os.path.join( avator_path, path)
-        os.remove(filePath)
+        if os.path.isfile(filePath):
+            os.remove(filePath)
     return HttpResponseRedirect("/admin/media")
