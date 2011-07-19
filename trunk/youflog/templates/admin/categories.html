@@ -27,9 +27,20 @@
 				</div>
 				
 				<div class="form-field">
-					<label for="slug">分类目录别名</label>
+					<label for="slug">slug</label>
 					<input name="slug" id="slug" value="" size="40" type="text">
-				    <p>“别名” 是URL友好的另外一个名称。它通常为小写并且只能包含字母，数字和连字符。</p>
+				    <p>“slug” 是URL友好的另外一个名称。它通常为小写并且只能包含字母，数字和连字符。</p>
+				</div>
+				
+				<div class="form-field">
+					<label for="category_parent">分类目录上级</label>
+					<select class="postform" id="category_parent" name="category_parent">
+						<option value="0">无</option>
+						{% for cate in categories%}
+						<option value="{{cate.id}}" class="level-{{cate.id}}" {%ifequal cate.id cat.parent_id%}selected='selected'{%endifequal%}>{{cate.name}}</option>
+						{%endfor%}
+					</select>
+					<p>分类目录，和标签不同，它可以有层级关系。你可以有一个音乐的分类目录，在这个目录下面你可以创建流行或者古典的子目录。完全自由。</p>
 				</div>
 				
 				<div class="form-field">
@@ -37,7 +48,7 @@
 				    <textarea cols="40" rows="5" id="desc" name="desc"></textarea>
 				    <p>描述不一定会被显示，有的主题会显示它。</p>
 				</div>
-				<p class="submit"><input class="button" name="submit" value="添加分类目录" type="submit"></p>
+				<p class="submit"><input class="button-primary" name="submit" value="添加分类目录" type="submit"></p>
 				</form></div>
 				
 			</div>
