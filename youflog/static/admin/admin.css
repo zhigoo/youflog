@@ -148,6 +148,9 @@ vertical-align:top;
 .tablenav select[name="action"], .tablenav select[name="action2"] {
 width:120px;
 }
+select[name="category_parent"]{
+width:240px;
+}
 #dashboard-widgets h4 {
 font-family:Georgia,"Times New Roman","Bitstream Charter",Times,serif;
 font-size:13px;

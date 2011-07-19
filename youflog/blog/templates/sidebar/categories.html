@@ -1,7 +1,3 @@
-{% if categories %}
-	{%for cate in categories%}
-	<li class="cat-item">
-		<a href="/category/{{cate.slug}}">{{cate.name}}</a>({{cate.count}})
-	</li>
-	{%endfor%}
-{% endif %}
+{%load sidebar%}
+
+{%get_category_list for categories%}

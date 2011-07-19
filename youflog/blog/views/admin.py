@@ -162,9 +162,8 @@ def edit_post(request,id):
 def post_delete(request):
     try:
         allchecks = request.POST.getlist("checks")
-        for id in allchecks:
-            entry = Entry.objects.get(id=id)
-            entry.delete()
+        idstring = ','.join(allchecks)  
+        Entry.objects.extra(where=['id IN ('+ idstring +')']).delete()
     finally:
         return HttpResponseRedirect('/admin/allposts')
     
@@ -360,9 +359,8 @@ def comment_delete(request):
     current_path = request.POST.get('currpath')
     try:
         allchecks = request.POST.getlist("checks")
-        for id in allchecks:
-            c = Comment.objects.get(id=id)
-            c.delete()
+        idstring = ','.join(allchecks)  
+        Comment.objects.extra(where=['id IN ('+ idstring +')']).delete()
     finally:
         if current_path:
             return HttpResponseRedirect(current_path)
@@ -407,32 +405,37 @@ def categories(request):
     return render_response(request,'admin/categories.html',{'categories':categories,'page':page})
 
 @login_required
+@require_POST
 def addCategory(request):
-    if request.method=='POST':
-        name = request.POST['name']
-        slug = request.POST['slug']
-        desc = request.POST['desc']
-        type = request.POST['type']
-        if type and type == 'add':
-            try:
-                cats=Category.objects.filter(name=name)
-                if cats.count() >= 1:
-                    messages.add_message(request,messages.INFO,'categry [%s] already exits!'%(name))
-                else:
-                    cat = Category(name=name,slug=slug,desc=desc)
-                    cat.save()
-                    messages.add_message(request,messages.INFO,'categry [%s] save ok!'%(name))
-            except:
-                pass
-                
-        elif type and type == 'edit':
-            id = request.POST.get('id','')
-            cat = Category.objects.get(id=id)
-            cat.name=name
-            cat.slug=slug
-            cat.desc=desc
-            cat.save()
-        return HttpResponseRedirect('/admin/categories')
+    name = request.POST['name']
+    slug = request.POST['slug']
+    desc = request.POST['desc']
+    type = request.POST['type']
+    pid = request.POST['category_parent']
+    if pid == '0':
+        pid = None
+    if type and type == 'add':
+        try:
+            cats=Category.objects.filter(name=name)
+            print cats
+            if cats.count() >= 1:
+                messages.add_message(request,messages.INFO,'categry [%s] already exits!'%(name))
+            else:
+                cat = Category(name=name,slug=slug,desc=desc,parent_id=pid)
+                cat.save()
+                messages.add_message(request,messages.INFO,'categry [%s] save ok!'%(name))
+        except Exception as e:
+            print 'exception:',e
+    elif type and type == 'edit':
+        id = request.POST.get('id','')
+        print 'update:',pid
+        cat = Category.objects.get(id=id)
+        cat.name=name
+        cat.slug=slug
+        cat.desc=desc
+        cat.parent_id = pid
+        cat.save()
+    return HttpResponseRedirect('/admin/categories')
 @login_required
 def editCategory(request,id):
     page=request.GET.get('page',1)
@@ -445,16 +448,13 @@ def editCategory(request,id):
     return render_response(request,'admin/category.html',{'cat':cat,'categories':categories,'page':page})
 
 @login_required
+@require_POST
 def deleteCategory(request):
-    if request.method=='POST':
-        action = request.POST.get('action','')
-        checks = request.POST.getlist('checks')
-        if checks or action == 'delete':
-            for id in checks:
-                if id:
-                    cat = Category.objects.get(id=id)
-                    cat.delete()
-        return HttpResponseRedirect('/admin/categories')
+    ids = request.POST.getlist('checks')
+    idstring = ','.join(ids)
+    Category.objects.extra(where=['id IN ('+ idstring +')']).delete()
+    cache.delete_cache('sidebar:categories')
+    return HttpResponseRedirect('/admin/categories')
     
 def links(request):
     page = request.GET.get('page',1)
@@ -462,39 +462,35 @@ def links(request):
     return render_response(request,'admin/links.html',{'links':links,'page':page})
 
 @login_required
+@require_POST
 def addLink(request):
-    if request.method=='POST':
-        type= request.POST.get('type','add')
-        text = request.POST.get('text','')
-        href = request.POST.get('href','http://www.iyouf.info')
-        if not href.startswith('http://'):
-            href = 'http://'+href
-        comment = request.POST.get('comment','')
-        if type and type == 'add':
-            link=Link(text=text,href=href,comment=comment)
-            link.save()
-            cache.delete_cache('sidebar:links')
-        else:
-            id=request.POST.get('id','')
-            link=Link.objects.get(id=id)
-            link.text=text
-            link.href=href
-            link.comment=comment
-            link.save()
-            cache.delete_cache('sidebar:links')
+    type= request.POST.get('type','add')
+    text = request.POST.get('text','')
+    href = request.POST.get('href','http://www.iyouf.info')
+    if not href.startswith('http://'):
+        href = 'http://'+href
+    comment = request.POST.get('comment','')
+    if type and type == 'add':
+        link=Link(text=text,href=href,comment=comment)
+        link.save()
+    else:
+        id=request.POST.get('id','')
+        link=Link.objects.get(id=id)
+        link.text=text
+        link.href=href
+        link.comment=comment
+        link.save()
     return HttpResponseRedirect('/admin/links')
 
 @login_required
+@require_POST
 def deleteLink(request):
-    if request.method=='POST':
-        action = request.POST.get('action','')
-        checks = request.POST.getlist('checks')
-        if checks or action=='delete':
-            for id in checks:
-                link=Link.objects.get(id=id)
-                link.delete()
-                cache.delete_cache('sidebar:links')
-        return HttpResponseRedirect('/admin/links')
+    action = request.POST.get('action','')
+    checks = request.POST.getlist('checks')
+    idstring = ','.join(checks)  
+    Link.objects.extra(where=['id IN ('+ idstring +')']).delete()  
+    cache.delete_cache('sidebar:links')
+    return HttpResponseRedirect('/admin/links')
 
 @login_required
 def editlink(request,id):
@@ -516,31 +512,31 @@ def settings(request):
     return render_response(request,'admin/settings.html',{'themes':themes,'site':site,'form':form})
 
 @login_required
+@require_POST
 def save_setting(request):
-    if request.method=='POST':
-        data=request.POST.copy()
-        form=SettingForm(data=data)
-        
-        blog=form.get_form_object()
-       
-        theme = request.POST.get('theme','default')
-        domain = request.POST.get('domain','')
-        if domain.startswith('http://'):
-            domain=domain[7:]
-        if domain.endswith('/'):
-            domain=domain[:-1]
-        try:    
-            blog.theme_name=theme
-            blog.save()
-            #site info
-            site = Site.objects.get_current()
-            site.domain=domain
-            site.name=blog.title
-            site.save()
-            messages.add_message(request,messages.INFO,'setting save ok!')
-        except:
-            messages.add_message(request,messages.INFO,'setting save failure!')
-        return HttpResponseRedirect('/admin/settings')
+    data=request.POST.copy()
+    form=SettingForm(data=data)
+    
+    blog=form.get_form_object()
+   
+    theme = request.POST.get('theme','default')
+    domain = request.POST.get('domain','')
+    if domain.startswith('http://'):
+        domain=domain[7:]
+    if domain.endswith('/'):
+        domain=domain[:-1]
+    try:    
+        blog.theme_name=theme
+        blog.save()
+        #site info
+        site = Site.objects.get_current()
+        site.domain=domain
+        site.name=blog.title
+        site.save()
+        messages.add_message(request,messages.INFO,'setting save ok!')
+    except:
+        messages.add_message(request,messages.INFO,'setting save failure!')
+    return HttpResponseRedirect('/admin/settings')
     
 @login_required 
 def media(request):

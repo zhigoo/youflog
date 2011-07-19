@@ -47,6 +47,16 @@ class CommentManager(models.Manager):
             qs = qs.filter(object_pk=force_unicode(model._get_pk_val()), is_public = True)
         return qs
 
+class CategoryManager(models.Manager):
+    def get_children_by_id(self, id):
+        list = []
+        categories = self.get_query_set()
+        for c in categories:
+            if c.parent_id == id:
+                list.append(c)
+        return list
+    
+    
 class PingbackManager(models.Manager):
     def pingbacks_for_object(self, obj):
         content_type = ContentType.objects.get_for_model(obj)

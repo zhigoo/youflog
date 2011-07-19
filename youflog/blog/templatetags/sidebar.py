@@ -25,7 +25,7 @@ def get_recent_posts(context,number=5):
             number = len(posts)
     return {'recentposts':posts[:number]}
 
-@register.inclusion_tag('sidebar/hot_posts.html', takes_context = True)
+@register.inclusion_tag('sidebar/popular_posts.html', takes_context = True)
 def get_popular_posts(context,number=5):
     posts = cache.get_cache('popular_posts')
     if not posts:
@@ -37,12 +37,9 @@ def get_popular_posts(context,number=5):
 
 @register.inclusion_tag('sidebar/random_posts.html', takes_context = True)
 def get_random_posts(context,number=5):
-    posts = cache.get_cache('random_posts')
-    if not posts:
-        posts = Entry.objects.get_posts()
-        cache.set_cache('random_posts',posts)
-        if number > len(posts):
-            number = len(posts)
+    posts = Entry.objects.get_posts()
+    if number > len(posts):
+        number = len(posts)
     return {'randomposts':sample(posts,number)}
 
 @register.inclusion_tag('sidebar/recent_comments.html', takes_context = True)
@@ -156,3 +153,62 @@ def get_recent_pingbacks(context):
 @register.inclusion_tag('sidebar/meta.html', takes_context = True)
 def get_meta_widget(context):
     return {'user':context.get('request').user}
+
+class CategoryNode(template.Node):
+    
+    def __init__(self, ctype=None,object_expr=None):
+        self.object_expr = object_expr
+    
+    @classmethod
+    def handle_token(cls, parser, token):
+        tokens = token.contents.split()
+        if tokens[1] != 'for':
+            raise template.TemplateSyntaxError("Second argument in %r tag must be 'for'" % tokens[0])
+
+        if len(tokens) == 3:
+            return cls(object_expr=parser.compile_filter(tokens[2]))
+    def render(self, context):
+        obj = self.object_expr.resolve(context)
+        def append_category_start(item,html):
+            t = template.Template('<li><a href="{{cate.get_absolute_url}}">{{cate.name}}</a>({{cate.count}})')
+            content = t.render(template.Context({'cate':item}))
+            html.append(content)
+        
+        def append_category_end(html):
+            html.append('</li>\n')
+
+        def append_child_start(html):
+            html.append('<ul class="children">\n')
+
+        def append_child_end(html):
+            html.append('</ul>\n')
+
+        def create_category_html(root, list, html):
+            append_category_start(root, html)
+            list.remove(root)
+            if root.has_children():
+                children = root.get_children()
+                for child in children:
+                    append_child_start(html)
+                    create_category_html(child, list, html)
+
+            append_category_end(html)
+            if root.has_parent():
+                append_child_end(html)
+
+            if len(list) > 0 and not root.has_parent():
+                create_category_html(list[0], list, html)
+
+        html = []
+        if obj:
+            sorted = []
+            first = obj[0]
+            html.append('<ul class="cat-item">\n')
+            create_category_html(first, list(obj), html)
+            html.append('</ul>')
+
+        return ''.join(html)
+    
+@register.tag
+def get_category_list(parser, token):
+    return CategoryNode.handle_token(parser, token)

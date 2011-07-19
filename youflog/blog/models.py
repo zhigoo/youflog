@@ -13,9 +13,8 @@ from tagging.fields import TagField
 from tagging.models import Tag,TaggedItem
 from blog.comments.models import Comment
 
-from blog.managers import EntryPublishManager,PingbackManager,PingbackClientManager
+from blog.managers import EntryPublishManager,PingbackManager,PingbackClientManager,CategoryManager
 import blog.cache as cache
-
 import logging
 
 class Blog(models.Model):
@@ -31,7 +30,6 @@ class Blog(models.Model):
     
     @staticmethod
     def get():
-        blog=None
         try:
             blog = Blog.objects.all()[0]
         except:
@@ -48,16 +46,35 @@ class Category(models.Model):
     name=models.CharField(max_length=50)
     slug=models.SlugField()
     desc=models.TextField(null=True, blank=True)
-    
+    parent = models.ForeignKey('self', null=True, blank=True,
+                               verbose_name='parent category',
+                               related_name='children')
+    objects = CategoryManager()
     @property
     def count(self):
         return Entry.objects.get_posts().filter(category=self).count()
-       
+    
+    def get_absolute_url(self):
+        return "/category/%s"%self.slug
+    
+    def has_children(self):
+        return bool(self.children.get_children_by_id(self.id))
+    
+    def has_parent(self):
+        return bool(self.parent_id)
+    
+    def get_children(self):
+        return self.children.get_children_by_id(self.id)
+    
     def __unicode__(self):
         return self.name
     
+    def save(self):
+        super(Category,self).save()
+        cache.delete_cache('sidebar:categories')
+    
     class Meta:
-        ordering = ('name',)
+        ordering = ('id',)
  
 class Entry(models.Model):
     ENTRY_TYPE_CHOICES=(('page','page'),('post','post'))
@@ -205,6 +222,10 @@ class Link(models.Model):
     text=models.CharField(max_length=20)
     comment=models.CharField(max_length=50,null=True, blank=True,default='')
     createdate=models.DateTimeField(auto_now_add=True)
+    
+    def save(self):
+        super(Link,self).delete()
+        cache.delete_cache('sidebar:links')
     
     def __unicode__(self):
         return self.text
