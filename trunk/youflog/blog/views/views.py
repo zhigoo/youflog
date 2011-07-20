@@ -37,10 +37,10 @@ def get_comment_cookie_meta(request):
 
 def index(request):
     page=request.GET.get('page',1)
-    posts=cache.get_cache('index_posts')
+    posts=cache.get('index_posts')
     if not posts:
         posts = Entry.objects.get_posts()
-        cache.set_cache('index_posts',posts)
+        cache.set('index_posts',posts)
     return render(request,'index.html',{'entries':posts,'ishome':True,'page':page})
 
 def singlePost(request,slug):
@@ -124,7 +124,8 @@ def post_comment(request, next = None):
     data = request.POST.copy()
     ctype = data.get("content_type")
     object_pk = data.get("object_pk")
-    checkcode = data.get('safecode') == request.session['safecode']
+    print request.session['safecode']
+    checkcode = data.get('safecode') == str(request.session['safecode']).lower()
     if not checkcode:
         return CommentPostBadRequest("验证码可不要写错了!")
         
@@ -180,33 +181,6 @@ def post_comment(request, next = None):
         pass
     
     return response
-
-def safecode(request):
-    fontSize=15
-    image = Image.new('RGB', (80, 20), (255, 255, 255))
-    font = ImageFont.truetype(CAPTCHA_FONT, fontSize)
-    draw = ImageDraw.Draw(image)
-    tp=OptionSet.get('safecode_type', 1);
-    if tp == str(1):
-        code=[]
-        gap = 5
-        start = 0
-        for i in range(0, 4):
-            x = start + fontSize * i + random.randint(0, gap) + gap * i
-            txt=str(random.randint(0,9))
-            code.append(txt)
-            draw.text((x,5), txt,font=font,fill=(100,211, 90))
-        del draw
-        request.session['safecode']=''.join(code)
-    else:
-        first=random.randint(0,9)
-        second=random.randint(0,9)
-        draw.text((0,5), str(first)+'+'+str(second),font=font,fill=(100,211, 90))
-        del draw
-        request.session['safecode']=str(first+second)
-    buf = cStringIO.StringIO()
-    image.save(buf, 'gif') 
-    return HttpResponse(buf.getvalue(),'image/gif')
 
 from django.db.models import Q
 def search(request):

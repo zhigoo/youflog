@@ -1,5 +1,10 @@
 {% load comment pagination%}
 <script type="text/javascript" src="/static/js/comment-reply.js"></script>
+<script type="text/javascript">
+function RefreshCode(obj){
+    obj.src = '{%url captcha_image%}' + "?code=" + Math.random();
+}
+</script>
 {% get_comment_form for object as commentform %}
 	<h3 id="comments">{{entry.comments.count}} Responses to "{{entry.title}}"</h3>
 
@@ -26,8 +31,11 @@
 	
 	<p>{{commentform.url}}
 	<label for="url">Website</label></p>
-	<p><input id="safecode" type="text" name="safecode"/>
-	<label for="safecode">验证码 <b style='color:red'>*</b><img onclick="this.setAttribute('src','/image_code')" src="/image_code" alt="CheckCode"/></label>
+	<p>
+		<input id="safecode" type="text" name="safecode"/>
+		<label for="safecode">验证码 <b style='color:red'>*</b>
+		</label>
+		<img alt="验证码" title="看不清？点击换另一张" onclick="RefreshCode(this)"  src="{%url captcha_image%}"/>
 	</p>
 	<p>{% include "themes/default/smily.html" %}</p>
 	

@@ -13,8 +13,10 @@ from tagging.fields import TagField
 from tagging.models import Tag,TaggedItem
 from blog.comments.models import Comment
 
-from blog.managers import EntryPublishManager,PingbackManager,PingbackClientManager,CategoryManager
+from blog.managers import *
 import blog.cache as cache
+
+from mptt.models import MPTTModel
 import logging
 
 class Blog(models.Model):
@@ -41,15 +43,15 @@ class Blog(models.Model):
     
     def __unicode__(self):
         return self.title
-
-class Category(models.Model):
+    
+class Category(MPTTModel):
     name=models.CharField(max_length=50)
     slug=models.SlugField()
     desc=models.TextField(null=True, blank=True)
     parent = models.ForeignKey('self', null=True, blank=True,
                                verbose_name='parent category',
                                related_name='children')
-    objects = CategoryManager()
+    
     @property
     def count(self):
         return Entry.objects.get_posts().filter(category=self).count()
@@ -57,25 +59,9 @@ class Category(models.Model):
     def get_absolute_url(self):
         return "/category/%s"%self.slug
     
-    def has_children(self):
-        return bool(self.children.get_children_by_id(self.id))
-    
-    def has_parent(self):
-        return bool(self.parent_id)
-    
-    def get_children(self):
-        return self.children.get_children_by_id(self.id)
-    
     def __unicode__(self):
         return self.name
-    
-    def save(self):
-        super(Category,self).save()
-        cache.delete_cache('sidebar:categories')
-    
-    class Meta:
-        ordering = ('id',)
- 
+
 class Entry(models.Model):
     ENTRY_TYPE_CHOICES=(('page','page'),('post','post'))
     author=models.ForeignKey(User)
@@ -202,11 +188,11 @@ class Entry(models.Model):
         self.published=pub
         super(Entry,self).save()
        
-        cache.delete_cache('index_posts')
-        cache.delete_cache('recent_posts')
-        cache.delete_cache('random_posts')
-        cache.delete_cache('sidebar:categories')
-        cache.delete_cache('sidebar:archives')
+        cache.delete('index_posts')
+        cache.delete('recent_posts')
+        cache.delete('random_posts')
+        cache.delete('sidebar:categories')
+        cache.delete('sidebar:archives')
         
         if self.published:
             send_pingback.send(sender=self.__class__,instance=self)
@@ -224,8 +210,8 @@ class Link(models.Model):
     createdate=models.DateTimeField(auto_now_add=True)
     
     def save(self):
-        super(Link,self).delete()
-        cache.delete_cache('sidebar:links')
+        super(Link,self).save()
+        cache.delete('sidebar:links')
     
     def __unicode__(self):
         return self.text

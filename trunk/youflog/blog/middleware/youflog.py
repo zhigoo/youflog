@@ -3,6 +3,7 @@ from django.utils.safestring import mark_safe
 from settings import YOUFLOG_VERSION
 import re
 
+_HTML_TYPES = ('text/html', 'application/xhtml+xml')
 HTML_TITLE_RE = re.compile(r'(</title>)', re.IGNORECASE)
 
 class RpcMiddleware(object):
@@ -25,10 +26,11 @@ class RpcMiddleware(object):
 class VersionMiddleware(object):
     
     def process_response(self,request,response):
-        def add_version_meta(match):
-            return mark_safe(match.group() + '<meta name="generator" content="youflog %s" />'%(YOUFLOG_VERSION))
+        if response['Content-Type'].split(';')[0] in _HTML_TYPES:
+           def add_version_meta(match):
+               return mark_safe(match.group() + '<meta name="generator" content="youflog %s" />'%YOUFLOG_VERSION)
         
-        response.content, n = HTML_TITLE_RE.subn(add_version_meta, response.content)
-        
+           a = response.content
+           response.content, n = HTML_TITLE_RE.subn(add_version_meta, response.content)
         return response
         
