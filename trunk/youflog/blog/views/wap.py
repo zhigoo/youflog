@@ -10,7 +10,7 @@ def index(request):
     entrys = cache.get('wap_index')
     if not entrys:
         entrys = Entry.objects.get_posts()
-        cache.set('wap_index',posts)
+        cache.set('wap_index',entrys)
     categories = cache.get('wap_category')
     if not categories:
         categories=Category.objects.all()
