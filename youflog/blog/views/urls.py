@@ -2,7 +2,7 @@
 # *_* encoding=utf-8 *_*
 from django.conf.urls.defaults import *
 from django.conf import settings
-from blog.views import views,wap
+from blog.views import views,wap,code
 
 
 urlpatterns = patterns('',
@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^recentComments',views.recentComments,name="recentComments"),  #通过ajax的方式获取最新的几条评论信息
     url(r'^archives/(?P<year>\d{4})/(?P<month>\d{1,2})$', views.archives,name='entry_by_month'),
     url(r'^calendar/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})',views.calendar,name='entry_by_calendar'),
-    url(r'^image_code',views.safecode,name='captcha_image'),
+    url(r'^image_code',code.validate,name='captcha_image'),
     url(r'^search/$', views.search,name='search'),
     url(r'^(.*)$', views.singlePost,name='single_post'),
    

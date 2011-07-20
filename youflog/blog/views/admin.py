@@ -417,7 +417,6 @@ def addCategory(request):
     if type and type == 'add':
         try:
             cats=Category.objects.filter(name=name)
-            print cats
             if cats.count() >= 1:
                 messages.add_message(request,messages.INFO,'categry [%s] already exits!'%(name))
             else:
@@ -428,7 +427,6 @@ def addCategory(request):
             print 'exception:',e
     elif type and type == 'edit':
         id = request.POST.get('id','')
-        print 'update:',pid
         cat = Category.objects.get(id=id)
         cat.name=name
         cat.slug=slug
@@ -453,7 +451,7 @@ def deleteCategory(request):
     ids = request.POST.getlist('checks')
     idstring = ','.join(ids)
     Category.objects.extra(where=['id IN ('+ idstring +')']).delete()
-    cache.delete_cache('sidebar:categories')
+    cache.delete('sidebar:categories')
     return HttpResponseRedirect('/admin/categories')
     
 def links(request):
@@ -489,7 +487,7 @@ def deleteLink(request):
     checks = request.POST.getlist('checks')
     idstring = ','.join(checks)  
     Link.objects.extra(where=['id IN ('+ idstring +')']).delete()  
-    cache.delete_cache('sidebar:links')
+    cache.delete('sidebar:links')
     return HttpResponseRedirect('/admin/links')
 
 @login_required
@@ -539,7 +537,7 @@ def save_setting(request):
     return HttpResponseRedirect('/admin/settings')
     
 @login_required 
-def media(request):
+def tools(request):
     return render_response(request,'admin/media.html',{})
 
 from os import makedirs

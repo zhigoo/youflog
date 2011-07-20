@@ -1,16 +1,16 @@
 {% extends "admin/base.html" %}
 {% block content %}
 <div class="wrap">
- <h2>媒体库</h2>
+ <h2>工具</h2>
  <form id="file-form" action="/admin/upload_media" method="post" enctype="multipart/form-data">
 
 <div id="html-upload-ui">
-	<p id="async-upload-wrap">
+	<!-- <p id="async-upload-wrap">
 	<input type="file" id="file" name="file"> 
 		<input type="submit" value="上传" name="html-upload" class="button"> 
-	</p>
+	</p> -->
 	<p>
-	 <a href="/admin/backup_db">备份数据库</a>
+	 <a href="{%url backup_db%}">备份sqlite3数据库</a>
 	</p>
 	<p>
 		<a href="{%url clear_cache%}">清空缓存</a>

@@ -17,20 +17,20 @@ register = Library()
 
 @register.inclusion_tag('sidebar/recent_posts.html', takes_context = True)
 def get_recent_posts(context,number=5):
-    posts = cache.get_cache('recent_posts')
+    posts = cache.get('recent_posts')
     if not posts:
         posts=Entry.objects.get_posts()
-        cache.set_cache('recent_posts',posts)
+        cache.set('recent_posts',posts)
         if number > len(posts):
             number = len(posts)
     return {'recentposts':posts[:number]}
 
 @register.inclusion_tag('sidebar/popular_posts.html', takes_context = True)
 def get_popular_posts(context,number=5):
-    posts = cache.get_cache('popular_posts')
+    posts = cache.get('popular_posts')
     if not posts:
         posts=Entry.objects.get_posts().order_by('-readtimes')
-        cache.set_cache('popular_posts',posts)
+        cache.set('popular_posts',posts)
         if number > len(posts):
             number = len(posts)
     return {'hotposts':posts[:number]}
@@ -49,43 +49,43 @@ def get_recent_comment(context,number=10):
 
 @register.inclusion_tag('sidebar/categories.html', takes_context = True)
 def get_categories(context):
-    categories=cache.get_cache('sidebar:categories')
+    categories=cache.get('sidebar:categories')
     if not categories:
-        categories=Category.objects.all()
-        cache.set_cache('sidebar:categories',categories,60 * 60)
-    return {'categories':categories}
+        categories=Category.tree.all()
+        cache.set('sidebar:categories',categories,60 * 60)
+    return {'nodes':categories}
 
 @register.inclusion_tag('sidebar/links.html', takes_context = True)
 def get_links(context):
-    links=cache.get_cache('sidebar:links')
+    links=cache.get('sidebar:links')
     if not links:
         links=Link.objects.all()
-        cache.set_cache('sidebar:links',links,60*60)
+        cache.set('sidebar:links',links,60*600)
     return {'links':links}
 
 @register.inclusion_tag('sidebar/archives.html', takes_context = True)
 def get_archives(context):
-    archives=cache.get_cache('sidebar:archives')
+    archives=cache.get('sidebar:archives')
     if not archives:
         archives = Entry.objects.dates('date','month','DESC')
-        cache.set_cache('sidebar:archives',archives,60*20)
+        cache.set('sidebar:archives',archives,60*600)
     return {'archives':archives}
 
 @register.inclusion_tag('sidebar/tags.html', takes_context = True)
 def get_tag_cloud(context):
-    result=cache.get_cache('sidebar:tagcloud')
+    result=cache.get('sidebar:tagcloud')
     if not result:
         result=[]
         tags=TaggedItem.objects.values('tag').annotate(count=Count('tag'))
         for tag in tags:
             t=get_object_or_404(Tag,id=tag['tag'])
             result.append({'count':tag['count'],'tag':t})
-        cache.set_cache('sidebar:tagcloud',result,60*10)
+        cache.set('sidebar:tagcloud',result,60*10)
     return {'tags':result}
 
 @register.inclusion_tag('readwall.html', takes_context = True)
 def get_reader_wall(context,number=10):
-    comments=cache.get_cache('sidebar:readerwall')
+    comments=cache.get('sidebar:readerwall')
     if not comments:
         admin_email=Blog.get().email
         sql="select count(email) as count,author,email,weburl from comments_comment where is_public=1 and email !='%s' group by email order by count desc limit %d"%(admin_email,number)
@@ -101,7 +101,7 @@ def get_reader_wall(context,number=10):
             weburl=row[3]
             comment={'author':author,'weburl':weburl,'count':str(count),'email':email}
             comments.append(comment)
-        cache.set_cache('sidebar:readerwall',comments,30)
+        cache.set('sidebar:readerwall',comments,30)
     return {'comments':comments}
 
 @register.inclusion_tag('menus.html', takes_context = True)
@@ -144,71 +144,12 @@ def get_calendar(context,year=None, month=None):
 
 @register.inclusion_tag('sidebar/pingbacks.html', takes_context = True)
 def get_recent_pingbacks(context):
-    pingbacks = cache.get_cache('recent_pingback')
+    pingbacks = cache.get('recent_pingback')
     if not pingbacks:
         pingbacks = Pingback.objects.all().order_by('-date')[:15]
-        cache.set_cache('recent_pingback',pingbacks)
+        cache.set('recent_pingback',pingbacks)
     return {'pingbacks': pingbacks}
 
 @register.inclusion_tag('sidebar/meta.html', takes_context = True)
 def get_meta_widget(context):
     return {'user':context.get('request').user}
-
-class CategoryNode(template.Node):
-    
-    def __init__(self, ctype=None,object_expr=None):
-        self.object_expr = object_expr
-    
-    @classmethod
-    def handle_token(cls, parser, token):
-        tokens = token.contents.split()
-        if tokens[1] != 'for':
-            raise template.TemplateSyntaxError("Second argument in %r tag must be 'for'" % tokens[0])
-
-        if len(tokens) == 3:
-            return cls(object_expr=parser.compile_filter(tokens[2]))
-    def render(self, context):
-        obj = self.object_expr.resolve(context)
-        def append_category_start(item,html):
-            t = template.Template('<li><a href="{{cate.get_absolute_url}}">{{cate.name}}</a>({{cate.count}})')
-            content = t.render(template.Context({'cate':item}))
-            html.append(content)
-        
-        def append_category_end(html):
-            html.append('</li>\n')
-
-        def append_child_start(html):
-            html.append('<ul class="children">\n')
-
-        def append_child_end(html):
-            html.append('</ul>\n')
-
-        def create_category_html(root, list, html):
-            append_category_start(root, html)
-            list.remove(root)
-            if root.has_children():
-                children = root.get_children()
-                for child in children:
-                    append_child_start(html)
-                    create_category_html(child, list, html)
-
-            append_category_end(html)
-            if root.has_parent():
-                append_child_end(html)
-
-            if len(list) > 0 and not root.has_parent():
-                create_category_html(list[0], list, html)
-
-        html = []
-        if obj:
-            sorted = []
-            first = obj[0]
-            html.append('<ul class="cat-item">\n')
-            create_category_html(first, list(obj), html)
-            html.append('</ul>')
-
-        return ''.join(html)
-    
-@register.tag
-def get_category_list(parser, token):
-    return CategoryNode.handle_token(parser, token)
