@@ -1,14 +1,15 @@
-<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml" dir="ltr"><head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>{{blog.title}} / Login</title>
+<link type="text/css" rel="stylesheet" media="screen" href="/static/login.css">
+</head>
+<body>
 
-
-	<title>{{blog.title}} › 登录</title>
-	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-	<link media="all" type="text/css" href="/static/admin/login.css" rel="stylesheet">
-
-	</head><body class="login">
-
-<div id="login">
-{% if messages %}
+	<div id="page-content">
+		<div id="login-page">
+		{% if messages %}
 	<div id="login_error">
     {% for message in messages %}
    {{ message }}
@@ -16,31 +17,36 @@
 	<br>
 	</div>
 {% endif %}
-<form method="post" action="" id="loginform" name="loginform">
-{% csrf_token %}
-	<p>
-		<label>用户名<br>
-		<input type="text" tabindex="10" size="20" value="" class="input" id="user_login" name="user"></label>
-	</p>
-	<p>
-		<label>密码<br>
-		<input type="password" tabindex="20" size="20" value="" class="input" id="user_pass" name="password"></label>
-	</p>
-	
-	<p class="submit">
-		<input type="submit" tabindex="100" value="登录" id="wp-submit" name="wp-submit">
-	</p>
-	<p>&nbsp;</p>
-
-<p id="nav">
-<a title="找回密码" href="#">忘记密码？</a>
-</p>
-
-</form></div>
-
-<p id="backtoblog"><a title="不知道自己在哪？" href="http://{{site.domain}}">← 返回 {{blog.title}}</a></p>
-
+			<form id="new_user_session" class="new_user_session" method="post" action="">
+			{% csrf_token %}
+				<div id="normal-login">
+					<p>
+						<label for="user_session_login">UserName</label>
+						<br/>
+						<input type="text" size="30" name="user" id="user_session_login">
+					</p>
+					<p>
+						<label for="user_session_password">Password</label><br>
+      					<input type="password" size="30" name="password" id="user_session_password">
+      				</p>
+				</div>
+				<p id="remember">
+					<input type="checkbox" value="1" name="remember_me" id="user_session_remember_me" checked="checked">
+					<label for="user_session_remember_me">Remember me</label>
+				</p>
+				<p>
+					<input type="submit" value="Login" name="commit" class="button">
+				 	<a class="new_password" href="#">Can't login?</a>
+				</p>
+			</form>
+			<p id="signup">
+				Not registered? 
+				<a href="#">Signup here for free</a>!
+			</p>
+		</div>
+	</div>
 <script type="text/javascript">
-try{document.getElementById('user_login').focus();}catch(e){}
+try{document.getElementById('user_session_login').focus();}catch(e){}
 </script>
-</body></html>
+</body>
+</html>
